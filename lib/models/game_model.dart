@@ -3,10 +3,7 @@ import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
 
 class GameModel extends ChangeNotifier {
-  final List<Player> players = [
-    Player(Id: 1, Name: "Ben", Turns: []),
-    Player(Id: 2, Name: "Dan", Turns: [])
-  ];
+  final List<Player> players = [];
   get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
 

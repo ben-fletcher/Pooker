@@ -38,7 +38,7 @@ class _SetupPageState extends State<SetupPage> {
       data: LightTheme,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Setup Page'),
+          title: const Text('New Game'),
         ),
         body: Consumer<GameModel>(
           builder: (context, gameModel, child) => Padding(
