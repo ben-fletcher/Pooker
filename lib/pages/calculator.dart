@@ -29,9 +29,8 @@ class CalculatorPage extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.sports_score),
                 onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => FinishPage()),
-                      (_) => false);
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => FinishPage()));
                 },
               ),
             ],
@@ -39,7 +38,13 @@ class CalculatorPage extends StatelessWidget {
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Scoreboard(), ActionButtons()],
+              children: [
+                Scoreboard(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 25.0),
+                  child: ActionButtons(),
+                ),
+              ],
             ),
           ),
         ),

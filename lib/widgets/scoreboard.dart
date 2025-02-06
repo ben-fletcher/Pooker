@@ -55,45 +55,55 @@ class Scoreboard extends StatelessWidget {
                 rows: gameModel.players.map((player) {
                   final isActive = gameModel.activePlayer == player;
                   final playerTurns =
-                      player.Turns.where((t) => t.toString() != '');
+                      player.Turns; //.where((t) => t.toString() != '');
                   return DataRow(
                     cells: [
-                      DataCell(Text(player.Name,
-                          style: TextStyle(color: Colors.white))),
-                      DataCell(Text(player.score.toString(),
-                          style: TextStyle(color: Colors.white))),
                       DataCell(
-                        Row(
-                          children: [
-                            playerTurns.length > 12 ? Text('...') : Container(),
-                            ...playerTurns
-                                .skip(max(playerTurns.length - 12, 0))
-                                .map((turn) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(horizontal: 2.0),
-                                padding: EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                  color: turn.event.foul != null &&
-                                          turn.event.foul!
-                                      ? Colors.yellow
-                                      : turn.event.potted
-                                          ? turn.event.colour == BallColour.Red
-                                              ? Colors.red
-                                              : Colors.black
-                                          : Colors.grey,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                child: Text(
-                                  '',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              );
-                            })
-                          ],
+                        Container(
+                          width: double.infinity,
+                          child: Text(player.Name,
+                              style: TextStyle(color: Colors.white)),
                         ),
+                      ),
+                      DataCell(
+                        Container(
+                          width: double.infinity,
+                          child: Text(player.score.toString(),
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                      DataCell(
+                        Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            spacing: 2.0,
+                            runSpacing: 2.0,
+                            children: [
+                              ...playerTurns.map((turn) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 2.0),
+                                  child: Icon(
+                                    turn.event.foul == true
+                                        ? Icons.close
+                                        : turn.event.potted
+                                            ? Icons.circle
+                                            : Icons.chevron_right_rounded,
+                                    size: 16.0,
+                                    color: turn.event.foul != null &&
+                                            turn.event.foul!
+                                        ? Colors.yellow
+                                        : turn.event.potted
+                                            ? turn.event.colour ==
+                                                    BallColour.Red
+                                                ? Colors.red
+                                                : Colors.black
+                                            : Colors.purpleAccent,
+                                  ),
+                                );
+                              })
+                            ],
+                        ),
+                      ),
                       ),
                     ],
                     color: MaterialStateProperty.resolveWith<Color?>(
