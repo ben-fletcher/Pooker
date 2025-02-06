@@ -3,7 +3,11 @@ import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
 
 class GameModel extends ChangeNotifier {
-  final List<Player> players = [Player(Id: 1, Name: "Ben", Turns: []), Player(Id: 2, Name: "Dan", Turns: [])];
+  final List<Player> players = [
+    Player(Id: 1, Name: "Ben", Turns: []),
+    Player(Id: 2, Name: "Dan", Turns: [])
+  ];
+  get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
 
   void submitGameEvent(GameEvent event) {
@@ -11,6 +15,20 @@ class GameModel extends ChangeNotifier {
     var turn = Turn(score: _calculateScore(event), event: event, ballIndex: 0);
     players[_currentPlayerIndex].Turns.add(turn);
 
+    if (event.foul == true || event.potted == false) {
+      _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
+    }
+
+    notifyListeners();
+  }
+
+  void addPlayer(Player player) {
+    players.add(player);
+    notifyListeners();
+  }
+
+  void removePlayer(int index) {
+    players.removeAt(index);
     notifyListeners();
   }
 
@@ -30,4 +48,9 @@ class GameModel extends ChangeNotifier {
     return 0;
   }
 
+  void reset() {
+    players.clear();
+    _currentPlayerIndex = 0;
+    notifyListeners();
+  }
 }

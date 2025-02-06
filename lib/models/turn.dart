@@ -26,6 +26,18 @@ class Turn {
     required this.event,
     required this.ballIndex,
   });
+
+  @override
+  String toString() {
+    switch (event.colour) {
+      case BallColour.Red:
+        return 'Red';
+      case BallColour.Black:
+        return 'Black';
+      default:
+        return '';
+    }
+  }
 }
 
 class BallTurn {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/calculator.dart';
+import 'package:pooker_score/pages/start.dart';
+import 'package:pooker_score/themes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,15 +20,10 @@ class MyApp extends StatelessWidget {
       create: (context) => GameModel(),
       child: MaterialApp(
         title: 'Pooker',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(),
+        theme: LightTheme,
+        darkTheme: DarkTheme,
+        themeMode: ThemeMode.dark,
+        home: StartPage(),
       ),
     );
   }
