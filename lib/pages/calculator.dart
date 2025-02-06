@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/data.dart';
-import 'package:pooker_score/pages/start.dart';
+import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
 
@@ -27,10 +27,10 @@ class CalculatorPage extends StatelessWidget {
             elevation: 0,
             actions: [
               IconButton(
-                icon: Icon(Icons.exit_to_app),
+                icon: Icon(Icons.sports_score),
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => StartPage()),
+                      MaterialPageRoute(builder: (_) => FinishPage()),
                       (_) => false);
                 },
               ),
