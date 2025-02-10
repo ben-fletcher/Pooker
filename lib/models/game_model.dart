@@ -6,6 +6,9 @@ class GameModel extends ChangeNotifier {
   final List<Player> players = [];
   get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
+  BallColour _nextTargetBall = BallColour.Red;
+
+  BallColour get nextTargetBall => _nextTargetBall;
 
   void submitGameEvent(GameEvent event) {
     // Add your code here!
@@ -14,6 +17,9 @@ class GameModel extends ChangeNotifier {
 
     if (event.foul == true || event.potted == false) {
       _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
+    } else {
+      _nextTargetBall =
+          _nextTargetBall == BallColour.Red ? BallColour.Black : BallColour.Red;
     }
 
     notifyListeners();
