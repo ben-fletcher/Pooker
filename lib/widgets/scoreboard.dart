@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/turn.dart';
@@ -14,7 +12,7 @@ class Scoreboard extends StatelessWidget {
       builder: (context, gameModel, child) {
         return Container(
           width: double.infinity,
-          margin: EdgeInsets.all(16.0),
+          margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.5),
@@ -42,8 +40,17 @@ class Scoreboard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.3,
+              Text(
+                'Remaining Balls: ${gameModel.remainingBalls}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10),
+              Expanded(
                 child: SingleChildScrollView(
                   child: DataTable(
                     columnSpacing: 20.0,

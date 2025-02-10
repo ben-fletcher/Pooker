@@ -18,17 +18,21 @@ class ActionButtons extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: gameModel.nextTargetBall == BallColour.Red
+                    onPressed: gameModel.remainingBalls > 0
                         ? () {
                             Provider.of<GameModel>(context, listen: false)
-                                .submitGameEvent(GameEvent(
-                                    potted: true, colour: BallColour.Red));
+                                .submitGameEvent(
+                                    GameEvent(
+                                        potted: true, colour: BallColour.Red),
+                                    Navigator.of(context));
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         minimumSize: Size(180, 180),
-                        backgroundColor: Colors.red,
+                        backgroundColor: gameModel.remainingBalls > 0
+                            ? Colors.red
+                            : Colors.grey.shade700,
                         foregroundColor: Colors.white,
                         shadowColor: Colors.black,
                         elevation: 15,
@@ -53,13 +57,12 @@ class ActionButtons extends StatelessWidget {
                 SizedBox(width: 20),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: gameModel.nextTargetBall == BallColour.Black
-                        ? () {
-                            Provider.of<GameModel>(context, listen: false)
-                                .submitGameEvent(GameEvent(
-                                    potted: true, colour: BallColour.Black));
-                          }
-                        : null,
+                    onPressed: () {
+                      Provider.of<GameModel>(context, listen: false)
+                          .submitGameEvent(
+                              GameEvent(potted: true, colour: BallColour.Black),
+                              Navigator.of(context));
+                    },
                     style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
                         minimumSize: Size(180, 180),
@@ -96,10 +99,12 @@ class ActionButtons extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       Provider.of<GameModel>(context, listen: false)
-                          .submitGameEvent(GameEvent(
-                              foul: true,
-                              colour: BallColour.Red,
-                              potted: true));
+                          .submitGameEvent(
+                              GameEvent(
+                                  foul: true,
+                                  colour: BallColour.Red,
+                                  potted: true),
+                              Navigator.of(context));
                     },
                     style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
@@ -132,7 +137,8 @@ class ActionButtons extends StatelessWidget {
                     onPressed: () {
                       Provider.of<GameModel>(context, listen: false)
                           .submitGameEvent(
-                              GameEvent(potted: false, colour: BallColour.Na));
+                              GameEvent(potted: false, colour: BallColour.Na),
+                              Navigator.of(context));
                     },
                     style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),
