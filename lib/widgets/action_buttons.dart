@@ -12,8 +12,7 @@ class ActionButtons extends StatelessWidget {
       spacing: 10,
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 10,
+          spacing: -50,
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
@@ -23,10 +22,28 @@ class ActionButtons extends StatelessWidget {
                           GameEvent(potted: true, colour: BallColour.Red));
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 100),
+                    shape: CircleBorder(),
+                    minimumSize: Size(150, 150),
                     backgroundColor: Colors.red,
-                    foregroundColor: Colors.white),
-                child: const Text("Red"),
+                    foregroundColor: Colors.white,
+                    shadowColor: Colors.black,
+                    elevation: 10,
+                    side: BorderSide(color: Colors.black, width: 3)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.sports_soccer_outlined,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Red",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -37,17 +54,37 @@ class ActionButtons extends StatelessWidget {
                           GameEvent(potted: true, colour: BallColour.Black));
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 100),
+                    shape: CircleBorder(),
+                    minimumSize: Size(150, 150),
                     backgroundColor: Colors.black,
-                    foregroundColor: Colors.white),
-                child: const Text("Black"),
+                    foregroundColor: Colors.white,
+                    shadowColor: Colors.black54,
+                    elevation: 10,
+                    side: BorderSide(color: Colors.black, width: 3)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "8",
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Black",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 10,
+          spacing: -50,
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
@@ -57,10 +94,28 @@ class ActionButtons extends StatelessWidget {
                           foul: true, colour: BallColour.Red, potted: true));
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 100),
-                    backgroundColor: Colors.yellow.shade500,
-                    foregroundColor: Colors.black),
-                child: const Text("Foul"),
+                    shape: CircleBorder(),
+                    minimumSize: Size(150, 150),
+                    backgroundColor: Colors.yellow.shade700,
+                    foregroundColor: Colors.black,
+                    shadowColor: Colors.yellowAccent,
+                    elevation: 10,
+                    side: BorderSide(color: Colors.black, width: 3)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.close,
+                      size: 50,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      "Foul",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -71,10 +126,28 @@ class ActionButtons extends StatelessWidget {
                           GameEvent(potted: false, colour: BallColour.Na));
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 100),
-                    backgroundColor: Colors.purpleAccent,
-                    foregroundColor: Colors.white),
-                child: const Text("Miss"),
+                    shape: CircleBorder(),
+                    minimumSize: Size(150, 150),
+                    backgroundColor: Colors.purple.shade700,
+                    foregroundColor: Colors.white,
+                    shadowColor: Colors.purpleAccent,
+                    elevation: 10,
+                    side: BorderSide(color: Colors.black, width: 3)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.next_plan,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Miss",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
