@@ -102,8 +102,8 @@ class ActionButtons extends StatelessWidget {
                           .submitGameEvent(
                               GameEvent(
                                   foul: true,
-                                  colour: BallColour.Red,
-                                  potted: true),
+                                  colour: BallColour.Na,
+                                  potted: false),
                               Navigator.of(context));
                     },
                     style: ElevatedButton.styleFrom(
