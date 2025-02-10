@@ -36,10 +36,11 @@ class CalculatorPage extends StatelessWidget {
             ],
           ),
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: ListView(
+              physics: BouncingScrollPhysics(),
               children: [
                 Scoreboard(),
+                const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 25.0),
                   child: ActionButtons(),

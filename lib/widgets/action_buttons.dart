@@ -9,10 +9,10 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 10,
+      spacing: 20,
       children: <Widget>[
         Row(
-          spacing: -50,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
@@ -23,29 +23,30 @@ class ActionButtons extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    minimumSize: Size(150, 150),
+                    minimumSize: Size(180, 180),
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     shadowColor: Colors.black,
-                    elevation: 10,
-                    side: BorderSide(color: Colors.black, width: 3)),
+                    elevation: 15,
+                    side: BorderSide(color: Colors.black, width: 4)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Icon(
                       Icons.sports_soccer_outlined,
-                      size: 50,
+                      size: 60,
                       color: Colors.white,
                     ),
                     Text(
                       "Red",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
             ),
+            SizedBox(width: 20),
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
@@ -55,26 +56,26 @@ class ActionButtons extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    minimumSize: Size(150, 150),
+                    minimumSize: Size(180, 180),
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                     shadowColor: Colors.black54,
-                    elevation: 10,
-                    side: BorderSide(color: Colors.black, width: 3)),
+                    elevation: 15,
+                    side: BorderSide(color: Colors.black, width: 4)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text(
                       "8",
                       style: TextStyle(
-                        fontSize: 50,
+                        fontSize: 60,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       "Black",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -83,8 +84,7 @@ class ActionButtons extends StatelessWidget {
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: -50,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
@@ -95,29 +95,30 @@ class ActionButtons extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    minimumSize: Size(150, 150),
+                    minimumSize: Size(180, 180),
                     backgroundColor: Colors.yellow.shade700,
                     foregroundColor: Colors.black,
                     shadowColor: Colors.yellowAccent,
-                    elevation: 10,
-                    side: BorderSide(color: Colors.black, width: 3)),
+                    elevation: 15,
+                    side: BorderSide(color: Colors.black, width: 4)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Icon(
                       Icons.close,
-                      size: 50,
+                      size: 60,
                       color: Colors.black,
                     ),
                     Text(
                       "Foul",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
             ),
+            SizedBox(width: 20),
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
@@ -127,24 +128,24 @@ class ActionButtons extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
-                    minimumSize: Size(150, 150),
+                    minimumSize: Size(180, 180),
                     backgroundColor: Colors.purple.shade700,
                     foregroundColor: Colors.white,
                     shadowColor: Colors.purpleAccent,
-                    elevation: 10,
-                    side: BorderSide(color: Colors.black, width: 3)),
+                    elevation: 15,
+                    side: BorderSide(color: Colors.black, width: 4)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Icon(
                       Icons.next_plan,
-                      size: 50,
+                      size: 60,
                       color: Colors.white,
                     ),
                     Text(
                       "Miss",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

@@ -18,29 +18,33 @@ class Scoreboard extends StatelessWidget {
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(25),
             border: Border.all(color: Colors.white, width: 2),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Scoreboard',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Colors.black,
-                      offset: Offset(5.0, 5.0),
-                    ),
-                  ],
+              Center(
+                child: Text(
+                  'Scoreboard',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.black,
+                        offset: Offset(5.0, 5.0),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 10),
               DataTable(
                 columnSpacing: 20.0,
+                dataRowMaxHeight: 70.0,
                 columns: const [
                   DataColumn(
                       label: Text('Player',
@@ -59,51 +63,41 @@ class Scoreboard extends StatelessWidget {
                   return DataRow(
                     cells: [
                       DataCell(
-                        Container(
-                          width: double.infinity,
-                          child: Text(player.Name,
-                              style: TextStyle(color: Colors.white)),
-                        ),
+                        Text(player.Name,
+                            style: TextStyle(color: Colors.white)),
                       ),
                       DataCell(
-                        Container(
-                          width: double.infinity,
-                          child: Text(player.score.toString(),
-                              style: TextStyle(color: Colors.white)),
-                        ),
+                        Text(player.score.toString(),
+                            style: TextStyle(color: Colors.white)),
                       ),
                       DataCell(
-                        Container(
-                          width: double.infinity,
-                          child: Wrap(
-                            spacing: 2.0,
-                            runSpacing: 2.0,
-                            children: [
-                              ...playerTurns.map((turn) {
-                                return Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 2.0),
-                                  child: Icon(
-                                    turn.event.foul == true
-                                        ? Icons.close
-                                        : turn.event.potted
-                                            ? Icons.circle
-                                            : Icons.chevron_right_rounded,
-                                    size: 16.0,
-                                    color: turn.event.foul != null &&
-                                            turn.event.foul!
-                                        ? Colors.yellow
-                                        : turn.event.potted
-                                            ? turn.event.colour ==
-                                                    BallColour.Red
-                                                ? Colors.red
-                                                : Colors.black
-                                            : Colors.purpleAccent,
-                                  ),
-                                );
-                              })
-                            ],
+                        Wrap(
+                          spacing: 2.0,
+                          runSpacing: 2.0,
+                          children: [
+                            ...playerTurns.map((turn) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(horizontal: 2.0),
+                                child: Icon(
+                                  turn.event.foul == true
+                                      ? Icons.close
+                                      : turn.event.potted
+                                          ? Icons.circle
+                                          : Icons.chevron_right_rounded,
+                                  size: 16.0,
+                                  color: turn.event.foul != null &&
+                                          turn.event.foul!
+                                      ? Colors.yellow
+                                      : turn.event.potted
+                                          ? turn.event.colour == BallColour.Red
+                                              ? Colors.red
+                                              : Colors.black
+                                          : Colors.purpleAccent,
+                                ),
+                              );
+                            })
+                          ],
                         ),
-                      ),
                       ),
                     ],
                     color: MaterialStateProperty.resolveWith<Color?>(
