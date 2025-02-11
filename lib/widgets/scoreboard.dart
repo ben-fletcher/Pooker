@@ -15,7 +15,7 @@ class Scoreboard extends StatelessWidget {
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(25),
             border: Border.all(color: Colors.white, width: 2),
           ),
@@ -68,11 +68,11 @@ class Scoreboard extends StatelessWidget {
                     ],
                     rows: gameModel.players.map((player) {
                       final isActive = gameModel.activePlayer == player;
-                      final playerTurns = player.Turns;
+                      final playerTurns = player.turns;
                       return DataRow(
                         cells: [
                           DataCell(
-                            Text(player.Name,
+                            Text(player.name,
                                 style: TextStyle(color: Colors.white)),
                           ),
                           DataCell(
@@ -100,7 +100,7 @@ class Scoreboard extends StatelessWidget {
                                           ? Colors.yellow
                                           : turn.event.potted
                                               ? turn.event.colour ==
-                                                      BallColour.Red
+                                                      BallColour.red
                                                   ? Colors.red
                                                   : Colors.black
                                               : Colors.purpleAccent,
@@ -111,10 +111,10 @@ class Scoreboard extends StatelessWidget {
                             ),
                           ),
                         ],
-                        color: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
+                        color: WidgetStateProperty.resolveWith<Color?>(
+                          (Set<WidgetState> states) {
                             if (isActive) {
-                              return Colors.green.withOpacity(0.3);
+                              return Colors.green.withValues(alpha: 0.3);
                             }
                             return null;
                           },
