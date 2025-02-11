@@ -9,7 +9,7 @@ class SetupPage extends StatefulWidget {
   const SetupPage({super.key});
 
   @override
-  _SetupPageState createState() => _SetupPageState();
+  State<SetupPage> createState() => _SetupPageState();
 }
 
 class _SetupPageState extends State<SetupPage> {
@@ -19,9 +19,9 @@ class _SetupPageState extends State<SetupPage> {
   void _addPlayer(GameModel gameModel) {
     if (_nameController.text.isNotEmpty) {
       final newPlayer = Player(
-          Id: gameModel.players.length + 1,
-          Name: _nameController.text,
-          Turns: []);
+          id: gameModel.players.length + 1,
+          name: _nameController.text,
+          turns: []);
       gameModel.addPlayer(newPlayer);
       _nameController.clear();
       _nameFocusNode.requestFocus();
@@ -77,7 +77,7 @@ class _SetupPageState extends State<SetupPage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
-                          title: Text(gameModel.players[index].Name,
+                          title: Text(gameModel.players[index].name,
                               style: TextStyle(fontSize: 18)),
                           trailing: IconButton(
                             icon: Icon(Icons.remove_circle, color: Colors.red),

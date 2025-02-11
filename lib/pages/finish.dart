@@ -9,7 +9,7 @@ class FinishPage extends StatefulWidget {
   const FinishPage({super.key});
 
   @override
-  _FinishPageState createState() => _FinishPageState();
+  State<FinishPage> createState() => _FinishPageState();
 }
 
 class _FinishPageState extends State<FinishPage> {
@@ -77,7 +77,7 @@ class _FinishPageState extends State<FinishPage> {
                                   color: Colors.grey,
                                 ),
                                 Text(
-                                  secondPlace.Name,
+                                  secondPlace.name,
                                   style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class _FinishPageState extends State<FinishPage> {
                                   color: Colors.amber,
                                 ),
                                 Text(
-                                  winner.Name,
+                                  winner.name,
                                   style: TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,
@@ -113,7 +113,7 @@ class _FinishPageState extends State<FinishPage> {
                                   color: Colors.brown,
                                 ),
                                 Text(
-                                  thirdPlace.Name,
+                                  thirdPlace.name,
                                   style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _FinishPageState extends State<FinishPage> {
                             leading: CircleAvatar(
                               child: Text((index + 1).toString()),
                             ),
-                            title: Text(players[index].Name),
+                            title: Text(players[index].name),
                             trailing: Text(players[index].score.toString()),
                           );
                         },

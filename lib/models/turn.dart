@@ -1,7 +1,7 @@
 enum BallColour {
-  Na,
-  Red,
-  Black,
+  na,
+  red,
+  black,
 }
 
 class GameEvent {
@@ -30,9 +30,9 @@ class Turn {
   @override
   String toString() {
     switch (event.colour) {
-      case BallColour.Red:
+      case BallColour.red:
         return 'Red';
-      case BallColour.Black:
+      case BallColour.black:
         return 'Black';
       default:
         return '';

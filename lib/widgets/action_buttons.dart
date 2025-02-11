@@ -23,7 +23,7 @@ class ActionButtons extends StatelessWidget {
                             Provider.of<GameModel>(context, listen: false)
                                 .submitGameEvent(
                                     GameEvent(
-                                        potted: true, colour: BallColour.Red),
+                                        potted: true, colour: BallColour.red),
                                     Navigator.of(context));
                           }
                         : null,
@@ -60,7 +60,7 @@ class ActionButtons extends StatelessWidget {
                     onPressed: () {
                       Provider.of<GameModel>(context, listen: false)
                           .submitGameEvent(
-                              GameEvent(potted: true, colour: BallColour.Black),
+                              GameEvent(potted: true, colour: BallColour.black),
                               Navigator.of(context));
                     },
                     style: ElevatedButton.styleFrom(
@@ -102,7 +102,7 @@ class ActionButtons extends StatelessWidget {
                           .submitGameEvent(
                               GameEvent(
                                   foul: true,
-                                  colour: BallColour.Na,
+                                  colour: BallColour.na,
                                   potted: false),
                               Navigator.of(context));
                     },
@@ -137,7 +137,7 @@ class ActionButtons extends StatelessWidget {
                     onPressed: () {
                       Provider.of<GameModel>(context, listen: false)
                           .submitGameEvent(
-                              GameEvent(potted: false, colour: BallColour.Na),
+                              GameEvent(potted: false, colour: BallColour.na),
                               Navigator.of(context));
                     },
                     style: ElevatedButton.styleFrom(

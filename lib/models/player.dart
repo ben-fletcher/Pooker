@@ -1,12 +1,12 @@
 import 'package:pooker_score/models/turn.dart';
 
 class Player {
-  int Id;
-  String Name;
-  List<Turn> Turns;
+  int id;
+  String name;
+  List<Turn> turns;
 
   get score =>
-      Turns.fold(0, (previousValue, element) => previousValue + element.score);
+      turns.fold(0, (previousValue, element) => previousValue + element.score);
 
-  Player({required this.Id, required this.Name, required this.Turns});
+  Player({required this.id, required this.name, required this.turns});
 }
