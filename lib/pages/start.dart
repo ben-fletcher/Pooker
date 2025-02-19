@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
+import 'package:pooker_score/pages/history.dart';
 import 'package:pooker_score/pages/setup.dart';
 import 'package:provider/provider.dart';
 
@@ -66,6 +67,17 @@ class StartPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
               ),
+              SizedBox(height: 10),
+              FilledButton.tonalIcon(
+                  icon: Icon(Icons.history),
+                  label: Text("History"),
+                  onPressed: () {
+                    Provider.of<GameModel>(context, listen: false).reset();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const HistoryPage()),
+                    );
+                  }),
             ],
           ),
         ),

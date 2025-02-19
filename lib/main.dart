@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/start.dart';
+import 'package:pooker_score/services/database_service.dart';
 import 'package:pooker_score/themes.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GameDatabaseService.initDatabase();
   runApp(const MyApp());
 }
 
