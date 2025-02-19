@@ -45,4 +45,18 @@ class GameDatabaseService {
       return GameResult.fromMap(maps[i]);
     });
   }
+
+  static Future<void> deleteGameResult(int id) async {
+    if (_database == null) return;
+    await _database!.delete(
+      'game_history',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  static Future<void> purgeGameHistory() async {
+    if (_database == null) return;
+    await _database!.delete('game_history');
+  }
 }

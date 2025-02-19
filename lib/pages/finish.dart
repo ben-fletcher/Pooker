@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/components/podium.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/start.dart';
 import 'package:provider/provider.dart';
@@ -68,65 +69,10 @@ class _FinishPageState extends State<FinishPage> {
                     if (winner != null ||
                         secondPlace != null ||
                         thirdPlace != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          if (secondPlace != null)
-                            Column(
-                              children: [
-                                Icon(
-                                  Icons.emoji_events,
-                                  size: 80,
-                                  color: Colors.grey,
-                                ),
-                                Text(
-                                  secondPlace.name,
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          if (winner != null)
-                            Column(
-                              children: [
-                                Icon(
-                                  Icons.emoji_events,
-                                  size: 100,
-                                  color: Colors.amber,
-                                ),
-                                Text(
-                                  winner.name,
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          if (thirdPlace != null)
-                            Column(
-                              children: [
-                                Icon(
-                                  Icons.emoji_events,
-                                  size: 60,
-                                  color: Colors.brown,
-                                ),
-                                Text(
-                                  thirdPlace.name,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ],
+                      Podium(
+                        winner: winner,
+                        secondPlace: secondPlace,
+                        thirdPlace: thirdPlace,
                       ),
                     const SizedBox(height: 50),
                     Divider(),
