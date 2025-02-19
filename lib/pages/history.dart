@@ -87,14 +87,14 @@ class _HistoryPageState extends State<HistoryPage> {
               return const Center(child: Text('No game history available'));
             } else {
               final gameHistory = snapshot.data!;
-              return Column(
+              return ListView(
                 children: [
                   _buildStatisticsSection(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6.0),
                     child: const Divider(),
                   ),
-                  Expanded(child: buildHistoryList(gameHistory)),
+                  ...buildHistoryListItems(gameHistory),
                 ],
               );
             }
@@ -102,6 +102,55 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ),
     );
+  }
+
+  List<Widget> buildHistoryListItems(List<GameResult> gameHistory) {
+    return gameHistory.map((game) {
+      final sortedPlayers = List.from(game.players)
+        ..sort((a, b) => b.score.compareTo(a.score));
+      return Card(
+        margin: const EdgeInsets.all(8.0),
+        child: ListTile(
+          title:
+              Text('Game on ${DateFormat.yMMMMd().add_Hm().format(game.date)}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: sortedPlayers.asMap().entries.map((entry) {
+              final player = entry.value;
+              final position = entry.key + 1;
+              Color textColor;
+              switch (position) {
+                case 1:
+                  textColor = Colors.amber;
+                  break;
+                case 2:
+                  textColor = Colors.grey;
+                  break;
+                case 3:
+                  textColor = Colors.brown;
+                  break;
+                default:
+                  textColor = Colors.black;
+              }
+              return Text(
+                '$position. ${player.name}: ${player.score}',
+                style: TextStyle(color: textColor, fontSize: 18),
+              );
+            }).toList(),
+          ),
+          onTap: () async {
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => GameResultPage(gameResult: game),
+              ),
+            );
+            if (result == true) {
+              _loadGameHistory();
+            }
+          },
+        ),
+      );
+    }).toList();
   }
 
   Widget _buildStatisticsSection() {
@@ -208,59 +257,6 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ],
       ),
-    );
-  }
-
-  ListView buildHistoryList(List<GameResult> gameHistory) {
-    return ListView.builder(
-      itemCount: gameHistory.length,
-      itemBuilder: (context, index) {
-        final game = gameHistory[index];
-        final sortedPlayers = List.from(game.players)
-          ..sort((a, b) => b.score.compareTo(a.score));
-        return Card(
-          margin: const EdgeInsets.all(8.0),
-          child: ListTile(
-            title: Text(
-                'Game on ${DateFormat.yMMMMd().add_Hm().format(game.date)}'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: sortedPlayers.asMap().entries.map((entry) {
-                final player = entry.value;
-                final position = entry.key + 1;
-                Color textColor;
-                switch (position) {
-                  case 1:
-                    textColor = Colors.amber;
-                    break;
-                  case 2:
-                    textColor = Colors.grey;
-                    break;
-                  case 3:
-                    textColor = Colors.brown;
-                    break;
-                  default:
-                    textColor = Colors.black;
-                }
-                return Text(
-                  '$position. ${player.name}: ${player.score}',
-                  style: TextStyle(color: textColor, fontSize: 18),
-                );
-              }).toList(),
-            ),
-            onTap: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => GameResultPage(gameResult: game),
-                ),
-              );
-              if (result == true) {
-                _loadGameHistory();
-              }
-            },
-          ),
-        );
-      },
     );
   }
 }
