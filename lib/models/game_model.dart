@@ -3,12 +3,16 @@ import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/models/player_turn.dart';
+import 'package:pooker_score/models/game_result.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
   final List<Player> players = [];
   get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
   BallColour _nextTargetBall = BallColour.red;
+  bool hasSaved = false;
   final List<PlayerTurn> _turnHistory = [];
 
   BallColour get nextTargetBall => _nextTargetBall;
@@ -39,12 +43,21 @@ class GameModel extends ChangeNotifier {
       _nextTargetBall = BallColour.black;
 
       if (event.potted && event.colour == BallColour.black) {
-        // End game
         navigator.push(MaterialPageRoute(builder: (_) => FinishPage()));
       }
     }
 
     notifyListeners();
+  }
+
+  void saveGame() {
+    var playerResults = players.map((player) {
+      return PlayerResult(name: player.name, score: player.score);
+    }).toList();
+
+    var gameResult = GameResult(date: DateTime.now(), players: playerResults);
+    GameDatabaseService.insertGameResult(gameResult);
+    hasSaved = true;
   }
 
   void undoLastEvent() {
