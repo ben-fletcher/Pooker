@@ -8,8 +8,27 @@ class Scoreboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+
     return Consumer<GameModel>(
       builder: (context, gameModel, child) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final activePlayerIndex =
+              gameModel.players.indexOf(gameModel.activePlayer);
+          if (activePlayerIndex != -1) {
+            final targetOffset = activePlayerIndex *
+                70.0; // Assuming each row has a height of 70.0
+            if (targetOffset <=
+                scrollController.position.maxScrollExtent + 35) {
+              scrollController.animateTo(
+                targetOffset,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          }
+        });
+
         return Container(
           width: double.infinity,
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
@@ -52,6 +71,7 @@ class Scoreboard extends StatelessWidget {
               SizedBox(height: 10),
               Expanded(
                 child: SingleChildScrollView(
+                  controller: scrollController,
                   child: DataTable(
                     columnSpacing: 20.0,
                     dataRowMaxHeight: 70.0,
