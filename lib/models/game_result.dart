@@ -38,11 +38,11 @@ class GameResult {
   }
 }
 
-class PlayerResult implements PlayerScore {
-  final String name;
+class PlayerResult extends PlayerScore {
+  @override
   final int score;
 
-  PlayerResult({required this.name, required this.score});
+  PlayerResult(super.name, this.score);
 
   String toJson() {
     final map = toMap();
@@ -63,13 +63,13 @@ class PlayerResult implements PlayerScore {
 
   static PlayerResult fromMap(Map<String, dynamic> map) {
     return PlayerResult(
-      name: map['name'],
-      score: map['score'],
+      map['name'],
+      map['score'],
     );
   }
   
   @override
-  set name(String _name) {
+  set name(String name) {
     throw ErrorDescription("Can't change name of PlayerResult");
   }
 }

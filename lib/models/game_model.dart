@@ -4,7 +4,6 @@ import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/models/player_turn.dart';
 import 'package:pooker_score/models/game_result.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
@@ -52,7 +51,7 @@ class GameModel extends ChangeNotifier {
 
   void saveGame() {
     var playerResults = players.map((player) {
-      return PlayerResult(name: player.name, score: player.score);
+      return PlayerResult(player.name, player.score);
     }).toList();
 
     var gameResult = GameResult(date: DateTime.now(), players: playerResults);

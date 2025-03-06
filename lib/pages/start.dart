@@ -35,12 +35,11 @@ class StartPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const Text(
+              Text(
                 "Pooker",
-                style: TextStyle(
-                  fontSize: 56,
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 82,
                   shadows: [
                     Shadow(
                       blurRadius: 10.0,

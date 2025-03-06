@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:flutter/foundation.dart';

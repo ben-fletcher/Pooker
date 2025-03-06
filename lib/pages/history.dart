@@ -3,7 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/pages/game_result_page.dart';
 import 'package:pooker_score/services/database_service.dart';
-import 'package:pooker_score/themes.dart';
+import 'package:pooker_score/theme.dart';
+import 'package:provider/provider.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -70,37 +71,41 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: LightTheme,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Game History'),
-        ),
-        body: FutureBuilder<List<GameResult>>(
-          future: _gameHistoryFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('Error loading game history'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No game history available'));
-            } else {
-              final gameHistory = snapshot.data!;
-              return ListView(
-                children: [
-                  _buildStatisticsSection(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                    child: const Divider(),
-                  ),
-                  ...buildHistoryListItems(gameHistory),
-                ],
-              );
-            }
-          },
-        ),
-      ),
+    return Consumer<MaterialTheme>(
+      builder: (context, theme, _) {
+        return Theme(
+          data: theme.light(),
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Game History'),
+            ),
+            body: FutureBuilder<List<GameResult>>(
+              future: _gameHistoryFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text('Error loading game history'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No game history available'));
+                } else {
+                  final gameHistory = snapshot.data!;
+                  return ListView(
+                    children: [
+                      _buildStatisticsSection(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: const Divider(),
+                      ),
+                      ...buildHistoryListItems(gameHistory),
+                    ],
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      }
     );
   }
 
@@ -248,7 +253,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    '${_averageScore.toStringAsFixed(2)}',
+                    _averageScore.toStringAsFixed(2),
                     style: TextStyle(fontSize: 16),
                   ),
                 ],

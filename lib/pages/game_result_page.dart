@@ -3,7 +3,8 @@ import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/services/database_service.dart';
 import 'package:intl/intl.dart';
 import 'package:pooker_score/components/podium.dart';
-import 'package:pooker_score/themes.dart';
+import 'package:pooker_score/theme.dart';
+import 'package:provider/provider.dart';
 
 class GameResultPage extends StatelessWidget {
   final GameResult gameResult;
@@ -18,60 +19,64 @@ class GameResultPage extends StatelessWidget {
     final secondPlace = sortedPlayers.length > 1 ? sortedPlayers[1] : null;
     final thirdPlace = sortedPlayers.length > 2 ? sortedPlayers[2] : null;
 
-    return Theme(
-      data: LightTheme,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(DateFormat.yMMMMd().add_Hm().format(gameResult.date)),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.delete),
-              color: Colors.red,
-              onPressed: () async {
-                await GameDatabaseService.deleteGameResult(gameResult.id!);
-                if (context.mounted) {
-                  Navigator.of(context).pop(true);
-                }
-              },
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Podium(
-                  winner: winner,
-                  secondPlace: secondPlace,
-                  thirdPlace: thirdPlace),
-              const SizedBox(height: 16.0),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: sortedPlayers.length,
-                  itemBuilder: (context, index) {
-                    var playerColor = getPlayerColor(index);
-                    var foregroundColor = playerColor != null
-                        ? playerColor.computeLuminance() > 0.5
-                            ? Colors.black
-                            : Colors.white
-                        : null;
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: playerColor,
-                        foregroundColor: foregroundColor,
-                        child: Text((index + 1).toString()),
-                      ),
-                      title: Text(sortedPlayers[index].name),
-                      trailing: Text(sortedPlayers[index].score.toString()),
-                    );
+    return Consumer<MaterialTheme>(
+      builder: (context, theme, _) {
+        return Theme(
+          data: theme.light(),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(DateFormat.yMMMMd().add_Hm().format(gameResult.date)),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  color: Colors.red,
+                  onPressed: () async {
+                    await GameDatabaseService.deleteGameResult(gameResult.id!);
+                    if (context.mounted) {
+                      Navigator.of(context).pop(true);
+                    }
                   },
                 ),
+              ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Podium(
+                      winner: winner,
+                      secondPlace: secondPlace,
+                      thirdPlace: thirdPlace),
+                  const SizedBox(height: 16.0),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: sortedPlayers.length,
+                      itemBuilder: (context, index) {
+                        var playerColor = getPlayerColor(index);
+                        var foregroundColor = playerColor != null
+                            ? playerColor.computeLuminance() > 0.5
+                                ? Colors.black
+                                : Colors.white
+                            : null;
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: playerColor,
+                            foregroundColor: foregroundColor,
+                            child: Text((index + 1).toString()),
+                          ),
+                          title: Text(sortedPlayers[index].name),
+                          trailing: Text(sortedPlayers[index].score.toString()),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 
