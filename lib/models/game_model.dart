@@ -49,6 +49,18 @@ class GameModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void submitSkillShot() {
+    players[_currentPlayerIndex].turns.add(
+      PlayerTurn(
+        playerIndex: _currentPlayerIndex,
+        score: 1,
+        event: GameEvent(potted: false, colour: BallColour.na),
+        ballIndex: 0,
+      ),
+    );
+    notifyListeners();
+  }
+
   void saveGame() {
     var playerResults = players.map((player) {
       return PlayerResult(player.name, player.score);

@@ -21,7 +21,7 @@ class GameDatabaseService {
       path,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)',
+          'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT, turns TEXT)',
         );
       },
       version: 1,

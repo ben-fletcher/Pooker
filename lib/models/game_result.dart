@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/player.dart';
+import 'package:pooker_score/models/player_turn.dart';
 
 class GameResult {
   int? id;
   final DateTime date;
   final List<PlayerResult> players;
+  final List<PlayerTurn> turns;
 
-  GameResult({required this.date, required this.players, this.id});
+  GameResult({required this.date, required this.players, required this.turns, this.id});
 
   String toJson() {
     final map = toMap();
@@ -24,6 +26,7 @@ class GameResult {
       'id': id,
       'date': date.toIso8601String(),
       'players': players.map((player) => player.toJson()).toList().toString(),
+      'turns': turns.map((turn) => turn.toJson()).toList().toString(),
     };
   }
 
@@ -33,6 +36,9 @@ class GameResult {
       date: DateTime.parse(map['date']),
       players: (json.decode(map['players']) as List)
           .map((player) => PlayerResult.fromMap(player))
+          .toList(),
+      turns: (json.decode(map['turns']) as List)
+          .map((turn) => PlayerTurn.fromMap(turn))
           .toList(),
     );
   }

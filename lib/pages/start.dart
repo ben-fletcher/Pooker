@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/history.dart';
 import 'package:pooker_score/pages/setup.dart';
+import 'package:pooker_score/pages/replay.dart';
 import 'package:provider/provider.dart';
 
 class StartPage extends StatelessWidget {
@@ -75,6 +76,17 @@ class StartPage extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const HistoryPage()),
+                    );
+                  }),
+              SizedBox(height: 10),
+              FilledButton.tonalIcon(
+                  icon: Icon(Icons.replay),
+                  label: Text("Replay"),
+                  onPressed: () {
+                    Provider.of<GameModel>(context, listen: false).reset();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const ReplayPage()),
                     );
                   }),
             ],

@@ -167,6 +167,42 @@ class ActionButtons extends StatelessWidget {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Provider.of<GameModel>(context, listen: false)
+                          .submitSkillShot();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        minimumSize: Size(180, 180),
+                        backgroundColor: Colors.blue.shade700,
+                        foregroundColor: Colors.white,
+                        shadowColor: Colors.blueAccent,
+                        elevation: 15,
+                        side: BorderSide(color: Colors.black, width: 4)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.star,
+                          size: 60,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          "Skill Shot",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         );
       },
