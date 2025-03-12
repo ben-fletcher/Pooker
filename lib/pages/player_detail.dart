@@ -27,7 +27,7 @@ class PlayerDetailScreen extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: GridView.count(
-              crossAxisCount: 2,
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               children: [

@@ -19,10 +19,11 @@ class GameDatabaseService {
 
     _database = await openDatabase(
       path,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)',
-        );
+      onCreate: (db, version) async {
+        await db.execute(
+            'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)');
+        await db
+            .execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         if (oldVersion == 1) {
