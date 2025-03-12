@@ -44,13 +44,6 @@ class CalculatorPage extends StatelessWidget {
                 }),
                 actions: [
                   IconButton(
-                    icon: Icon(Icons.exit_to_app),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => StartPage()));
-                    },
-                  ),
-                  IconButton(
                     icon: Icon(Icons.sports_score),
                     onPressed: () {
                       Navigator.of(context).push(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/pages/player_detail.dart';
 import 'package:pooker_score/services/database_service.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -38,17 +39,42 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       final player = snapshot.data![index];
                       return ListTile(
                         title: Text(player),
-                        trailing: IconButton(
-                            onPressed: () {
-                              GameDatabaseService.deletePlayer(player);
-                              setState(() {
-                                players = GameDatabaseService.loadPlayers();
-                              });
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Theme.of(context).colorScheme.error,
-                            )),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PlayerDetailScreen(
+                                playerName: player,
+                              ),
+                            ),
+                          );
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => PlayerDetailScreen(
+                                        playerName: player,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.bar_chart_rounded)),
+                            IconButton(
+                                onPressed: () {
+                                  GameDatabaseService.deletePlayer(player);
+                                  setState(() {
+                                    players = GameDatabaseService.loadPlayers();
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: Theme.of(context).colorScheme.error,
+                                )),
+                          ],
+                        ),
                       );
                     },
                   ),

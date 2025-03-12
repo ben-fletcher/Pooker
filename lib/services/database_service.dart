@@ -91,4 +91,37 @@ class GameDatabaseService {
       whereArgs: [name],
     );
   }
+
+  static Future<Map<String, dynamic>> getPlayerStatistics(
+      String playerName) async {
+    final history = await loadGameHistory();
+
+    final result = history.fold(<String, dynamic>{}, (value, element) {
+      for (var player in element.players) {
+        if (player.name == playerName) {
+          value['gamesPlayed'] = (value['gamesPlayed'] ?? 0) + 1;
+          value['gamesWon'] =
+              (value['gamesWon'] ?? 0) + (player.score == 0 ? 1 : 0);
+          value['totalScore'] = (value['totalScore'] ?? 0) + player.score;
+
+          final highestScore = value['highestScore'] ?? 0;
+          value['highestScore'] =
+              player.score > highestScore ? player.score : highestScore;
+        }
+      }
+      return value;
+    });
+
+    if (result.isEmpty) {
+      return result;
+    }
+
+    result['averageScore'] =
+        (result['totalScore'] / result['gamesPlayed']).toStringAsFixed(4);
+    result['winRate'] = ((result['gamesWon'] / result['gamesPlayed']) * 100)
+            .toStringAsFixed(2) +
+        '%';
+
+    return result;
+  }
 }
