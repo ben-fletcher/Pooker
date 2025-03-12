@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/finish.dart';
+import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
@@ -37,11 +38,18 @@ class CalculatorPage extends StatelessWidget {
                   return IconButton(
                     icon: Icon(Icons.undo),
                     onPressed: () {
-                      gameModel.undoLastEvent();
+                      gameModel.undoLastEvent(context);
                     },
                   );
                 }),
                 actions: [
+                  IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => StartPage()));
+                    },
+                  ),
                   IconButton(
                     icon: Icon(Icons.sports_score),
                     onPressed: () {

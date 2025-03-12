@@ -24,7 +24,12 @@ class GameDatabaseService {
           'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)',
         );
       },
-      version: 1,
+      onUpgrade: (db, oldVersion, newVersion) {
+        if (oldVersion == 1) {
+          db.execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
+        }
+      },
+      version: 2,
     );
   }
 
@@ -59,5 +64,31 @@ class GameDatabaseService {
   static Future<void> purgeGameHistory() async {
     if (_database == null) return;
     await _database!.delete('game_history');
+  }
+
+  static Future<void> insertPlayer(String name) async {
+    if (_database == null) return;
+    await _database!.insert(
+      'player',
+      {'name': name},
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+  }
+
+  static Future<List<String>> loadPlayers() async {
+    if (_database == null) return [];
+    final List<Map<String, dynamic>> maps = await _database!.query('player');
+    return List.generate(maps.length, (i) {
+      return maps[i]['name'] as String;
+    });
+  }
+
+  static Future<void> deletePlayer(String name) async {
+    if (_database == null) return;
+    await _database!.delete(
+      'player',
+      where: 'name = ?',
+      whereArgs: [name],
+    );
   }
 }
