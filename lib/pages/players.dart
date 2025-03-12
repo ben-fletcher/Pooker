@@ -101,6 +101,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
           title: Text('Add Player'),
           content: TextField(
             controller: nameController,
+            autocorrect: false,
+            textCapitalization: TextCapitalization.words,
             decoration: InputDecoration(hintText: 'Enter player name'),
           ),
           actions: [
