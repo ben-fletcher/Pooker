@@ -12,60 +12,60 @@ class CalculatorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MaterialTheme>(
-      builder: (context, theme, _) {
-        return Theme(
-          data: theme.dark(),
-          child: Stack(
-            children: [
-              Container(
+    return Consumer<MaterialTheme>(builder: (context, theme, _) {
+      return Theme(
+        data: theme.dark(),
+        child: Stack(
+          children: [
+            Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/pool_table_background.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              Scaffold(
+            ),
+            Scaffold(
+              //backgroundColor: Colors.green.shade900,
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                title: Text(APP_TITLE),
                 backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  title: Text(APP_TITLE),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  leading: Consumer<GameModel>(builder: (context, gameModel, child) {
-                    return IconButton(
-                      icon: Icon(Icons.undo),
-                      onPressed: () {
-                        gameModel.undoLastEvent();
-                      },
-                    );
-                  }),
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.sports_score),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (_) => FinishPage()));
-                      },
+                elevation: 0,
+                leading:
+                    Consumer<GameModel>(builder: (context, gameModel, child) {
+                  return IconButton(
+                    icon: Icon(Icons.undo),
+                    onPressed: () {
+                      gameModel.undoLastEvent();
+                    },
+                  );
+                }),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.sports_score),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => FinishPage()));
+                    },
+                  ),
+                ],
+              ),
+              body: Center(
+                child: Column(
+                  children: [
+                    Expanded(child: Scoreboard()),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 25.0),
+                      child: ActionButtons(),
                     ),
                   ],
                 ),
-                body: Center(
-                  child: Column(
-                    children: [
-                      Expanded(child: Scoreboard()),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: ActionButtons(),
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            ],
-          ),
-        );
-      }
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

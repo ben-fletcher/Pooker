@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/components/pool_ball_button.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:provider/provider.dart';
@@ -16,79 +17,30 @@ class ActionButtons extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: gameModel.remainingBalls > 0
-                        ? () {
-                            Provider.of<GameModel>(context, listen: false)
-                                .submitGameEvent(
-                                    GameEvent(
-                                        potted: true, colour: BallColour.red),
-                                    Navigator.of(context));
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(),
-                        minimumSize: Size(180, 180),
-                        backgroundColor: gameModel.remainingBalls > 0
-                            ? Colors.red
-                            : Colors.grey.shade700,
-                        foregroundColor: Colors.white,
-                        shadowColor: Colors.black,
-                        elevation: 15,
-                        side: BorderSide(color: Colors.black, width: 4)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.sports_soccer_outlined,
-                          size: 60,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          "Red",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
+                PoolBallButton(
+                  color: gameModel.remainingBalls > 0
+                      ? Colors.red
+                      : Colors.grey.shade700,
+                  onPressed: gameModel.remainingBalls > 0
+                      ? () {
+                          Provider.of<GameModel>(context, listen: false)
+                              .submitGameEvent(
+                                  GameEvent(
+                                      potted: true, colour: BallColour.red),
+                                  Navigator.of(context));
+                        }
+                      : null,
                 ),
                 SizedBox(width: 20),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Provider.of<GameModel>(context, listen: false)
-                          .submitGameEvent(
-                              GameEvent(potted: true, colour: BallColour.black),
-                              Navigator.of(context));
-                    },
-                    style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(),
-                        minimumSize: Size(180, 180),
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        shadowColor: Colors.black54,
-                        elevation: 15,
-                        side: BorderSide(color: Colors.black, width: 4)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "8",
-                          style: TextStyle(
-                            fontSize: 60,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Black",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
+                PoolBallButton(
+                  color: Colors.black,
+                  number: "8",
+                  onPressed: () {
+                    Provider.of<GameModel>(context, listen: false)
+                        .submitGameEvent(
+                            GameEvent(potted: true, colour: BallColour.black),
+                            Navigator.of(context));
+                  },
                 ),
               ],
             ),
@@ -111,8 +63,7 @@ class ActionButtons extends StatelessWidget {
                         minimumSize: Size(180, 180),
                         backgroundColor: Colors.yellow.shade700,
                         foregroundColor: Colors.black,
-                        shadowColor: Colors.yellowAccent,
-                        elevation: 15,
+                        elevation: 8,
                         side: BorderSide(color: Colors.black, width: 4)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -145,8 +96,7 @@ class ActionButtons extends StatelessWidget {
                         minimumSize: Size(180, 180),
                         backgroundColor: Colors.purple.shade700,
                         foregroundColor: Colors.white,
-                        shadowColor: Colors.purpleAccent,
-                        elevation: 15,
+                        elevation: 8,
                         side: BorderSide(color: Colors.black, width: 4)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -39,7 +39,7 @@ class StartPage extends StatelessWidget {
                 "Pooker",
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: Colors.white,
-                  fontSize: 82,
+                  fontSize: 72,
                   shadows: [
                     Shadow(
                       blurRadius: 10.0,
@@ -50,7 +50,7 @@ class StartPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton.icon(
+              FilledButton.icon(
                 icon: Icon(Icons.play_arrow, size: 32),
                 label: Text(
                   "Start",
@@ -62,11 +62,12 @@ class StartPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const SetupPage()),
                   );
                 },
-                style: ElevatedButton.styleFrom(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.green.shade700,
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               FilledButton.tonalIcon(
                   icon: Icon(Icons.history),
                   label: Text("History"),
