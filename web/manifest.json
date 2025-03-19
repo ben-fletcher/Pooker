@@ -1,11 +1,11 @@
 {
-    "name": "pooker_score",
-    "short_name": "pooker_score",
+    "name": "Pooker",
+    "short_name": "Pooker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "An app to keep track of the score of a pooker game",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

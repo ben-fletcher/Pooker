@@ -4,7 +4,7 @@ import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/models/player_turn.dart';
 import 'package:pooker_score/models/game_result.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
@@ -52,7 +52,7 @@ class GameModel extends ChangeNotifier {
 
   void saveGame() {
     var playerResults = players.map((player) {
-      return PlayerResult(name: player.name, score: player.score);
+      return PlayerResult(player.name, player.score);
     }).toList();
 
     var gameResult = GameResult(date: DateTime.now(), players: playerResults);
@@ -60,7 +60,7 @@ class GameModel extends ChangeNotifier {
     hasSaved = true;
   }
 
-  void undoLastEvent() {
+  void undoLastEvent(BuildContext context) {
     if (_turnHistory.isNotEmpty) {
       PlayerTurn lastTurn = _turnHistory.removeLast();
       Player player = players[lastTurn.playerIndex];
@@ -72,6 +72,39 @@ class GameModel extends ChangeNotifier {
 
       _currentPlayerIndex = lastTurn.playerIndex;
       notifyListeners();
+    } else {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Exit Game'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Would you like to exit this game?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => StartPage()),
+                      (_) => false);
+                },
+                child: const Text('Exit'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

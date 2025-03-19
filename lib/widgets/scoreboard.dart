@@ -29,37 +29,38 @@ class Scoreboard extends StatelessWidget {
           }
         });
 
-        return Container(
-          width: double.infinity,
-          margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-          padding: EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(color: Colors.white, width: 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
                 child: Text(
                   'Scoreboard',
                   style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.black,
-                        offset: Offset(5.0, 5.0),
-                      ),
-                    ],
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: Colors.black,
+                            offset: Offset(5.0, 5.0),
+                          ),
+                        ],
                   ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Text(
+                  ),
+                  SizedBox(height: 10),
+                  Text(
                 'Remaining Balls: ${gameModel.remainingBalls}',
                 style: TextStyle(
                   fontSize: 14,
@@ -67,84 +68,86 @@ class Scoreboard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Expanded(
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: DataTable(
-                    columnSpacing: 20.0,
-                    dataRowMaxHeight: 70.0,
-                    columns: const [
-                      DataColumn(
-                          label: Text('Player',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Score',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Turns',
-                              style: TextStyle(color: Colors.white))),
-                    ],
-                    rows: gameModel.players.map((player) {
-                      final isActive = gameModel.activePlayer == player;
-                      final playerTurns = player.turns;
-                      return DataRow(
-                        cells: [
-                          DataCell(
-                            Text(player.name,
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                          DataCell(
-                            Text(player.score.toString(),
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                          DataCell(
-                            Wrap(
-                              spacing: 2.0,
-                              runSpacing: 2.0,
-                              children: [
-                                ...playerTurns.map((turn) {
-                                  return Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 2.0),
-                                    child: Icon(
-                                      turn.event.foul == true
-                                          ? Icons.close
-                                          : turn.event.potted
-                                              ? Icons.circle
-                                              : Icons.chevron_right_rounded,
-                                      size: 16.0,
-                                      color: turn.event.foul != null &&
-                                              turn.event.foul!
-                                          ? Colors.yellow
-                                          : turn.event.potted
-                                              ? turn.event.colour ==
-                                                      BallColour.red
-                                                  ? Colors.red
-                                                  : Colors.black
-                                              : Colors.purpleAccent,
-                                    ),
-                                  );
-                                })
-                              ],
-                            ),
-                          ),
+                        columnSpacing: 20.0,
+                        dataRowMaxHeight: 70.0,
+                        columns: const [
+                          DataColumn(
+                              label: Text('Player',
+                                  style: TextStyle(color: Colors.white))),
+                          DataColumn(
+                              label: Text('Score',
+                                  style: TextStyle(color: Colors.white))),
+                          DataColumn(
+                              label: Text('Turns',
+                                  style: TextStyle(color: Colors.white))),
                         ],
-                        color: WidgetStateProperty.resolveWith<Color?>(
-                          (Set<WidgetState> states) {
-                            if (isActive) {
-                              return Colors.green.withValues(alpha: 0.3);
-                            }
-                            return null;
-                          },
-                        ),
-                      );
-                    }).toList(),
+                        rows: gameModel.players.map((player) {
+                          final isActive = gameModel.activePlayer == player;
+                          final playerTurns = player.turns;
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(player.name,
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                              DataCell(
+                                Text(player.score.toString(),
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                              DataCell(
+                                Wrap(
+                                  spacing: 2.0,
+                                  runSpacing: 2.0,
+                                  children: [
+                                    ...playerTurns.map((turn) {
+                                      return Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: Icon(
+                                          turn.event.foul == true
+                                              ? Icons.close
+                                              : turn.event.potted
+                                                  ? Icons.circle
+                                                  : Icons.chevron_right_rounded,
+                                          size: 16.0,
+                                          color: turn.event.foul != null &&
+                                                  turn.event.foul!
+                                              ? Colors.yellow
+                                              : turn.event.potted
+                                                  ? turn.event.colour ==
+                                                          BallColour.red
+                                                      ? Colors.red
+                                                      : Colors.black
+                                                  : Colors.purpleAccent,
+                                        ),
+                                      );
+                                    })
+                                  ],
+                                ),
+                              ),
+                            ],
+                            color: WidgetStateProperty.resolveWith<Color?>(
+                              (Set<WidgetState> states) {
+                                if (isActive) {
+                                  return Colors.green.withValues(alpha: 0.3);
+                                }
+                                return null;
+                              },
+                            ),
+                          );
+                        }).toList(),
                   ),
                 ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
