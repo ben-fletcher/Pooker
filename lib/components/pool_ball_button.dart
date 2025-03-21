@@ -5,7 +5,8 @@ class PoolBallButton extends StatelessWidget {
   final Color color;
   final Function()? onPressed;
 
-  const PoolBallButton({super.key, this.number, required this.color, this.onPressed});
+  const PoolBallButton(
+      {super.key, this.number, required this.color, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

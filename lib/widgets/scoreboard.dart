@@ -43,9 +43,9 @@ class Scoreboard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Center(
-                child: Text(
-                  'Scoreboard',
-                  style: TextStyle(
+                    child: Text(
+                      'Scoreboard',
+                      style: TextStyle(
                         fontSize: 24,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -56,24 +56,24 @@ class Scoreboard extends StatelessWidget {
                             offset: Offset(5.0, 5.0),
                           ),
                         ],
-                  ),
-                ),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 10),
                   Text(
-                'Remaining Balls: ${gameModel.remainingBalls}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+                    'Remaining Balls: ${gameModel.remainingBalls}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10),
                   Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: DataTable(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: DataTable(
                         columnSpacing: 20.0,
                         dataRowMaxHeight: 70.0,
                         columns: const [
@@ -142,8 +142,8 @@ class Scoreboard extends StatelessWidget {
                             ),
                           );
                         }).toList(),
-                  ),
-                ),
+                      ),
+                    ),
                   ),
                 ],
               ),

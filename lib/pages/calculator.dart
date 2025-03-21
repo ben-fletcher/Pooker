@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/finish.dart';
-import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
@@ -19,12 +18,12 @@ class CalculatorPage extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/pool_table_background.jpg'),
-                    fit: BoxFit.cover,
-                  ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/pool_table_background.jpg'),
+                  fit: BoxFit.cover,
                 ),
+              ),
             ),
             Scaffold(
               //backgroundColor: Colors.green.shade900,

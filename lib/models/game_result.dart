@@ -67,7 +67,7 @@ class PlayerResult extends PlayerScore {
       map['score'],
     );
   }
-  
+
   @override
   set name(String name) {
     throw ErrorDescription("Can't change name of PlayerResult");

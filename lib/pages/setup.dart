@@ -69,8 +69,7 @@ class _SetupPageState extends State<SetupPage> {
                           );
                         },
                       );
-                    }
-                    ),
+                    }),
                   ),
                   _buildPlayerSelector(gameModel),
                   const SizedBox(height: 16),
@@ -138,7 +137,7 @@ class _SetupPageState extends State<SetupPage> {
                       .any((element) => element.name == player)) {
                     return const SizedBox.shrink();
                   }
-              
+
                   return ListTile(
                     title: Text(player, style: TextStyle(fontSize: 20)),
                     trailing: IconButton(

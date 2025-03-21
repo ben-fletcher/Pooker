@@ -41,6 +41,7 @@ dependencies:
   sqflite_common_ffi_web: ^0.4.5+4
   google_fonts: ^6.2.1
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
