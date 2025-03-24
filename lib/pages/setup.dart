@@ -65,10 +65,21 @@ class _SetupPageState extends State<SetupPage> {
                         );
                       }
 
-                      return ListView.builder(
+                      return ReorderableListView.builder(
                         itemCount: gameModel.players.length,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          final player = gameModel.players.removeAt(oldIndex);
+                          gameModel.players.insert(newIndex, player);
+                          // Re-index the players
+                          for (var i = 0; i < gameModel.players.length; i++) {
+                            gameModel.players[i].id = i + 1;
+                          }
+                          setState(() {});
+                        },
                         itemBuilder: (context, index) {
                           return Card(
+                            key: ValueKey(gameModel.players[index].id),
                             child: ListTile(
                               title: Text(gameModel.players[index].name,
                                   style: TextStyle(fontSize: 18)),
