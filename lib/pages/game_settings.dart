@@ -40,7 +40,10 @@ class GameSettingsPage extends StatelessWidget {
                       children: [
                         CustomPaint(
                           size: const Size(100, 100),
-                          painter: TriangleRackPainter(),
+                          painter: TriangleRackPainter(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
                         ),
                         const SizedBox(height: 8),
                         Chip(
@@ -67,7 +70,10 @@ class GameSettingsPage extends StatelessWidget {
                       children: [
                         CustomPaint(
                           size: const Size(65, 100),
-                          painter: DiamondRackPainter(),
+                          painter: DiamondRackPainter(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
                         ),
                         const SizedBox(height: 8),
                         Chip(
@@ -136,10 +142,14 @@ class GameSettingsPage extends StatelessWidget {
 }
 
 class TriangleRackPainter extends CustomPainter {
+  final Color color;
+
+  TriangleRackPainter({this.color = Colors.black});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
 
@@ -157,10 +167,14 @@ class TriangleRackPainter extends CustomPainter {
 }
 
 class DiamondRackPainter extends CustomPainter {
+  final Color color;
+
+  DiamondRackPainter({this.color = Colors.black});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
 

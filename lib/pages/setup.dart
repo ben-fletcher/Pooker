@@ -30,105 +30,98 @@ class _SetupPageState extends State<SetupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MaterialTheme>(builder: (context, theme, _) {
-      return Theme(
-        data: theme.light(),
-        child: Consumer<GameModel>(builder: (context, gameModel, _) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('New Game', style: TextStyle(fontSize: 24)),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      gameModel.orderPlayersAlphabetically();
-                    },
-                    icon: Icon(Icons.sort_by_alpha)),
-                IconButton(
-                  icon: const Icon(Icons.shuffle),
-                  onPressed: () {
-                    gameModel.shufflePlayers();
-                  },
-                ),
-              ],
+    return Consumer<GameModel>(builder: (context, gameModel, _) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('New Game', style: TextStyle(fontSize: 24)),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  gameModel.orderPlayersAlphabetically();
+                },
+                icon: Icon(Icons.sort_by_alpha)),
+            IconButton(
+              icon: const Icon(Icons.shuffle),
+              onPressed: () {
+                gameModel.shufflePlayers();
+              },
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: Builder(builder: (context) {
-                      if (gameModel.players.isEmpty) {
-                        return const Center(
-                          child: Text('No players added yet'),
-                        );
-                      }
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Expanded(
+                child: Builder(builder: (context) {
+                  if (gameModel.players.isEmpty) {
+                    return const Center(
+                      child: Text('No players added yet'),
+                    );
+                  }
 
-                      return ReorderableListView.builder(
-                        itemCount: gameModel.players.length,
-                        onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) newIndex -= 1;
-                          final player = gameModel.players.removeAt(oldIndex);
-                          gameModel.players.insert(newIndex, player);
-                          // Re-index the players
-                          for (var i = 0; i < gameModel.players.length; i++) {
-                            gameModel.players[i].id = i + 1;
-                          }
-                          setState(() {});
-                        },
-                        itemBuilder: (context, index) {
-                          return Card(
-                            key: ValueKey(gameModel.players[index].id),
-                            child: ListTile(
-                              title: Text(gameModel.players[index].name,
-                                  style: TextStyle(fontSize: 18)),
-                              trailing: IconButton(
-                                icon: Icon(Icons.remove_circle,
-                                    color: Colors.red),
-                                onPressed: () =>
-                                    _removePlayer(gameModel, index),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }),
-                  ),
-                  _buildPlayerSelector(gameModel),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: FilledButton.icon(
-                      onPressed: gameModel.players.isNotEmpty
-                          ? () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => GameSettingsPage()));
-                            }
-                          : null,
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        backgroundColor:
-                            gameModel.players.isNotEmpty ? null : Colors.grey,
-                        textStyle: TextStyle(fontSize: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  return ReorderableListView.builder(
+                    itemCount: gameModel.players.length,
+                    onReorder: (oldIndex, newIndex) {
+                      if (newIndex > oldIndex) newIndex -= 1;
+                      final player = gameModel.players.removeAt(oldIndex);
+                      gameModel.players.insert(newIndex, player);
+                      // Re-index the players
+                      for (var i = 0; i < gameModel.players.length; i++) {
+                        gameModel.players[i].id = i + 1;
+                      }
+                      setState(() {});
+                    },
+                    itemBuilder: (context, index) {
+                      return Card(
+                        key: ValueKey(gameModel.players[index].id),
+                        child: ListTile(
+                          title: Text(gameModel.players[index].name,
+                              style: TextStyle(fontSize: 18)),
+                          trailing: IconButton(
+                            icon: Icon(Icons.remove_circle, color: Colors.red),
+                            onPressed: () => _removePlayer(gameModel, index),
+                          ),
                         ),
-                      ),
-                      icon: const Icon(Icons.skip_next_sharp, size: 32),
-                      label: const Text('Next',
-                          style: TextStyle(
-                            fontFamily: 'Comic Sans MS',
-                            fontWeight: FontWeight.bold,
-                          )),
+                      );
+                    },
+                  );
+                }),
+              ),
+              _buildPlayerSelector(gameModel),
+              const SizedBox(height: 16),
+              Center(
+                child: FilledButton.icon(
+                  onPressed: gameModel.players.isNotEmpty
+                      ? () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => GameSettingsPage()));
+                        }
+                      : null,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                    backgroundColor:
+                        gameModel.players.isNotEmpty ? null : Colors.grey,
+                    textStyle: TextStyle(fontSize: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                ],
+                  icon: const Icon(Icons.skip_next_sharp, size: 32),
+                  label: const Text('Next',
+                      style: TextStyle(
+                        fontFamily: 'Comic Sans MS',
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
               ),
-            ),
-          );
-        }),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       );
     });
   }

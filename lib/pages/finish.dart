@@ -20,7 +20,7 @@ class _FinishPageState extends State<FinishPage> {
   void initState() {
     super.initState();
     _confettiController =
-        ConfettiController(duration: const Duration(seconds: 10));
+        ConfettiController(duration: const Duration(seconds: 5));
     _confettiController.play();
   }
 
@@ -78,17 +78,22 @@ class _FinishPageState extends State<FinishPage> {
                     Divider(),
                     const SizedBox(height: 16),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: players.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              child: Text((index + 1).toString()),
-                            ),
-                            title: Text(players[index].name),
-                            trailing: Text(players[index].score.toString()),
-                          );
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          _confettiController.play();
                         },
+                        child: ListView.builder(
+                          itemCount: players.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                child: Text((index + 1).toString()),
+                              ),
+                              title: Text(players[index].name),
+                              trailing: Text(players[index].score.toString()),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],

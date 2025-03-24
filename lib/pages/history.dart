@@ -71,40 +71,35 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MaterialTheme>(builder: (context, theme, _) {
-      return Theme(
-        data: theme.light(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Game History'),
-          ),
-          body: FutureBuilder<List<GameResult>>(
-            future: _gameHistoryFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return const Center(child: Text('Error loading game history'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No game history available'));
-              } else {
-                final gameHistory = snapshot.data!;
-                return ListView(
-                  children: [
-                    _buildStatisticsSection(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: const Divider(),
-                    ),
-                    ...buildHistoryListItems(gameHistory),
-                  ],
-                );
-              }
-            },
-          ),
-        ),
-      );
-    });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Game History'),
+      ),
+      body: FutureBuilder<List<GameResult>>(
+        future: _gameHistoryFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error loading game history'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No game history available'));
+          } else {
+            final gameHistory = snapshot.data!;
+            return ListView(
+              children: [
+                _buildStatisticsSection(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: const Divider(),
+                ),
+                ...buildHistoryListItems(gameHistory),
+              ],
+            );
+          }
+        },
+      ),
+    );
   }
 
   List<Widget> buildHistoryListItems(List<GameResult> gameHistory) {

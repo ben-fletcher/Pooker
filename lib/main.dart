@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           title: 'Pooker',
           theme: theme.light(),
           darkTheme: theme.dark(),
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.system,
           home: StartPage(),
           debugShowCheckedModeBanner: false,
         ));

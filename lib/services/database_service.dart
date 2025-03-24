@@ -119,7 +119,7 @@ class GameDatabaseService {
 
       value['gamesPlayed'] = (value['gamesPlayed'] ?? 0) + 1;
       value['gamesWon'] =
-          (value['gamesWon'] ?? 0) + playerResult == winnerResult ? 1 : 0;
+          (value['gamesWon'] ?? 0) + (playerResult == winnerResult ? 1 : 0);
       value['totalScore'] = (value['totalScore'] ?? 0) + playerResult.score;
 
       final highestScore = value['highestScore'] ?? 0;
@@ -187,4 +187,6 @@ class GameDatabaseService {
       debugPrint("Error importing database: $e");
     }
   }
+
+  static resetDatabase() {}
 }
