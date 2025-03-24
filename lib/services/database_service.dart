@@ -1,3 +1,5 @@
+import 'dart:io'; // Add this import
+import 'package:file_picker/file_picker.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 // ignore: depend_on_referenced_packages
@@ -9,13 +11,7 @@ class GameDatabaseService {
   static Database? _database;
 
   static Future<void> initDatabase() async {
-    String path;
-    if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-      path = 'pooker.db';
-    } else {
-      path = join(await getDatabasesPath(), 'pooker.db');
-    }
+    String path = await getDatabasePath();
 
     _database = await openDatabase(
       path,
@@ -32,6 +28,17 @@ class GameDatabaseService {
       },
       version: 2,
     );
+  }
+
+  static Future<String> getDatabasePath() async {
+    String path;
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+      path = 'pooker.db';
+    } else {
+      path = join(await getDatabasesPath(), 'pooker.db');
+    }
+    return path;
   }
 
   static Future<void> insertGameResult(GameResult gameResult) async {
@@ -111,7 +118,8 @@ class GameDatabaseService {
       );
 
       value['gamesPlayed'] = (value['gamesPlayed'] ?? 0) + 1;
-      value['gamesWon'] = (value['gamesWon'] ?? 0) + playerResult == winnerResult ? 1 : 0;
+      value['gamesWon'] =
+          (value['gamesWon'] ?? 0) + playerResult == winnerResult ? 1 : 0;
       value['totalScore'] = (value['totalScore'] ?? 0) + playerResult.score;
 
       final highestScore = value['highestScore'] ?? 0;
@@ -132,5 +140,51 @@ class GameDatabaseService {
         '%';
 
     return result;
+  }
+
+  static Future<void> exportDatabase() async {
+    if (_database == null) return;
+
+    try {
+      final String dbPath = await getDatabasePath();
+      final File dbFile = File(dbPath);
+
+      String? outputPath = await FilePicker.platform.saveFile(
+          dialogTitle: 'Export Database',
+          fileName: 'pooker.db',
+          bytes: await dbFile.readAsBytes());
+
+      debugPrint("Database exported successfully to $outputPath");
+    } catch (e) {
+      debugPrint("Error exporting database: $e");
+    }
+  }
+
+  static Future<void> importDatabase(String sourcePath) async {
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
+
+    try {
+      String dbPath = await getDatabasePath();
+
+      // Replace the current database file with the imported file
+      final File sourceFile = File(sourcePath);
+      final File destinationFile = File(dbPath);
+
+      if (await sourceFile.exists()) {
+        await destinationFile.writeAsBytes(await sourceFile.readAsBytes(),
+            flush: true);
+        debugPrint("Database imported successfully from $sourcePath");
+
+        // Reinitialize the database
+        await initDatabase();
+      } else {
+        debugPrint("Source database file does not exist at $sourcePath");
+      }
+    } catch (e) {
+      debugPrint("Error importing database: $e");
+    }
   }
 }
