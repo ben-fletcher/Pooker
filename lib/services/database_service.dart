@@ -188,5 +188,13 @@ class GameDatabaseService {
     }
   }
 
-  static resetDatabase() {}
+  static Future<void> resetDatabase() async {
+    if (_database != null) {
+      _database!.close();
+      _database = null;
+    }
+
+    await deleteDatabase(await getDatabasesPath());
+    await initDatabase();
+  }
 }
