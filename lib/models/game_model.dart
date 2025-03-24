@@ -9,6 +9,7 @@ import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
   final List<Player> players = [];
+  int totalBalls = 15;
   get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
   BallColour _nextTargetBall = BallColour.red;
@@ -109,7 +110,6 @@ class GameModel extends ChangeNotifier {
   }
 
   int get remainingBalls {
-    int totalBalls = 14;
     int pottedBalls = players.fold(0, (sum, player) {
       return sum +
           player.turns
@@ -117,7 +117,9 @@ class GameModel extends ChangeNotifier {
                   turn.event.potted && turn.event.colour == BallColour.red)
               .length;
     });
-    return totalBalls - pottedBalls;
+
+    // Subtract the black ball
+    return totalBalls - 1 - pottedBalls;
   }
 
   void addPlayer(Player player) {
@@ -149,6 +151,25 @@ class GameModel extends ChangeNotifier {
   void reset() {
     players.clear();
     _currentPlayerIndex = 0;
+    _nextTargetBall = BallColour.red;
+    hasSaved = false;
+    _turnHistory.clear();
+
+    notifyListeners();
+  }
+
+  void setTotalBalls(int balls) {
+    totalBalls = balls;
+    notifyListeners();
+  }
+
+  void shufflePlayers() {
+    players.shuffle();
+    notifyListeners();
+  }
+
+  void orderPlayersAlphabetically() {
+    players.sort((a, b) => a.name.compareTo(b.name));
     notifyListeners();
   }
 }
