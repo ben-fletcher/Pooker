@@ -20,6 +20,7 @@ class PlayerDetailScreen extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
+            print(snapshot.error);
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
@@ -31,12 +32,18 @@ class PlayerDetailScreen extends StatelessWidget {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               children: [
-                _buildStatCard('Games Played', stats['gamesPlayed'], Icons.games, Colors.blue),
-                _buildStatCard('Games Won', stats['gamesWon'], Icons.emoji_events, Colors.green),
-                _buildStatCard('Total Score', stats['totalScore'], Icons.score, Colors.red),
-                _buildStatCard('Average Score', stats['averageScore'], Icons.bar_chart, Colors.purple),
-                _buildStatCard('Highest Score', stats['highestScore'], Icons.star, Colors.orange),
-                _buildStatCard('Win Rate', stats['winRate'], Icons.percent, Colors.teal),
+                _buildStatCard('Games Played', stats['gamesPlayed'],
+                    Icons.games, Colors.blue),
+                _buildStatCard('Games Won', stats['gamesWon'],
+                    Icons.emoji_events, Colors.green),
+                _buildStatCard('Total Score', stats['totalScore'], Icons.score,
+                    Colors.red),
+                _buildStatCard('Average Score', stats['averageScore'],
+                    Icons.bar_chart, Colors.purple),
+                _buildStatCard('Highest Score', stats['highestScore'],
+                    Icons.star, Colors.orange),
+                _buildStatCard(
+                    'Win Rate', stats['winRate'], Icons.percent, Colors.teal),
                 // Add more statistics as needed
               ],
             ),
@@ -46,7 +53,8 @@ class PlayerDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, dynamic value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, dynamic value, IconData icon, Color color) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -57,7 +65,9 @@ class PlayerDetailScreen extends StatelessWidget {
           children: [
             Icon(icon, size: 40, color: color),
             SizedBox(height: 10),
-            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+            Text(title,
+                style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold, color: color)),
             Text(value.toString(), style: TextStyle(fontSize: 16)),
           ],
         ),

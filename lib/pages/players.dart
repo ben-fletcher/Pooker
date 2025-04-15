@@ -100,6 +100,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         return AlertDialog(
           title: Text('Add Player'),
           content: TextField(
+            focusNode: FocusNode()..requestFocus(),
             controller: nameController,
             autocorrect: false,
             textCapitalization: TextCapitalization.words,
