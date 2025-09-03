@@ -52,6 +52,10 @@ class GameModel extends ChangeNotifier {
   }
 
   void saveGame() {
+    if (players.isEmpty) {
+      return;
+    }
+
     var playerResults = players.map((player) {
       return PlayerResult(player.name, player.score);
     }).toList();

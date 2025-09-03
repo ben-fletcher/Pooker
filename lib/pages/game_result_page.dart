@@ -4,8 +4,6 @@ import 'package:pooker_score/pages/player_detail.dart';
 import 'package:pooker_score/services/database_service.dart';
 import 'package:intl/intl.dart';
 import 'package:pooker_score/components/podium.dart';
-import 'package:pooker_score/theme.dart';
-import 'package:provider/provider.dart';
 
 class GameResultPage extends StatelessWidget {
   final GameResult gameResult;

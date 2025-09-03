@@ -1,4 +1,4 @@
-import 'dart:io'; // Add this import
+import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
@@ -104,42 +104,55 @@ class GameDatabaseService {
       String playerName) async {
     final history = await loadGameHistory();
 
-    final result = history.fold(<String, dynamic>{}, (value, element) {
-      final PlayerResult winnerResult = element.players.firstWhere(
-        (player) =>
-            player.score ==
-            element.players.map((e) => e.score).reduce((a, b) => a > b ? a : b),
-        orElse: () => PlayerResult('', 0),
-      );
+    int gamesPlayed = 0;
+    int gamesWon = 0;
+    int totalScore = 0;
+    int highestScore = 0;
 
-      final PlayerResult playerResult = element.players.firstWhere(
-        (player) => player.name == playerName,
-        orElse: () => PlayerResult('', 0),
-      );
+    for (final game in history) {
+      // Consider only games where the player actually participated
+      final matching =
+          game.players.where((player) => player.name == playerName).toList();
+      if (matching.isEmpty) continue;
 
-      value['gamesPlayed'] = (value['gamesPlayed'] ?? 0) + 1;
-      value['gamesWon'] =
-          (value['gamesWon'] ?? 0) + (playerResult == winnerResult ? 1 : 0);
-      value['totalScore'] = (value['totalScore'] ?? 0) + playerResult.score;
+      final playerResult = matching.first;
 
-      final highestScore = value['highestScore'] ?? 0;
-      value['highestScore'] =
-          playerResult.score > highestScore ? playerResult.score : highestScore;
+      gamesPlayed += 1;
+      totalScore += playerResult.score;
+      if (playerResult.score > highestScore) {
+        highestScore = playerResult.score;
+      }
 
-      return value;
-    });
-
-    if (result.isEmpty) {
-      return result;
+      // Determine the winner of this game
+      final PlayerResult winner = game.players.reduce(
+          (a, b) => a.score > b.score ? a : b);
+      if (winner.name == playerName) {
+        gamesWon += 1;
+      }
     }
 
-    result['averageScore'] =
-        (result['totalScore'] / result['gamesPlayed']).toStringAsFixed(4);
-    result['winRate'] = ((result['gamesWon'] / result['gamesPlayed']) * 100)
-            .toStringAsFixed(2) +
-        '%';
+    if (gamesPlayed == 0) {
+      return {
+        'gamesPlayed': 0,
+        'gamesWon': 0,
+        'totalScore': 0,
+        'averageScore': '0.0000',
+        'highestScore': 0,
+        'winRate': '0.00%'
+      };
+    }
 
-    return result;
+    final average = (totalScore / gamesPlayed).toStringAsFixed(4);
+    final winRate = ((gamesWon / gamesPlayed) * 100).toStringAsFixed(2) + '%';
+
+    return {
+      'gamesPlayed': gamesPlayed,
+      'gamesWon': gamesWon,
+      'totalScore': totalScore,
+      'averageScore': average,
+      'highestScore': highestScore,
+      'winRate': winRate,
+    };
   }
 
   static Future<void> exportDatabase() async {
