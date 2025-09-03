@@ -6,9 +6,27 @@ import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-class CalculatorPage extends StatelessWidget {
+class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key});
+
+  @override
+  State<CalculatorPage> createState() => _CalculatorPageState();
+}
+
+class _CalculatorPageState extends State<CalculatorPage> {
+  @override
+  void initState() {
+    super.initState();
+    WakelockPlus.enable();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WakelockPlus.disable();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +60,42 @@ class CalculatorPage extends StatelessWidget {
                   );
                 }),
                 actions: [
-                  IconButton(
-                    icon: Icon(Icons.sports_score),
+                  MenuItemButton(
+                    child: Icon(Icons.menu),
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => FinishPage()));
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(100, 100, 0, 0),
+                        items: [
+                          PopupMenuItem(
+                            child: Row(
+                              spacing: 10.0,
+                              children: [
+                                Icon(Icons.sports_score),
+                                Text('Finish Game'),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => FinishPage()));
+                            },
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              spacing: 10.0,
+                              children: [
+                                Icon(Icons.add),
+                                Text('Add Player'),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/about');
+                            },
+                          ),
+                        ],
+                      );
                     },
-                  ),
+                  )
                 ],
               ),
               body: Center(

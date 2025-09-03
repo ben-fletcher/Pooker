@@ -3,8 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/pages/game_result_page.dart';
 import 'package:pooker_score/services/database_service.dart';
-import 'package:pooker_score/theme.dart';
-import 'package:provider/provider.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
