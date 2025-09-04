@@ -42,6 +42,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
               title: Text(APP_TITLE),
               backgroundColor: Colors.transparent,
               elevation: 0,
+              scrolledUnderElevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.undo),
                 onPressed: () {
