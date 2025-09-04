@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/pages/game_settings.dart';
@@ -13,6 +14,8 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
+  Future<List<String>> _playersFuture = GameDatabaseService.loadPlayers();
+
   void _addPlayer(String player, GameModel gameModel) {
     final newPlayer =
         Player(id: gameModel.players.length + 1, name: player, turns: []);
@@ -127,7 +130,7 @@ class _SetupPageState extends State<SetupPage> {
 
   Widget _buildPlayerSelector(GameModel gameModel) {
     return FutureBuilder(
-        future: GameDatabaseService.loadPlayers(),
+        future: _playersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               snapshot.hasData == false) {
@@ -141,8 +144,25 @@ class _SetupPageState extends State<SetupPage> {
           return Expanded(
             child: Card.outlined(
               child: ListView.builder(
-                itemCount: snapshot.data!.length,
+                itemCount: snapshot.data!.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == snapshot.data!.length) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FilledButton.icon(
+                        onPressed: () {
+                          showAddPlayerDialog(context).then((value) {
+                            setState(() {
+                              _playersFuture = GameDatabaseService.loadPlayers();
+                            });
+                          });
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text('Add Player'),
+                      ),
+                    );
+                  }
+
                   final player = snapshot.data![index];
 
                   if (gameModel.players

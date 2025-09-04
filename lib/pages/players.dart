@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/pages/player_detail.dart';
 import 'package:pooker_score/services/database_service.dart';
 
@@ -63,11 +64,34 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 },
                                 icon: Icon(Icons.bar_chart_rounded)),
                             IconButton(
-                                onPressed: () {
-                                  GameDatabaseService.deletePlayer(player);
-                                  setState(() {
-                                    players = GameDatabaseService.loadPlayers();
-                                  });
+                                onPressed: () async {
+                                  // Confirm the deletion
+                                  bool? confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Delete Player'),
+                                      content: Text('Are you sure you want to delete this player?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(false),
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(true),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Theme.of(context).colorScheme.error,
+                                          ),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  if (confirm == true) {
+                                    GameDatabaseService.deletePlayer(player);
+                                    setState(() {
+                                      players = GameDatabaseService.loadPlayers();
+                                    });
+                                  }
                                 },
                                 icon: Icon(
                                   Icons.delete_outline_rounded,
@@ -86,49 +110,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
           label: Text("Add Player"),
           icon: Icon(Icons.add),
           onPressed: () {
-            _showAddPlayerDialog(context);
+            showAddPlayerDialog(context).then((value) {
+              setState(() {
+                players = GameDatabaseService.loadPlayers();
+              });
+            });
           }),
-    );
-  }
-
-  void _showAddPlayerDialog(BuildContext context) {
-    final nameController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Add Player'),
-          content: TextField(
-            focusNode: FocusNode()..requestFocus(),
-            controller: nameController,
-            autocorrect: false,
-            textCapitalization: TextCapitalization.words,
-            decoration: InputDecoration(hintText: 'Enter player name'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final playerName = nameController.text;
-                if (playerName.isNotEmpty) {
-                  GameDatabaseService.insertPlayer(playerName);
-                  setState(() {
-                    players = GameDatabaseService.loadPlayers();
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text('Add'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
