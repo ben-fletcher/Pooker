@@ -40,7 +40,8 @@ class GameModel extends ChangeNotifier {
           _nextTargetBall == BallColour.red ? BallColour.black : BallColour.red;
     }
 
-    if (remainingBalls == 0) {
+    // Always ensure next target is black if no reds remain
+    if (remainingBalls <= 0) {
       _nextTargetBall = BallColour.black;
 
       if (event.potted && event.colour == BallColour.black) {
@@ -76,6 +77,12 @@ class GameModel extends ChangeNotifier {
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
+      
+      // Ensure next target is black if no reds remain
+      if (remainingBalls <= 0) {
+        _nextTargetBall = BallColour.black;
+      }
+      
       notifyListeners();
     } else {
       showDialog<void>(
@@ -119,7 +126,7 @@ class GameModel extends ChangeNotifier {
           player.turns
               .where((turn) =>
                   turn.event.potted && turn.event.colour == BallColour.red)
-              .length;
+              .fold(0, (turnSum, turn) => turnSum + turn.event.count);
     });
 
     // Subtract the black ball
@@ -142,7 +149,7 @@ class GameModel extends ChangeNotifier {
     }
 
     if (event.potted && event.colour == BallColour.red) {
-      return 1;
+      return 1 * event.count; // Handle multiple reds
     }
 
     if (event.potted && event.colour == BallColour.black) {
@@ -175,5 +182,34 @@ class GameModel extends ChangeNotifier {
   void orderPlayersAlphabetically() {
     players.sort((a, b) => a.name.compareTo(b.name));
     notifyListeners();
+  }
+
+  void adjustPlayerScore(Player player, int newScore) {
+    int currentScore = player.score;
+    int adjustment = newScore - currentScore;
+    
+    if (adjustment != 0) {
+      // Create a manual adjustment turn
+      var adjustmentTurn = PlayerTurn(
+        playerIndex: players.indexOf(player),
+        score: adjustment,
+        event: GameEvent(
+          colour: BallColour.red,
+          potted: false,
+          foul: false,
+        ),
+        ballIndex: 0,
+      );
+      
+      player.turns.add(adjustmentTurn);
+      _turnHistory.add(adjustmentTurn);
+      
+      // Ensure next target is black if no reds remain
+      if (remainingBalls <= 0) {
+        _nextTargetBall = BallColour.black;
+      }
+      
+      notifyListeners();
+    }
   }
 }

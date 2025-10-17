@@ -8,11 +8,13 @@ class GameEvent {
   bool potted;
   bool? foul;
   BallColour colour;
+  int count; // Number of balls potted (for multiple reds on one shot)
 
   GameEvent({
     required this.potted,
     this.foul,
     required this.colour,
+    this.count = 1,
   });
 }
 

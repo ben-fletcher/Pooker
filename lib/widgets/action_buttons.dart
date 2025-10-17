@@ -7,6 +7,65 @@ import 'package:provider/provider.dart';
 class ActionButtons extends StatelessWidget {
   const ActionButtons({super.key});
 
+  void _showMultipleRedsDialog(BuildContext context, GameModel gameModel) {
+    final int maxReds = gameModel.remainingBalls;
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Multiple Reds Potted'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('How many reds were potted on this shot?'),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: List.generate(
+                maxReds > 5 ? 5 : maxReds,
+                (index) {
+                  final count = index + 2; // Start from 2 reds
+                  return FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      gameModel.submitGameEvent(
+                        GameEvent(
+                          potted: true,
+                          colour: BallColour.red,
+                          count: count,
+                        ),
+                        Navigator.of(context),
+                      );
+                    },
+                    style: FilledButton.styleFrom(
+                      minimumSize: Size(60, 60),
+                      backgroundColor: Colors.red,
+                    ),
+                    child: Text(
+                      '$count',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GameModel>(
@@ -14,22 +73,48 @@ class ActionButtons extends StatelessWidget {
         return Column(
           spacing: 20,
           children: <Widget>[
+            if (gameModel.remainingBalls > 1)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info_outline, size: 16, color: Colors.white70),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Long press red ball for multiple reds',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                PoolBallButton(
-                  color: gameModel.remainingBalls > 0
-                      ? Colors.red
-                      : Colors.grey.shade700,
-                  onPressed: gameModel.remainingBalls > 0
-                      ? () {
-                          Provider.of<GameModel>(context, listen: false)
-                              .submitGameEvent(
-                                  GameEvent(
-                                      potted: true, colour: BallColour.red),
-                                  Navigator.of(context));
-                        }
+                GestureDetector(
+                  onLongPress: gameModel.remainingBalls > 1
+                      ? () => _showMultipleRedsDialog(context, gameModel)
                       : null,
+                  child: PoolBallButton(
+                    color: gameModel.remainingBalls > 0
+                        ? Colors.red
+                        : Colors.grey.shade700,
+                    onPressed: gameModel.remainingBalls > 0
+                        ? () {
+                            Provider.of<GameModel>(context, listen: false)
+                                .submitGameEvent(
+                                    GameEvent(
+                                        potted: true,
+                                        colour: BallColour.red,
+                                        count: 1),
+                                    Navigator.of(context));
+                          }
+                        : null,
+                  ),
                 ),
                 SizedBox(width: 20),
                 PoolBallButton(

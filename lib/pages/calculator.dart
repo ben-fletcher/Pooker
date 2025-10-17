@@ -18,6 +18,8 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
+  bool _isEditMode = false;
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +52,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 },
               ),
               actions: [
+                IconButton(
+                  icon: Icon(_isEditMode ? Icons.edit_off : Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      _isEditMode = !_isEditMode;
+                    });
+                  },
+                  tooltip: _isEditMode ? 'Exit Edit Mode' : 'Edit Scores',
+                ),
                 MenuItemButton(
                   child: Icon(Icons.menu),
                   onPressed: () {
@@ -91,7 +102,34 @@ class _CalculatorPageState extends State<CalculatorPage> {
             body: Center(
               child: Column(
                 children: [
-                  Expanded(child: Scoreboard()),
+                  if (_isEditMode)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      color: Colors.orange.shade800,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit, size: 16, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Edit Mode - Tap scores to adjust',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  Expanded(
+                    child: Scoreboard(
+                      isEditMode: _isEditMode,
+                      onScoreTap: _isEditMode
+                          ? (player) => _showEditScoreDialog(gameModel, player)
+                          : null,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ActionButtons(),
@@ -103,6 +141,60 @@ class _CalculatorPageState extends State<CalculatorPage> {
         }),
       );
     });
+  }
+
+  void _showEditScoreDialog(GameModel gameModel, Player player) {
+    final TextEditingController scoreController = TextEditingController();
+    scoreController.text = player.score.toString();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit ${player.name}\'s Score'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Current Score: ${player.score}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: scoreController,
+              keyboardType: TextInputType.numberWithOptions(signed: true),
+              decoration: InputDecoration(
+                labelText: 'New Score',
+                border: OutlineInputBorder(),
+                helperText: 'Enter the corrected score',
+              ),
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final int? newScore = int.tryParse(scoreController.text);
+              if (newScore != null) {
+                gameModel.adjustPlayerScore(player, newScore);
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${player.name}\'s score adjusted to $newScore'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future showAddMidGamePlayerDialog(GameModel gameModel) async {
