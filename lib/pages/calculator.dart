@@ -24,6 +24,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void initState() {
     super.initState();
     WakelockPlus.enable();
+    // Load settings from database
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final gameModel = Provider.of<GameModel>(context, listen: false);
+      gameModel.loadSettings();
+    });
   }
 
   @override

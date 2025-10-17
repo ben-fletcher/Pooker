@@ -224,11 +224,16 @@ List<Widget> _buildTurnIcons(BuildContext context, Player player, int maxItems) 
   return turns.map<Widget>((t) {
     final bool isFoul = t.event.foul == true;
     final bool isPotted = t.event.potted;
+    final bool isSkillShot = !isPotted && !isFoul && t.event.colour == BallColour.na && t.score > 0;
     Color color;
     IconData icon;
     Widget iconWidget;
     
-    if (isFoul) {
+    if (isSkillShot) {
+      // Skill shot bonus
+      color = Colors.amber;
+      iconWidget = Icon(Icons.star, size: 14, color: color);
+    } else if (isFoul) {
       color = cs.error;
       icon = Icons.close;
       iconWidget = Icon(icon, size: 14, color: color);
