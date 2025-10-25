@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/history.dart';
 import 'package:pooker_score/pages/players.dart';
+import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/pages/settings.dart';
 import 'package:pooker_score/pages/setup.dart';
 import 'package:pooker_score/theme.dart';
@@ -87,30 +88,44 @@ class StartPage extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FilledButton.tonalIcon(
+                            icon: Icon(Icons.history),
+                            label: Text("History"),
+                            onPressed: () {
+                              Provider.of<GameModel>(context, listen: false)
+                                  .reset();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const HistoryPage()),
+                              );
+                            }),
+                        SizedBox(width: 30),
+                        FilledButton.tonalIcon(
+                            icon: Icon(Icons.people),
+                            label: Text("Players"),
+                            onPressed: () {
+                              Provider.of<GameModel>(context, listen: false)
+                                  .reset();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const PlayerScreen()),
+                              );
+                            }),
+                      ],
+                    ),
+                    SizedBox(height: 16),
                     FilledButton.tonalIcon(
-                        icon: Icon(Icons.history),
-                        label: Text("History"),
+                        icon: Icon(Icons.help_outline),
+                        label: Text("Rules"),
                         onPressed: () {
-                          Provider.of<GameModel>(context, listen: false)
-                              .reset();
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => const HistoryPage()),
-                          );
-                        }),
-                    SizedBox(width: 30),
-                    FilledButton.tonalIcon(
-                        icon: Icon(Icons.people),
-                        label: Text("Players"),
-                        onPressed: () {
-                          Provider.of<GameModel>(context, listen: false)
-                              .reset();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const PlayerScreen()),
+                                builder: (context) => const RulesPage()),
                           );
                         }),
                   ],
