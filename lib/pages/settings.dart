@@ -12,6 +12,28 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool _skillShotEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
+    setState(() {
+      _skillShotEnabled = skillShotEnabled;
+    });
+  }
+
+  Future<void> _toggleSkillShot(bool value) async {
+    await GameDatabaseService.setSkillShotEnabled(value);
+    setState(() {
+      _skillShotEnabled = value;
+    });
+  }
+
   Future<void> _exportDatabase() async {
     if (kIsWeb) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,6 +125,22 @@ class _SettingsPageState extends State<SettingsPage> {
             ElevatedButton(
               onPressed: _openAboutPage,
               child: const Text('About'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Game Settings',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Card(
+              child: SwitchListTile(
+                title: const Text('Bonus Point Button'),
+                subtitle: const Text(
+                  'Award an extra point for skillful shots or funny fouls',
+                ),
+                value: _skillShotEnabled,
+                onChanged: _toggleSkillShot,
+                secondary: const Icon(Icons.star),
+              ),
             ),
             const SizedBox(height: 20),
             Text(

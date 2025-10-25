@@ -20,13 +20,18 @@ class GameDatabaseService {
             'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)');
         await db
             .execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
+        await db.execute(
+            'CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         if (oldVersion == 1) {
           db.execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
         }
+        if (oldVersion < 3) {
+          db.execute('CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
+        }
       },
-      version: 2,
+      version: 3,
     );
   }
 
@@ -209,5 +214,35 @@ class GameDatabaseService {
 
     await deleteDatabase(await getDatabasesPath());
     await initDatabase();
+  }
+
+  // Settings methods
+  static Future<void> setSetting(String key, String value) async {
+    if (_database == null) return;
+    await _database!.insert(
+      'settings',
+      {'key': key, 'value': value},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  static Future<String?> getSetting(String key) async {
+    if (_database == null) return null;
+    final List<Map<String, dynamic>> maps = await _database!.query(
+      'settings',
+      where: 'key = ?',
+      whereArgs: [key],
+    );
+    if (maps.isEmpty) return null;
+    return maps.first['value'] as String?;
+  }
+
+  static Future<bool> getSkillShotEnabled() async {
+    final value = await getSetting('skill_shot_enabled');
+    return value == 'true';
+  }
+
+  static Future<void> setSkillShotEnabled(bool enabled) async {
+    await setSetting('skill_shot_enabled', enabled.toString());
   }
 }

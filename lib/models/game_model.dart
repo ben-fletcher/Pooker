@@ -15,8 +15,15 @@ class GameModel extends ChangeNotifier {
   BallColour _nextTargetBall = BallColour.red;
   bool hasSaved = false;
   final List<PlayerTurn> _turnHistory = [];
+  bool _skillShotEnabled = false;
 
   BallColour get nextTargetBall => _nextTargetBall;
+  bool get skillShotEnabled => _skillShotEnabled;
+
+  Future<void> loadSettings() async {
+    _skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
+    notifyListeners();
+  }
 
   void submitGameEvent(GameEvent event, NavigatorState navigator) {
     if (event.colour != _nextTargetBall && event.potted) {
@@ -40,7 +47,8 @@ class GameModel extends ChangeNotifier {
           _nextTargetBall == BallColour.red ? BallColour.black : BallColour.red;
     }
 
-    if (remainingBalls == 0) {
+    // Always ensure next target is black if no reds remain
+    if (remainingBalls <= 0) {
       _nextTargetBall = BallColour.black;
 
       if (event.potted && event.colour == BallColour.black) {
@@ -76,6 +84,12 @@ class GameModel extends ChangeNotifier {
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
+      
+      // Ensure next target is black if no reds remain
+      if (remainingBalls <= 0) {
+        _nextTargetBall = BallColour.black;
+      }
+      
       notifyListeners();
     } else {
       showDialog<void>(
@@ -119,7 +133,7 @@ class GameModel extends ChangeNotifier {
           player.turns
               .where((turn) =>
                   turn.event.potted && turn.event.colour == BallColour.red)
-              .length;
+              .fold(0, (turnSum, turn) => turnSum + turn.event.count);
     });
 
     // Subtract the black ball
@@ -142,7 +156,7 @@ class GameModel extends ChangeNotifier {
     }
 
     if (event.potted && event.colour == BallColour.red) {
-      return 1;
+      return 1 * event.count; // Handle multiple reds
     }
 
     if (event.potted && event.colour == BallColour.black) {
@@ -175,5 +189,68 @@ class GameModel extends ChangeNotifier {
   void orderPlayersAlphabetically() {
     players.sort((a, b) => a.name.compareTo(b.name));
     notifyListeners();
+  }
+
+  void adjustPlayerScore(Player player, int newScore) {
+    int currentScore = player.score;
+    int adjustment = newScore - currentScore;
+    
+    if (adjustment != 0) {
+      // Create a manual adjustment turn
+      var adjustmentTurn = PlayerTurn(
+        playerIndex: players.indexOf(player),
+        score: adjustment,
+        event: GameEvent(
+          colour: BallColour.red,
+          potted: false,
+          foul: false,
+        ),
+        ballIndex: 0,
+      );
+      
+      player.turns.add(adjustmentTurn);
+      _turnHistory.add(adjustmentTurn);
+      
+      // Ensure next target is black if no reds remain
+      if (remainingBalls <= 0) {
+        _nextTargetBall = BallColour.black;
+      }
+      
+      notifyListeners();
+    }
+  }
+
+  void applySkillShotBonus() {
+    if (!_skillShotEnabled) return;
+    
+    // Find the last turn (pot, foul, or miss)
+    if (_turnHistory.isEmpty) return;
+    
+    final lastTurn = _turnHistory.last;
+    
+    // Don't apply skill shot to another skill shot
+    final bool isAlreadySkillShot = !lastTurn.event.potted && 
+                                    lastTurn.event.foul != true && 
+                                    lastTurn.event.colour == BallColour.na && 
+                                    lastTurn.score > 0;
+    
+    if (!isAlreadySkillShot) {
+      // Add skill shot bonus to the last player who did something
+      // (works for impressive pots OR funny fouls!)
+      final bonusTurn = PlayerTurn(
+        playerIndex: lastTurn.playerIndex,
+        score: 1,
+        event: GameEvent(
+          colour: BallColour.na,
+          potted: false,
+          foul: false,
+        ),
+        ballIndex: 0,
+      );
+      
+      players[lastTurn.playerIndex].turns.add(bonusTurn);
+      _turnHistory.add(bonusTurn);
+      notifyListeners();
+    }
   }
 }

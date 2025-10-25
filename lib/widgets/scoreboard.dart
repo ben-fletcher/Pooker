@@ -6,7 +6,14 @@ import 'package:pooker_score/models/turn.dart';
 import 'package:provider/provider.dart';
 
 class Scoreboard extends StatelessWidget {
-  const Scoreboard({super.key});
+  final bool isEditMode;
+  final void Function(Player)? onScoreTap;
+
+  const Scoreboard({
+    super.key,
+    this.isEditMode = false,
+    this.onScoreTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,12 +132,46 @@ class Scoreboard extends StatelessWidget {
                                     const SizedBox(width: 8),
                                     _MiniPill(icon: Icons.report_problem, text: '$foulCount'),
                                     const SizedBox(width: 20),
-                                    Text(
-                                      player.score.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(fontWeight: FontWeight.w700),
+                                    GestureDetector(
+                                      onTap: isEditMode && onScoreTap != null
+                                          ? () => onScoreTap!(player)
+                                          : null,
+                                      child: Container(
+                                        padding: isEditMode
+                                            ? const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 4)
+                                            : null,
+                                        decoration: isEditMode
+                                            ? BoxDecoration(
+                                                color: cs.primaryContainer.withOpacity(0.3),
+                                                borderRadius: BorderRadius.circular(8),
+                                                border: Border.all(
+                                                  color: cs.primary.withOpacity(0.5),
+                                                  width: 2,
+                                                ),
+                                              )
+                                            : null,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              player.score.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.copyWith(fontWeight: FontWeight.w700),
+                                            ),
+                                            if (isEditMode) ...[
+                                              const SizedBox(width: 4),
+                                              Icon(
+                                                Icons.edit,
+                                                size: 16,
+                                                color: cs.primary,
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -183,25 +224,64 @@ List<Widget> _buildTurnIcons(BuildContext context, Player player, int maxItems) 
   return turns.map<Widget>((t) {
     final bool isFoul = t.event.foul == true;
     final bool isPotted = t.event.potted;
+    final bool isSkillShot = !isPotted && !isFoul && t.event.colour == BallColour.na && t.score > 0;
     Color color;
     IconData icon;
-    if (isFoul) {
+    Widget iconWidget;
+    
+    if (isSkillShot) {
+      // Skill shot bonus
+      color = Colors.amber;
+      iconWidget = Icon(Icons.star, size: 14, color: color);
+    } else if (isFoul) {
       color = cs.error;
       icon = Icons.close;
+      iconWidget = Icon(icon, size: 14, color: color);
     } else if (isPotted) {
       if (t.event.colour == BallColour.red) {
         color = Colors.red;
+        // Show multiple circles for multiple reds
+        if (t.event.count > 1) {
+          iconWidget = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...List.generate(
+                t.event.count > 3 ? 3 : t.event.count,
+                (index) => Padding(
+                  padding: EdgeInsets.only(left: index > 0 ? 2.0 : 0),
+                  child: Icon(Icons.circle, size: 14, color: color),
+                ),
+              ),
+              if (t.event.count > 3)
+                Padding(
+                  padding: const EdgeInsets.only(left: 2.0),
+                  child: Text(
+                    '+${t.event.count - 3}',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        } else {
+          iconWidget = Icon(Icons.circle, size: 14, color: color);
+        }
       } else {
         color = Colors.black;
+        iconWidget = Icon(Icons.circle, size: 14, color: color);
       }
-      icon = Icons.circle;
     } else {
       color = cs.tertiary;
       icon = Icons.chevron_right_rounded;
+      iconWidget = Icon(icon, size: 14, color: color);
     }
+    
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: Icon(icon, size: 14, color: color),
+      child: iconWidget,
     );
   }).toList();
 }
