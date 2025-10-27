@@ -39,7 +39,7 @@ class StartPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Spacer(),
+                Spacer(flex: 4),
                 const Text(
                   "Welcome to",
                   style: TextStyle(
@@ -83,51 +83,47 @@ class StartPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   ),
                 ),
-                Spacer(),
-                Column(
+                Spacer(flex: 3,),
+                TextButton.icon(
+                    icon: Icon(Icons.help_outline, color: Colors.white),
+                    label: Text("How to Play", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const RulesPage()),
+                      );
+                    }),
+
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FilledButton.tonalIcon(
-                            icon: Icon(Icons.history),
-                            label: Text("History"),
-                            onPressed: () {
-                              Provider.of<GameModel>(context, listen: false)
-                                  .reset();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => const HistoryPage()),
-                              );
-                            }),
-                        SizedBox(width: 30),
-                        FilledButton.tonalIcon(
-                            icon: Icon(Icons.people),
-                            label: Text("Players"),
-                            onPressed: () {
-                              Provider.of<GameModel>(context, listen: false)
-                                  .reset();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => const PlayerScreen()),
-                              );
-                            }),
-                      ],
-                    ),
-                    SizedBox(height: 16),
                     FilledButton.tonalIcon(
-                        icon: Icon(Icons.help_outline),
-                        label: Text("Rules"),
+                        icon: Icon(Icons.history),
+                        label: Text("History"),
                         onPressed: () {
+                          Provider.of<GameModel>(context, listen: false)
+                              .reset();
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => const RulesPage()),
+                                builder: (context) => const HistoryPage()),
                           );
                         }),
+                    SizedBox(width: 30),
+                    FilledButton.tonalIcon(
+                        icon: Icon(Icons.people),
+                        label: Text("Players"),
+                        onPressed: () {
+                          Provider.of<GameModel>(context, listen: false)
+                              .reset();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const PlayerScreen()),
+                          );
+                        })
                   ],
                 ),
                 SizedBox(height: 30),
