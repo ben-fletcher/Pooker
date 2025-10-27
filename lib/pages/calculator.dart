@@ -3,6 +3,7 @@ import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/pages/finish.dart';
+import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/services/database_service.dart';
 import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
@@ -96,6 +97,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           ),
                           onTap: () {
                             showAddMidGamePlayerDialog(gameModel);
+                          },
+                        ),
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.help_outline),
+                              Text('Rules'),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const RulesPage()));
                           },
                         ),
                       ],

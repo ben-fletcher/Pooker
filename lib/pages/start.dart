@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/history.dart';
 import 'package:pooker_score/pages/players.dart';
+import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/pages/settings.dart';
 import 'package:pooker_score/pages/setup.dart';
 import 'package:pooker_score/theme.dart';
@@ -38,7 +39,7 @@ class StartPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Spacer(),
+                Spacer(flex: 4),
                 const Text(
                   "Welcome to",
                   style: TextStyle(
@@ -82,11 +83,21 @@ class StartPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   ),
                 ),
-                Spacer(),
+                Spacer(flex: 3,),
+                TextButton.icon(
+                    icon: Icon(Icons.help_outline, color: Colors.white),
+                    label: Text("How to Play", style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const RulesPage()),
+                      );
+                    }),
+
+                SizedBox(height: 25),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -112,7 +123,7 @@ class StartPage extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const PlayerScreen()),
                           );
-                        }),
+                        })
                   ],
                 ),
                 SizedBox(height: 30),
