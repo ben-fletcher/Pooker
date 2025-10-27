@@ -6,6 +6,6 @@ Pooker is a way to play a snooker style game on a pool table. You can also play 
 
 Pooker is played by assuming all balls except the black ball (8 ball) are "red balls" in snooker. And the black ball is the only "colour ball" in snooker. A red ball get's you 1 point and a black ball gets you 3 points.
 
----
-![App Screenshot](assets/screenshots/Screenshot_1761303660.png)
-![Podium Screenshot](assets/screenshots/Screenshot_1761303697.png)
+|||
+|-|-|
+|![App Screenshot](assets/screenshots/Screenshot_1761303660.png)|![Podium Screenshot](assets/screenshots/Screenshot_1761303697.png)|
