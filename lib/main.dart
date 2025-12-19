@@ -27,13 +27,16 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => GameModel()),
           Provider(create: (_) => theme)
         ],
-        child: MaterialApp(
-          title: 'Pooker',
-          theme: theme.light(),
-          darkTheme: theme.dark(),
-          themeMode: ThemeMode.system,
-          home: StartPage(),
-          debugShowCheckedModeBanner: false,
+        child: SafeArea(
+          top: false,
+          child: MaterialApp(
+            title: 'Pooker',
+            theme: theme.light(),
+            darkTheme: theme.dark(),
+            themeMode: ThemeMode.system,
+            home: StartPage(),
+            debugShowCheckedModeBanner: false,
+          ),
         ));
   }
 
