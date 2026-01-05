@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/services/database_service.dart';
@@ -27,16 +28,17 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => GameModel()),
           Provider(create: (_) => theme)
         ],
-        child: SafeArea(
-          top: false,
-          child: MaterialApp(
-            title: 'Pooker',
-            theme: theme.light(),
-            darkTheme: theme.dark(),
-            themeMode: ThemeMode.system,
-            home: StartPage(),
-            debugShowCheckedModeBanner: false,
+        child: MaterialApp(
+          title: 'Pooker',
+          theme: theme.light(),
+          darkTheme: theme.dark(),
+          themeMode: ThemeMode.dark,
+          home: StartPage(),
+          builder: (context, child) => SafeArea(
+            top: false,
+            child: child!,
           ),
+          debugShowCheckedModeBanner: false,
         ));
   }
 
