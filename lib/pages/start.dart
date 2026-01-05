@@ -65,7 +65,7 @@ class StartPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 50),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 0),
@@ -93,7 +93,7 @@ class StartPage extends StatelessWidget {
               Spacer(flex: 3,),
               TextButton.icon(
                   icon: Icon(Icons.help_outline, color: Colors.white),
-                  label: Text("How to Play", style: TextStyle(color: Colors.white)),
+                  label: Text("How to Play", style: TextStyle(color: Colors.white, fontSize: 18)),
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -107,7 +107,7 @@ class StartPage extends StatelessWidget {
                 children: [
                   FilledButton.tonalIcon(
                       icon: Icon(Icons.history),
-                      label: Text("History"),
+                      label: Text("History", style: TextStyle(fontSize: 18)),
                       onPressed: () {
                         Provider.of<GameModel>(context, listen: false)
                             .reset();
@@ -119,7 +119,7 @@ class StartPage extends StatelessWidget {
                   SizedBox(width: 30),
                   FilledButton.tonalIcon(
                       icon: Icon(Icons.people),
-                      label: Text("Players"),
+                      label: Text("Players", style: TextStyle(fontSize: 18)),
                       onPressed: () {
                         Provider.of<GameModel>(context, listen: false)
                             .reset();

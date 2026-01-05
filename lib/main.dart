@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme =
-        createTextTheme(context, "AR One Sans", "AR One Sans");
+        createTextTheme(context);
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
@@ -43,13 +43,11 @@ class MyApp extends StatelessWidget {
   }
 
   TextTheme createTextTheme(
-      BuildContext context, String bodyFontString, String displayFontString) {
+      BuildContext context) {
     TextTheme baseTextTheme = Theme.of(context).textTheme;
-    TextTheme bodyTextTheme =
-        GoogleFonts.getTextTheme(bodyFontString, baseTextTheme);
-    TextTheme displayTextTheme =
-        GoogleFonts.getTextTheme(displayFontString, baseTextTheme);
-    TextTheme textTheme = displayTextTheme.copyWith(
+    TextTheme bodyTextTheme = GoogleFonts.preahvihearTextTheme(baseTextTheme);
+
+    TextTheme textTheme = bodyTextTheme.copyWith(
       bodyLarge: bodyTextTheme.bodyLarge,
       bodyMedium: bodyTextTheme.bodyMedium,
       bodySmall: bodyTextTheme.bodySmall,

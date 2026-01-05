@@ -119,7 +119,6 @@ class _SetupPageState extends State<SetupPage> {
                   icon: const Icon(Icons.skip_next_sharp, size: 32),
                   label: const Text('Next',
                       style: TextStyle(
-                        fontFamily: 'Comic Sans MS',
                         fontWeight: FontWeight.bold,
                       )),
                 ),
@@ -198,14 +197,16 @@ class _SetupPageState extends State<SetupPage> {
                 final player = playersToAdd.elementAt(index);
 
                 return Card(
-                  child: ListTile(
-                    title: Text(player, style: TextStyle(fontSize: 18)),
-                    trailing: IconButton(
-                      onPressed: () {
-                        _addPlayer(player, gameModel);
-                      },
-                      icon: Icon(Icons.add),
-                      iconSize: 30,
+                  child: Center(
+                    child: ListTile(
+                      title: Text(player, style: TextStyle(fontSize: 18)),
+                      trailing: IconButton(
+                        onPressed: () {
+                          _addPlayer(player, gameModel);
+                        },
+                        icon: Icon(Icons.add),
+                        iconSize: 30,
+                      ),
                     ),
                   ),
                 );
