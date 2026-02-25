@@ -69,14 +69,14 @@ class Scoreboard extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          _Chip(text: 'Reds: ${gameModel.remainingBalls}',
+                          _Chip(
+                              text: 'Reds: ${gameModel.remainingBalls}',
                               color: cs.primary),
                           const SizedBox(width: 8),
                           _Chip(
                               text:
                                   'Next: ${gameModel.nextTargetBall == BallColour.red ? 'Red' : 'Black'}',
-                              color: gameModel.nextTargetBall ==
-                                      BallColour.red
+                              color: gameModel.nextTargetBall == BallColour.red
                                   ? Colors.red
                                   : Colors.black),
                         ],
@@ -98,13 +98,22 @@ class Scoreboard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isActive
-                                  ? cs.primary.withOpacity(0.08)
-                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: cs.outline.withOpacity(0.2),
+                                color: isActive
+                                    ? cs.primary.withValues(alpha: 0.7)
+                                    : cs.outline.withValues(alpha: 0.2),
+                                width: isActive ? 2 : 1,
                               ),
+                              boxShadow: isActive
+                                  ? [
+                                      BoxShadow(
+                                          color:
+                                              cs.primary.withValues(alpha: 0.2),
+                                          blurRadius: 5,
+                                          spreadRadius: 2),
+                                    ]
+                                  : [],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,9 +140,13 @@ class Scoreboard extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    _MiniPill(icon: Icons.sports_score, text: '$currentBreak'),
+                                    _MiniPill(
+                                        icon: Icons.sports_score,
+                                        text: '$currentBreak'),
                                     const SizedBox(width: 8),
-                                    _MiniPill(icon: Icons.report_problem, text: '$foulCount'),
+                                    _MiniPill(
+                                        icon: Icons.report_problem,
+                                        text: '$foulCount'),
                                     const SizedBox(width: 20),
                                     GestureDetector(
                                       onTap: isEditMode && onScoreTap != null
@@ -146,10 +159,13 @@ class Scoreboard extends StatelessWidget {
                                             : null,
                                         decoration: isEditMode
                                             ? BoxDecoration(
-                                                color: cs.primaryContainer.withOpacity(0.3),
-                                                borderRadius: BorderRadius.circular(8),
+                                                color: cs.primaryContainer
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                                 border: Border.all(
-                                                  color: cs.primary.withOpacity(0.5),
+                                                  color: cs.primary
+                                                      .withOpacity(0.5),
                                                   width: 2,
                                                 ),
                                               )
@@ -162,7 +178,9 @@ class Scoreboard extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleLarge
-                                                  ?.copyWith(fontWeight: FontWeight.w700),
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700),
                                             ),
                                             if (isEditMode) ...[
                                               const SizedBox(width: 4),
@@ -183,7 +201,8 @@ class Scoreboard extends StatelessWidget {
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                    children: _buildTurnIcons(context, player, 16),
+                                    children:
+                                        _buildTurnIcons(context, player, 16),
                                   ),
                                 )
                               ],
@@ -221,17 +240,19 @@ int _computeFouls(player) {
 
 // Removed unused _buildTurnChips in favor of compact _buildTurnIcons
 
-List<Widget> _buildTurnIcons(BuildContext context, Player player, int maxItems) {
+List<Widget> _buildTurnIcons(
+    BuildContext context, Player player, int maxItems) {
   final cs = Theme.of(context).colorScheme;
   final turns = player.turns.reversed.take(maxItems).toList().reversed;
   return turns.map<Widget>((t) {
     final bool isFoul = t.event.foul == true;
     final bool isPotted = t.event.potted;
-    final bool isSkillShot = !isPotted && !isFoul && t.event.colour == BallColour.na && t.score > 0;
+    final bool isSkillShot =
+        !isPotted && !isFoul && t.event.colour == BallColour.na && t.score > 0;
     Color color;
     IconData icon;
     Widget iconWidget;
-    
+
     if (isSkillShot) {
       // Skill shot bonus
       color = Colors.amber;
@@ -281,7 +302,7 @@ List<Widget> _buildTurnIcons(BuildContext context, Player player, int maxItems) 
       icon = Icons.chevron_right_rounded;
       iconWidget = Icon(icon, size: 14, color: color);
     }
-    
+
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: iconWidget,
@@ -300,7 +321,7 @@ class _MiniPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: cs.surfaceVariant.withOpacity(0.6),
+        color: cs.surfaceContainerHighest.withOpacity(0.6),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
@@ -345,5 +366,3 @@ class _Chip extends StatelessWidget {
     );
   }
 }
-
-// Removed unused _InfoPill; condensed break/foul line instead

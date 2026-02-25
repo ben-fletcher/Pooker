@@ -148,7 +148,7 @@ class GameDatabaseService {
     }
 
     final average = (totalScore / gamesPlayed).toStringAsFixed(4);
-    final winRate = ((gamesWon / gamesPlayed) * 100).toStringAsFixed(2) + '%';
+    final winRate = '${((gamesWon / gamesPlayed) * 100).toStringAsFixed(2)}%';
 
     return {
       'gamesPlayed': gamesPlayed,

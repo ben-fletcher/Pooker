@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pooker_score/helpers/player_helpers.dart';
@@ -6,7 +5,6 @@ import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/pages/game_settings.dart';
 import 'package:pooker_score/services/database_service.dart';
-import 'package:pooker_score/theme.dart';
 import 'package:provider/provider.dart';
 
 class SetupPage extends StatefulWidget {

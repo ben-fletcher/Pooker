@@ -457,7 +457,7 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
