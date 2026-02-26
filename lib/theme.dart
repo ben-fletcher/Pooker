@@ -4,7 +4,7 @@ import "package:flutter/services.dart";
 class MaterialTheme {
   final TextTheme textTheme;
 
-  static const Color greenCardSurface = Color.fromARGB(255, 28, 58, 38);
+  static const Color greenCardSurface = Color.fromARGB(255, 24, 50, 33);
 
   const MaterialTheme(this.textTheme);
 
@@ -183,7 +183,7 @@ class MaterialTheme {
       onPrimaryContainer: Color(0xffcdeda4),
       secondary: Color(0xffbfcbad),
       onSecondary: Color(0xff2a331e),
-      secondaryContainer: Color(0xff404a33),
+      secondaryContainer: Color(0xff363e2b),
       onSecondaryContainer: Color(0xffdbe7c8),
       tertiary: Color(0xffa0d0cb),
       onTertiary: Color(0xff003735),

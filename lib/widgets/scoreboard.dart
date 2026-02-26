@@ -43,14 +43,8 @@ class Scoreboard extends StatelessWidget {
         final cs = Theme.of(context).colorScheme;
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Card(
+          child: Card.outlined(
             elevation: 5,
-            color: cs.surface,
-            shadowColor: cs.secondary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: cs.secondary, width: 3),
-            ),
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14.0),
@@ -321,7 +315,7 @@ class _MiniPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withOpacity(0.6),
+        color: cs.secondaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(

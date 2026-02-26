@@ -48,6 +48,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
             appBar: AppBar(
               title: Text(APP_TITLE),
               elevation: 0,
+              bottom: PreferredSize(
+                  preferredSize: Size(double.infinity, 3),
+                  child: LinearProgressIndicator(
+                    value: (gameModel.totalBalls - gameModel.remainingBalls) /
+                        gameModel.totalBalls,
+                  )),
               scrolledUnderElevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.undo),
@@ -122,7 +128,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   if (_isEditMode)
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       color: Colors.orange.shade800,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -139,18 +146,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         ],
                       ),
                     ),
-                  Expanded(
-                    child: Scoreboard(
-                      isEditMode: _isEditMode,
-                      onScoreTap: _isEditMode
-                          ? (player) => _showEditScoreDialog(gameModel, player)
-                          : null,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25.0),
-                    child: ActionButtons(),
-                  ),
+                  if (MediaQuery.of(context).size.aspectRatio > 1)
+                    GridView(
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                        children: _buildMainControls(gameModel))
+                  else
+                    ..._buildMainControls(gameModel)
                 ],
               ),
             ),
@@ -158,6 +161,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
         }),
       );
     });
+  }
+
+  List<Widget> _buildMainControls(GameModel gameModel) {
+    return [
+      Expanded(
+        child: Scoreboard(
+          isEditMode: _isEditMode,
+          onScoreTap: _isEditMode
+              ? (player) => _showEditScoreDialog(gameModel, player)
+              : null,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 25.0),
+        child: ActionButtons(),
+      )
+    ];
   }
 
   void _showEditScoreDialog(GameModel gameModel, Player player) {
@@ -201,7 +221,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${player.name}\'s score adjusted to $newScore'),
+                    content:
+                        Text('${player.name}\'s score adjusted to $newScore'),
                     duration: Duration(seconds: 2),
                   ),
                 );
@@ -216,7 +237,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   Future showAddMidGamePlayerDialog(GameModel gameModel) async {
     List<String> players = await GameDatabaseService.loadPlayers();
-    players = players.where((player) => !gameModel.players.any((p) => p.name == player)).toList();
+    players = players
+        .where((player) => !gameModel.players.any((p) => p.name == player))
+        .toList();
     final playerController = TextEditingController();
     String? selectedPlayer;
 
@@ -231,8 +254,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           enableSearch: false,
           label: const Text('Player'),
           dropdownMenuEntries: players
-              .map((player) =>
-                  DropdownMenuEntry(value: player, label: player))
+              .map((player) => DropdownMenuEntry(value: player, label: player))
               .toList(),
           onSelected: (String? player) {
             selectedPlayer = player;
@@ -249,7 +271,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 if (selectedPlayer == null) {
                   return;
                 }
-                gameModel.addPlayer(Player(id: gameModel.players.length + 1, name: selectedPlayer!, turns: []));
+                gameModel.addPlayer(Player(
+                    id: gameModel.players.length + 1,
+                    name: selectedPlayer!,
+                    turns: []));
                 Navigator.of(context).pop();
               },
               child: Text('Add')),
