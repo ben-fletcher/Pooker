@@ -201,7 +201,7 @@ class GameModel extends ChangeNotifier {
         playerIndex: players.indexOf(player),
         score: adjustment,
         event: GameEvent(
-          colour: BallColour.red,
+          colour: BallColour.na,
           potted: false,
           foul: false,
         ),

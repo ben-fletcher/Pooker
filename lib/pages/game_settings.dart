@@ -99,7 +99,8 @@ class GameSettingsPage extends StatelessWidget {
                 child: Column(
                   children: [
                     const Expanded(child: SizedBox()),
-                    Center(
+                    SizedBox(
+                      width: double.infinity,
                       child: FilledButton.icon(
                         onPressed: gameModel.players.isNotEmpty
                             ? () {
@@ -121,11 +122,11 @@ class GameSettingsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        icon: const Icon(Icons.play_arrow, size: 32),
-                        label: const Text('Start',
+                        icon: const Icon(Icons.play_circle_fill, size: 32),
+                        label: const Text('Start Game',
                             style: TextStyle(
-                              fontFamily: 'Comic Sans MS',
                               fontWeight: FontWeight.bold,
+                              fontSize: 22,
                             )),
                       ),
                     ),

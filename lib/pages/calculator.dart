@@ -45,10 +45,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
         data: theme.dark(),
         child: Consumer<GameModel>(builder: (context, gameModel, child) {
           return Scaffold(
-            backgroundColor: Colors.green.shade900,
             appBar: AppBar(
               title: Text(APP_TITLE),
-              backgroundColor: Colors.transparent,
               elevation: 0,
               scrolledUnderElevation: 0,
               leading: IconButton(

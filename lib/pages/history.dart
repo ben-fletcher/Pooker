@@ -126,7 +126,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   textColor = Colors.brown;
                   break;
                 default:
-                  textColor = Colors.black;
+                  textColor = Theme.of(context).colorScheme.onSurface;
               }
               return Text(
                 '$position. ${player.name}: ${player.score}',

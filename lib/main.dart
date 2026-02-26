@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme =
-        createTextTheme(context, "AR One Sans", "AR One Sans");
+        createTextTheme(context);
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
@@ -27,27 +27,26 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => GameModel()),
           Provider(create: (_) => theme)
         ],
-        child: SafeArea(
-          top: false,
-          child: MaterialApp(
-            title: 'Pooker',
-            theme: theme.light(),
-            darkTheme: theme.dark(),
-            themeMode: ThemeMode.system,
-            home: StartPage(),
-            debugShowCheckedModeBanner: false,
+        child: MaterialApp(
+          title: 'Pooker',
+          theme: theme.light(),
+          darkTheme: theme.dark(),
+          themeMode: ThemeMode.dark,
+          home: StartPage(),
+          builder: (context, child) => SafeArea(
+            top: false,
+            child: child!,
           ),
+          debugShowCheckedModeBanner: false,
         ));
   }
 
   TextTheme createTextTheme(
-      BuildContext context, String bodyFontString, String displayFontString) {
+      BuildContext context) {
     TextTheme baseTextTheme = Theme.of(context).textTheme;
-    TextTheme bodyTextTheme =
-        GoogleFonts.getTextTheme(bodyFontString, baseTextTheme);
-    TextTheme displayTextTheme =
-        GoogleFonts.getTextTheme(displayFontString, baseTextTheme);
-    TextTheme textTheme = displayTextTheme.copyWith(
+    TextTheme bodyTextTheme = GoogleFonts.preahvihearTextTheme(baseTextTheme);
+
+    TextTheme textTheme = bodyTextTheme.copyWith(
       bodyLarge: bodyTextTheme.bodyLarge,
       bodyMedium: bodyTextTheme.bodyMedium,
       bodySmall: bodyTextTheme.bodySmall,

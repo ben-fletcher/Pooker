@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The INTERNET permission is required to load the font from Google Fonts -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Pooker"
         android:name="${applicationName}"

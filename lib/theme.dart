@@ -1,16 +1,19 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 class MaterialTheme {
   final TextTheme textTheme;
+
+  static const Color greenCardSurface = Color.fromARGB(255, 28, 58, 38);
 
   const MaterialTheme(this.textTheme);
 
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xff4c662b),
-      surfaceTint: Color(0xff4c662b),
-      onPrimary: Color(0xffffffff),
+      primary: Color(0xff11d452),
+      surfaceTint: Color.fromARGB(255, 4, 51, 20),
+      onPrimary: Color.fromARGB(255, 0, 0, 0),
       primaryContainer: Color(0xffcdeda4),
       onPrimaryContainer: Color(0xff354e16),
       secondary: Color(0xff586249),
@@ -173,10 +176,10 @@ class MaterialTheme {
   static ColorScheme darkScheme() {
     return const ColorScheme(
       brightness: Brightness.dark,
-      primary: Color(0xffb1d18a),
+      primary: Color(0xff11d452),
       surfaceTint: Color(0xffb1d18a),
-      onPrimary: Color(0xff1f3701),
-      primaryContainer: Color(0xff354e16),
+      onPrimary: Color.fromARGB(255, 0, 0, 0),
+      primaryContainer: Color.fromARGB(255, 46, 95, 62),
       onPrimaryContainer: Color(0xffcdeda4),
       secondary: Color(0xffbfcbad),
       onSecondary: Color(0xff2a331e),
@@ -190,34 +193,22 @@ class MaterialTheme {
       onError: Color(0xff690005),
       errorContainer: Color(0xff93000a),
       onErrorContainer: Color(0xffffdad6),
-      surface: Color(0xff12140e),
+      surface: Color(0xff102216),
       onSurface: Color(0xffe2e3d8),
       onSurfaceVariant: Color(0xffc5c8ba),
       outline: Color(0xff8f9285),
-      outlineVariant: Color(0xff44483d),
+      outlineVariant: Color.fromARGB(188, 104, 110, 94),
       shadow: Color(0xff000000),
       scrim: Color(0xff000000),
       inverseSurface: Color(0xffe2e3d8),
       inversePrimary: Color(0xff4c662b),
-      primaryFixed: Color(0xffcdeda4),
-      onPrimaryFixed: Color(0xff102000),
-      primaryFixedDim: Color(0xffb1d18a),
-      onPrimaryFixedVariant: Color(0xff354e16),
-      secondaryFixed: Color(0xffdbe7c8),
-      onSecondaryFixed: Color(0xff151e0b),
-      secondaryFixedDim: Color(0xffbfcbad),
-      onSecondaryFixedVariant: Color(0xff404a33),
-      tertiaryFixed: Color(0xffbcece7),
-      onTertiaryFixed: Color(0xff00201e),
-      tertiaryFixedDim: Color(0xffa0d0cb),
-      onTertiaryFixedVariant: Color(0xff1f4e4b),
       surfaceDim: Color(0xff12140e),
       surfaceBright: Color(0xff383a32),
       surfaceContainerLowest: Color(0xff0c0f09),
-      surfaceContainerLow: Color(0xff1a1c16),
-      surfaceContainer: Color(0xff1e201a),
-      surfaceContainerHigh: Color(0xff282b24),
-      surfaceContainerHighest: Color(0xff33362e),
+      surfaceContainerLow: MaterialTheme.greenCardSurface,
+      surfaceContainer: MaterialTheme.greenCardSurface,
+      surfaceContainerHigh: MaterialTheme.greenCardSurface,
+      surfaceContainerHighest: MaterialTheme.greenCardSurface
     );
   }
 
@@ -345,12 +336,52 @@ class MaterialTheme {
         ),
         scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
-        /* pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: PredictiveBackPageTransitionsBuilder( ),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder()
-          },
-        ), */
+        appBarTheme: AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: colorScheme.surface
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+        pageTransitionsTheme: PageTransitionsTheme(),
       );
 
   List<ExtendedColor> get extendedColors => [];
