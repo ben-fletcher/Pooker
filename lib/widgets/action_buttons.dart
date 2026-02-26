@@ -31,7 +31,7 @@ class ActionButtons extends StatelessWidget {
   void _showFoulDialog(BuildContext context, GameModel gameModel) {
     if (gameModel.nextTargetBall == BallColour.red) {
       Provider.of<GameModel>(context, listen: false).submitGameEvent(
-          GameEvent(foul: true, colour: BallColour.red, potted: true),
+          GameEvent(foul: true, colour: BallColour.na, potted: false),
           Navigator.of(context));
       return;
     }
