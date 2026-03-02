@@ -13,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _skillShotEnabled = false;
+  bool _hardModeEnabled = false;
 
   @override
   void initState() {
@@ -22,8 +23,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     final skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
+    final hardModeEnabled = await GameDatabaseService.getHardModeEnabled();
     setState(() {
       _skillShotEnabled = skillShotEnabled;
+      _hardModeEnabled = hardModeEnabled;
     });
   }
 
@@ -31,6 +34,13 @@ class _SettingsPageState extends State<SettingsPage> {
     await GameDatabaseService.setSkillShotEnabled(value);
     setState(() {
       _skillShotEnabled = value;
+    });
+  }
+
+  Future<void> _toggleHardMode(bool value) async {
+    await GameDatabaseService.setHardModeEnabled(value);
+    setState(() {
+      _hardModeEnabled = value;
     });
   }
 
@@ -119,49 +129,63 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 10,
-            children: [
-              ElevatedButton(
-                onPressed: _openAboutPage,
-                child: const Text('About'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Game Settings',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Card(
-                child: SwitchListTile(
-                  title: const Text('Bonus Point Button'),
-                  subtitle: const Text(
-                    'Award an extra point for skillful shots or funny fouls',
-                  ),
-                  value: _skillShotEnabled,
-                  onChanged: _toggleSkillShot,
-                  secondary: const Icon(Icons.star),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
+              children: [
+                ElevatedButton(
+                  onPressed: _openAboutPage,
+                  child: const Text('About'),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Database',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              ElevatedButton(
-                onPressed: _exportDatabase,
-                child: const Text('Export Database'),
-              ),
-              ElevatedButton(
-                onPressed: _importDatabase,
-                child: const Text('Import Database'),
-              ),
-              ElevatedButton(
-                onPressed: _resetData,
-                child:
-                    const Text('Reset Data', style: TextStyle(color: Colors.red)),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Text(
+                  'Game Settings',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Card(
+                  child: Column(children: [
+                    SwitchListTile(
+                      title: const Text('Bonus Point Button'),
+                      subtitle: const Text(
+                        'Award an extra point for skillful shots or funny fouls',
+                      ),
+                      value: _skillShotEnabled,
+                      onChanged: _toggleSkillShot,
+                      secondary: const Icon(Icons.star),
+                    ),
+                    const Divider(),
+                    SwitchListTile(
+                      title: const Text('Hard Mode'),
+                      subtitle: const Text(
+                        'Fouls on black are -3 points',
+                      ),
+                      value: _hardModeEnabled,
+                      onChanged: _toggleHardMode,
+                      secondary: const Icon(Icons.keyboard_double_arrow_up),
+                    ),
+                  ],)
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Database',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                ElevatedButton(
+                  onPressed: _exportDatabase,
+                  child: const Text('Export Database'),
+                ),
+                ElevatedButton(
+                  onPressed: _importDatabase,
+                  child: const Text('Import Database'),
+                ),
+                ElevatedButton(
+                  onPressed: _resetData,
+                  child:
+                      const Text('Reset Data', style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

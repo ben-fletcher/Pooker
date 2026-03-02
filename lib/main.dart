@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Pooker',
-          theme: theme.light(),
+          //theme: theme.light(),
           darkTheme: theme.dark(),
           themeMode: ThemeMode.dark,
           home: StartPage(),

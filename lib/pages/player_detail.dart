@@ -137,12 +137,19 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
     }
 
     // Calculate consistency (standard deviation)
-    double consistency = 0.0;
+    double consistency = 100.0;
     if (allScores.length > 1) {
       final mean = allScores.reduce((a, b) => a + b) / allScores.length;
-      final variance = allScores.map((score) => 
-          (score - mean) * (score - mean)).reduce((a, b) => a + b) / allScores.length;
-      consistency = variance > 0 ? (100 / (1 + variance / 100)) : 100;
+      // final variance = allScores.map((score) =>
+      //     (score - mean) * (score - mean)).reduce((a, b) => a + b) / allScores.length;
+
+      final std = allScores.map((score) =>
+        (score - mean).abs()).reduce((a, b) => a + b) / allScores.length;
+
+      consistency = (1 - std / mean) * 100;
+      if (consistency < 0) {
+        consistency = 0;
+      }
     }
 
     return {
@@ -330,7 +337,7 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: recentScores.asMap().entries.map((entry) {
                   final maxScore = recentScores.reduce((a, b) => a > b ? a : b);
-                  final height = maxScore > 0 ? (entry.value / maxScore) * 80.0 : 0.0;
+                  final height = maxScore > 0 && entry.value > 0 ? (entry.value / maxScore) * 80.0 : 0.0;
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),

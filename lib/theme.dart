@@ -4,14 +4,16 @@ import "package:flutter/services.dart";
 class MaterialTheme {
   final TextTheme textTheme;
 
-  static const Color greenCardSurface = Color.fromARGB(255, 24, 50, 33);
+  static const Color greenCardSurface = Color.fromARGB(255, 42, 66, 50);
+
+  static const Color primaryColor = Color(0xff11d452);
 
   const MaterialTheme(this.textTheme);
 
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xff11d452),
+      primary: primaryColor,
       surfaceTint: Color.fromARGB(255, 4, 51, 20),
       onPrimary: Color.fromARGB(255, 0, 0, 0),
       primaryContainer: Color(0xffcdeda4),
@@ -213,7 +215,7 @@ class MaterialTheme {
   }
 
   ThemeData dark() {
-    return theme(darkScheme());
+    return theme(ColorScheme.fromSeed(seedColor: primaryColor, primary: primaryColor, brightness: Brightness.dark));
   }
 
   static ColorScheme darkMediumContrastScheme() {
@@ -334,7 +336,7 @@ class MaterialTheme {
           bodyColor: colorScheme.onSurface,
           displayColor: colorScheme.onSurface,
         ),
-        scaffoldBackgroundColor: colorScheme.surface,
+        //scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
         appBarTheme: AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(

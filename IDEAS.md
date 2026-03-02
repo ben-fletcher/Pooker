@@ -1,0 +1,2 @@
+- Game timer
+- Hard Mode

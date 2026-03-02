@@ -368,7 +368,7 @@ class ActionButtons extends StatelessWidget {
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor:
-                          Theme.of(context).colorScheme.primaryContainer,
+                          Theme.of(context).colorScheme.tertiaryContainer,
                       foregroundColor: Colors.white,
                     ),
                     child: Column(
