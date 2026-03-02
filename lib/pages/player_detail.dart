@@ -34,21 +34,23 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           ),
         ),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _loadPlayerData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: _loadPlayerData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            debugPrint(snapshot.error.toString());
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+            if (snapshot.hasError) {
+              debugPrint(snapshot.error.toString());
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
 
-          final data = snapshot.data!;
-          return _buildContent(data);
-        },
+            final data = snapshot.data!;
+            return _buildContent(data);
+          },
+        ),
       ),
     );
   }

@@ -52,77 +52,79 @@ class _SetupPageState extends State<SetupPage> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
-                child: Text('Current Players (${gameModel.players.length})',
-                    style: TextStyle(fontSize: 20)),
-              ),
-              Expanded(
-                child: Builder(builder: (context) {
-                  if (gameModel.players.isEmpty) {
-                    return const Center(
-                      child: Text('No players added yet'),
-                    );
-                  }
-
-                  return ReorderableListView.builder(
-                    itemCount: gameModel.players.length,
-                    onReorder: (oldIndex, newIndex) {
-                      if (newIndex > oldIndex) newIndex -= 1;
-                      final player = gameModel.players.removeAt(oldIndex);
-                      gameModel.players.insert(newIndex, player);
-                      // Re-index the players
-                      for (var i = 0; i < gameModel.players.length; i++) {
-                        gameModel.players[i].id = i + 1;
-                      }
-                      setState(() {});
-                    },
-                    itemBuilder: (context, index) {
-                      return _buildPlayerCard(gameModel, index);
-                    },
-                  );
-                }),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
-                child: Text('Add Players', style: TextStyle(fontSize: 20)),
-              ),
-              _buildPlayerSelector(gameModel),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: gameModel.players.isNotEmpty
-                      ? () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => GameSettingsPage()));
-                        }
-                      : null,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 16),
-                    backgroundColor:
-                        gameModel.players.isNotEmpty ? null : Colors.grey,
-                    textStyle:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  icon: const Icon(Icons.skip_next_sharp, size: 32),
-                  label: const Text('Next',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
+                  child: Text('Current Players (${gameModel.players.length})',
+                      style: TextStyle(fontSize: 20)),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                Expanded(
+                  child: Builder(builder: (context) {
+                    if (gameModel.players.isEmpty) {
+                      return const Center(
+                        child: Text('No players added yet'),
+                      );
+                    }
+            
+                    return ReorderableListView.builder(
+                      itemCount: gameModel.players.length,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) newIndex -= 1;
+                        final player = gameModel.players.removeAt(oldIndex);
+                        gameModel.players.insert(newIndex, player);
+                        // Re-index the players
+                        for (var i = 0; i < gameModel.players.length; i++) {
+                          gameModel.players[i].id = i + 1;
+                        }
+                        setState(() {});
+                      },
+                      itemBuilder: (context, index) {
+                        return _buildPlayerCard(gameModel, index);
+                      },
+                    );
+                  }),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
+                  child: Text('Add Players', style: TextStyle(fontSize: 20)),
+                ),
+                _buildPlayerSelector(gameModel),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: gameModel.players.isNotEmpty
+                        ? () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => GameSettingsPage()));
+                          }
+                        : null,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
+                      backgroundColor:
+                          gameModel.players.isNotEmpty ? null : Colors.grey,
+                      textStyle:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    icon: const Icon(Icons.skip_next_sharp, size: 32),
+                    label: const Text('Next',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       );

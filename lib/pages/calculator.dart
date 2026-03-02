@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
@@ -122,39 +124,37 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 )
               ],
             ),
-            body: Center(
-              child: Column(
-                children: [
-                  if (_isEditMode)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      color: Colors.orange.shade800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.edit, size: 16, color: Colors.white),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Edit Mode - Tap scores to adjust',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  children: [
+                    if (_isEditMode)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        color: Colors.orange.shade800,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit, size: 16, color: Colors.white),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Edit Mode - Tap scores to adjust',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  if (MediaQuery.of(context).size.aspectRatio > 1)
-                    GridView(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                        children: _buildMainControls(gameModel))
-                  else
-                    ..._buildMainControls(gameModel)
-                ],
+                    if (MediaQuery.of(context).size.aspectRatio > 1)
+                      _buildTabletMainControls(gameModel)
+                    else
+                      ..._buildMainControls(gameModel)
+                  ],
+                ),
               ),
             ),
           );
@@ -174,10 +174,32 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(bottom: 25.0),
+        padding: const EdgeInsets.only(bottom: 8.0),
         child: ActionButtons(),
       )
     ];
+  }
+
+  Widget _buildTabletMainControls(GameModel gameModel) {
+    return Expanded(
+      child: Row(children: [
+        Expanded(
+          child: Scoreboard(
+            isEditMode: _isEditMode,
+            onScoreTap: _isEditMode
+                ? (player) => _showEditScoreDialog(gameModel, player)
+                : null,
+          ),
+        ),
+        SizedBox(
+          width: min(500, MediaQuery.of(context).size.width / 2),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ActionButtons(),
+          ),
+        )
+      ]),
+    );
   }
 
   void _showEditScoreDialog(GameModel gameModel, Player player) {

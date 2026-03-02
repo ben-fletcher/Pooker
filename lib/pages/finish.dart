@@ -61,42 +61,44 @@ class _FinishPageState extends State<FinishPage> {
               final secondPlace = players.length > 1 ? players[1] : null;
               final thirdPlace = players.length > 2 ? players[2] : null;
 
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    if (winner != null ||
-                        secondPlace != null ||
-                        thirdPlace != null)
-                      Podium(
-                        winner: winner,
-                        secondPlace: secondPlace,
-                        thirdPlace: thirdPlace,
-                      ),
-                    const SizedBox(height: 50),
-                    Divider(),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          _confettiController.play();
-                        },
-                        child: ListView.builder(
-                          itemCount: players.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              leading: CircleAvatar(
-                                child: Text((index + 1).toString()),
-                              ),
-                              title: Text(players[index].name),
-                              trailing: Text(players[index].score.toString()),
-                            );
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      if (winner != null ||
+                          secondPlace != null ||
+                          thirdPlace != null)
+                        Podium(
+                          winner: winner,
+                          secondPlace: secondPlace,
+                          thirdPlace: thirdPlace,
+                        ),
+                      const SizedBox(height: 50),
+                      Divider(),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            _confettiController.play();
                           },
+                          child: ListView.builder(
+                            itemCount: players.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  child: Text((index + 1).toString()),
+                                ),
+                                title: Text(players[index].name),
+                                trailing: Text(players[index].score.toString()),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

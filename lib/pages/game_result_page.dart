@@ -34,48 +34,50 @@ class GameResultPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Podium(
-                winner: winner,
-                secondPlace: secondPlace,
-                thirdPlace: thirdPlace),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: sortedPlayers.length,
-                itemBuilder: (context, index) {
-                  var playerColor = getPlayerColor(index);
-                  var foregroundColor = playerColor != null
-                      ? playerColor.computeLuminance() > 0.5
-                          ? Colors.black
-                          : Colors.white
-                      : null;
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: playerColor,
-                      foregroundColor: foregroundColor,
-                      child: Text((index + 1).toString()),
-                    ),
-                    title: Text(sortedPlayers[index].name),
-                    trailing: Text(sortedPlayers[index].score.toString()),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => PlayerDetailScreen(
-                            playerName: sortedPlayers[index].name,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Podium(
+                  winner: winner,
+                  secondPlace: secondPlace,
+                  thirdPlace: thirdPlace),
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: sortedPlayers.length,
+                  itemBuilder: (context, index) {
+                    var playerColor = getPlayerColor(index);
+                    var foregroundColor = playerColor != null
+                        ? playerColor.computeLuminance() > 0.5
+                            ? Colors.black
+                            : Colors.white
+                        : null;
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: playerColor,
+                        foregroundColor: foregroundColor,
+                        child: Text((index + 1).toString()),
+                      ),
+                      title: Text(sortedPlayers[index].name),
+                      trailing: Text(sortedPlayers[index].score.toString()),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PlayerDetailScreen(
+                              playerName: sortedPlayers[index].name,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

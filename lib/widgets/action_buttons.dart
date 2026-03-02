@@ -39,70 +39,72 @@ class ActionButtons extends StatelessWidget {
     showModalBottomSheet(
         context: context,
         showDragHandle: true,
-        builder: (context) => SizedBox(
-              height: 210,
-              width: double.infinity,
-              child: Column(
-                spacing: 20,
-                children: [
-                  Text("Foul Type?",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: 'Roboto')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: 10,
-                      children: [
-                        ElevatedButton.icon(
-                            onPressed: () {
-                              Provider.of<GameModel>(context, listen: false)
-                                  .submitGameEvent(
-                                      GameEvent(
-                                          foul: true,
-                                          colour: BallColour.na,
-                                          potted: false),
-                                      Navigator.of(context));
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(60, 60),
-                              backgroundColor: Colors.orange.shade800,
-                            ),
-                            icon: Icon(Icons.gps_off_outlined,
-                                color: Colors.white),
-                            label: const Text(
-                              "Miss",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                            )),
-                        FilledButton.icon(
-                            onPressed: () {
-                              Provider.of<GameModel>(context, listen: false)
-                                  .submitGameEvent(
-                                      GameEvent(
-                                          foul: true,
-                                          colour: BallColour.red,
-                                          potted: true),
-                                      Navigator.of(context));
-                              Navigator.of(context).pop();
-                            },
-                            style: FilledButton.styleFrom(
-                              minimumSize: Size(60, 60),
-                              backgroundColor: Colors.red.shade800,
-                            ),
-                            icon:
-                                Icon(Icons.not_interested, color: Colors.white),
-                            label: const Text(
-                              "Potted Red",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                            )),
-                      ],
-                    ),
-                  )
-                ],
+        builder: (context) => SafeArea(
+          child: SizedBox(
+                height: 210,
+                width: double.infinity,
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    Text("Foul Type?",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: 'Roboto')),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 10,
+                        children: [
+                          ElevatedButton.icon(
+                              onPressed: () {
+                                Provider.of<GameModel>(context, listen: false)
+                                    .submitGameEvent(
+                                        GameEvent(
+                                            foul: true,
+                                            colour: BallColour.na,
+                                            potted: false),
+                                        Navigator.of(context));
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(60, 60),
+                                backgroundColor: Colors.orange.shade800,
+                              ),
+                              icon: Icon(Icons.gps_off_outlined,
+                                  color: Colors.white),
+                              label: const Text(
+                                "Miss",
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.white),
+                              )),
+                          FilledButton.icon(
+                              onPressed: () {
+                                Provider.of<GameModel>(context, listen: false)
+                                    .submitGameEvent(
+                                        GameEvent(
+                                            foul: true,
+                                            colour: BallColour.red,
+                                            potted: true),
+                                        Navigator.of(context));
+                                Navigator.of(context).pop();
+                              },
+                              style: FilledButton.styleFrom(
+                                minimumSize: Size(60, 60),
+                                backgroundColor: Colors.red.shade800,
+                              ),
+                              icon:
+                                  Icon(Icons.not_interested, color: Colors.white),
+                              label: const Text(
+                                "Potted Red",
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.white),
+                              )),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ));
+        ));
   }
 
   void _showMultipleRedsDialog(BuildContext context, GameModel gameModel) {
@@ -278,7 +280,6 @@ class ActionButtons extends StatelessWidget {
             ),
           ),
           Container(
-            width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             height: 250,
             child: Row(
