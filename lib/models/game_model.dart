@@ -80,8 +80,13 @@ class GameModel extends ChangeNotifier {
       Player player = players[lastTurn.playerIndex];
       player.turns.removeLast();
 
-      if (lastTurn.event.potted && lastTurn.event.foul != true) {
-        _nextTargetBall = lastTurn.event.colour;
+      if (lastTurn.event.potted) {
+        if (lastTurn.event.foul != true) {
+          _nextTargetBall = lastTurn.event.colour;
+        }
+        else {
+          _nextTargetBall = _turnHistory.last.event.colour == BallColour.red ? BallColour.black : BallColour.red;
+        }
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
