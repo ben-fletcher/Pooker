@@ -22,8 +22,9 @@ class Scoreboard extends StatelessWidget {
     return Consumer<GameModel>(
       builder: (context, gameModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final activePlayerIndex =
-              gameModel.players.indexOf(gameModel.activePlayer);
+          final activePlayerIndex = gameModel.activePlayer != null
+              ? gameModel.players.indexOf(gameModel.activePlayer)
+              : -1;
           if (activePlayerIndex != -1) {
             final double targetOffset = activePlayerIndex * 92.0;
             if (scrollController.hasClients) {
@@ -307,6 +308,7 @@ List<Widget> _buildTurnIcons(
 class _MiniPill extends StatelessWidget {
   final IconData icon;
   final String text;
+
   const _MiniPill({required this.icon, required this.text});
 
   @override
@@ -339,6 +341,7 @@ class _MiniPill extends StatelessWidget {
 class _Chip extends StatelessWidget {
   final String text;
   final Color color;
+
   const _Chip({required this.text, required this.color});
 
   @override

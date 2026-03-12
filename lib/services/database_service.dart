@@ -49,9 +49,13 @@ class GameDatabaseService {
   static Future<void> insertGameResult(GameResult gameResult) async {
     if (_database == null) return;
 
+    final mapGameResult = gameResult.toMap();
+    // Delete existing record if the game had already been saved once.
+    await _database!.delete('game_history', where: 'date = ?', whereArgs: [mapGameResult['date']]);
+
     await _database!.insert(
       'game_history',
-      gameResult.toMap(),
+      mapGameResult,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }

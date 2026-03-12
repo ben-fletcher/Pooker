@@ -9,16 +9,17 @@ import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
   final List<Player> players = [];
+  final List<PlayerTurn> _turnHistory = [];
+
   int totalBalls = 15;
-  get activePlayer => players[_currentPlayerIndex];
   int _currentPlayerIndex = 0;
   BallColour _nextTargetBall = BallColour.red;
-  bool hasSaved = false;
-  final List<PlayerTurn> _turnHistory = [];
   bool _skillShotEnabled = false;
+  DateTime _startDate = DateTime.now();
 
   BallColour get nextTargetBall => _nextTargetBall;
   bool get skillShotEnabled => _skillShotEnabled;
+  get activePlayer => players.isNotEmpty ? players[_currentPlayerIndex] : null;
 
   Future<void> loadSettings() async {
     _skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
@@ -68,9 +69,9 @@ class GameModel extends ChangeNotifier {
       return PlayerResult(player.name, player.score);
     }).toList();
 
-    var gameResult = GameResult(date: DateTime.now(), players: playerResults);
+    var gameResult = GameResult(date: _startDate, players: playerResults);
     GameDatabaseService.insertGameResult(gameResult);
-    hasSaved = true;
+    debugPrint("Saved game");
   }
 
   void undoLastEvent(BuildContext context) {
@@ -79,7 +80,7 @@ class GameModel extends ChangeNotifier {
       Player player = players[lastTurn.playerIndex];
       player.turns.removeLast();
 
-      if (lastTurn.event.potted) {
+      if (lastTurn.event.potted && lastTurn.event.foul != true) {
         _nextTargetBall = lastTurn.event.colour;
       }
 
@@ -170,8 +171,8 @@ class GameModel extends ChangeNotifier {
     players.clear();
     _currentPlayerIndex = 0;
     _nextTargetBall = BallColour.red;
-    hasSaved = false;
     _turnHistory.clear();
+    _startDate = DateTime.now();
 
     notifyListeners();
   }
