@@ -45,7 +45,7 @@ class Scoreboard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card.outlined(
-            elevation: 5,
+            elevation: 10,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14.0),
