@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
+import 'package:pooker_score/widgets/reflective_border.dart';
 import 'package:provider/provider.dart';
 
 class Scoreboard extends StatelessWidget {
@@ -43,170 +44,207 @@ class Scoreboard extends StatelessWidget {
         final cs = Theme.of(context).colorScheme;
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Card.outlined(
-            elevation: 5,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(14.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Scoreboard',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                      Row(
-                        children: [
-                          _Chip(
-                              text: 'Reds: ${gameModel.remainingBalls}',
-                              color: cs.primary),
-                          const SizedBox(width: 8),
-                          _Chip(
-                              text:
-                                  'Next: ${gameModel.nextTargetBall == BallColour.red ? 'Red' : 'Black'}',
-                              color: gameModel.nextTargetBall == BallColour.red
-                                  ? Colors.red
-                                  : Colors.black),
-                        ],
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      child: Column(
-                        children: gameModel.players.map((player) {
-                          final bool isActive =
-                              gameModel.activePlayer == player;
-                          final int currentBreak = _computeCurrentBreak(player);
-                          final int foulCount = _computeFouls(player);
-                          return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
+          child: Container(
+            decoration: BoxDecoration(
+                // image: DecorationImage(
+                //   image: AssetImage("assets/felt.png"),
+                //   fit: BoxFit.cover,
+                //   opacity: 0.0
+                // ),
+              color: Colors.black.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [BoxShadow(offset: Offset(5, 5), blurRadius: 5, color: Colors.black.withValues(alpha: 0.4), spreadRadius: 2)]),
+            child: ReflectiveBorder(
+              borderWidth: 4,
+              glow: false,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Scoreboard',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        Row(
+                          children: [
+                            _Chip(
+                                text: 'Reds: ${gameModel.remainingBalls}',
+                                color: cs.primary),
+                            const SizedBox(width: 8),
+                            _Chip(
+                                text:
+                                    'Next: ${gameModel.nextTargetBall == BallColour.red ? 'Red' : 'Black'}',
+                                color:
+                                    gameModel.nextTargetBall == BallColour.red
+                                        ? Colors.red
+                                        : Colors.black),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: gameModel.players.map((player) {
+                            final bool isActive =
+                                gameModel.activePlayer == player;
+                            final int currentBreak =
+                                _computeCurrentBreak(player);
+                            final int foulCount = _computeFouls(player);
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              /*                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isActive
+                                      ? cs.primary.withValues(alpha: 0.7)
+                                      : cs.outline.withValues(alpha: 0.2),
+                                  width: isActive ? 2 : 1,
+                                ),
+                                boxShadow: isActive
+                                    ? [
+                                        BoxShadow(
+                                            color:
+                                                cs.primary.withValues(alpha: 0.2),
+                                            blurRadius: 5,
+                                            spreadRadius: 2),
+                                      ]
+                                    : [],
+                              ), */
+                              child: ReflectiveBorder(
                                 color: isActive
-                                    ? cs.primary.withValues(alpha: 0.7)
-                                    : cs.outline.withValues(alpha: 0.2),
-                                width: isActive ? 2 : 1,
-                              ),
-                              boxShadow: isActive
-                                  ? [
-                                      BoxShadow(
-                                          color:
-                                              cs.primary.withValues(alpha: 0.2),
-                                          blurRadius: 5,
-                                          spreadRadius: 2),
-                                    ]
-                                  : [],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 10,
-                                      height: 10,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color:
-                                            isActive ? cs.primary : cs.outline,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        player.name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    _MiniPill(
-                                        icon: Icons.sports_score,
-                                        text: '$currentBreak'),
-                                    const SizedBox(width: 8),
-                                    _MiniPill(
-                                        icon: Icons.report_problem,
-                                        text: '$foulCount'),
-                                    const SizedBox(width: 20),
-                                    GestureDetector(
-                                      onTap: isEditMode && onScoreTap != null
-                                          ? () => onScoreTap!(player)
-                                          : null,
-                                      child: Container(
-                                        padding: isEditMode
-                                            ? const EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 4)
-                                            : null,
-                                        decoration: isEditMode
-                                            ? BoxDecoration(
-                                                color: cs.primaryContainer
-                                                    .withOpacity(0.3),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                border: Border.all(
-                                                  color: cs.primary
-                                                      .withOpacity(0.5),
-                                                  width: 2,
-                                                ),
-                                              )
-                                            : null,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.outline,
+                                borderRadius: 12,
+                                glow: isActive,
+                                borderWidth: isActive ? 2.5 : 1,
+                                child: Card(
+                                  margin: EdgeInsets.all(0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              player.score.toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                            if (isEditMode) ...[
-                                              const SizedBox(width: 4),
-                                              Icon(
-                                                Icons.edit,
-                                                size: 16,
-                                                color: cs.primary,
+                                            Container(
+                                              width: 10,
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: isActive
+                                                    ? cs.primary
+                                                    : cs.outline,
                                               ),
-                                            ],
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                player.name,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            _MiniPill(
+                                                icon: Icons.sports_score,
+                                                text: '$currentBreak'),
+                                            const SizedBox(width: 8),
+                                            _MiniPill(
+                                                icon: Icons.report_problem,
+                                                text: '$foulCount'),
+                                            const SizedBox(width: 20),
+                                            GestureDetector(
+                                              onTap: isEditMode &&
+                                                      onScoreTap != null
+                                                  ? () => onScoreTap!(player)
+                                                  : null,
+                                              child: Container(
+                                                padding: isEditMode
+                                                    ? const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 4)
+                                                    : null,
+                                                decoration: isEditMode
+                                                    ? BoxDecoration(
+                                                        color: cs
+                                                            .primaryContainer
+                                                            .withOpacity(0.3),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                        border: Border.all(
+                                                          color: cs.primary
+                                                              .withOpacity(0.5),
+                                                          width: 2,
+                                                        ),
+                                                      )
+                                                    : null,
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      player.score.toString(),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleLarge
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800),
+                                                    ),
+                                                    if (isEditMode) ...[
+                                                      const SizedBox(width: 4),
+                                                      Icon(
+                                                        Icons.edit,
+                                                        size: 16,
+                                                        color: cs.primary,
+                                                      ),
+                                                    ],
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      ),
+                                        const SizedBox(height: 6),
+                                        // Turn history: last 16 icons
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: _buildTurnIcons(
+                                                context, player, 16),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 6),
-                                // Turn history: last 16 icons
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children:
-                                        _buildTurnIcons(context, player, 16),
                                   ),
-                                )
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -307,6 +345,7 @@ List<Widget> _buildTurnIcons(
 class _MiniPill extends StatelessWidget {
   final IconData icon;
   final String text;
+
   const _MiniPill({required this.icon, required this.text});
 
   @override
@@ -315,9 +354,9 @@ class _MiniPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: cs.secondaryContainer,
-        borderRadius: BorderRadius.circular(999),
-      ),
+          color: cs.secondaryContainer,
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: [BoxShadow(offset: Offset(2, 2), blurRadius: 2)]),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -339,6 +378,7 @@ class _MiniPill extends StatelessWidget {
 class _Chip extends StatelessWidget {
   final String text;
   final Color color;
+
   const _Chip({required this.text, required this.color});
 
   @override
@@ -346,10 +386,10 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withOpacity(0.25)),
-      ),
+          color: color.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: color.withOpacity(0.25)),
+          boxShadow: [BoxShadow(offset: Offset(3, 3), blurRadius: 3)]),
       child: Text(
         text,
         style: Theme.of(context)

@@ -44,114 +44,122 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Widget build(BuildContext context) {
     return Consumer<MaterialTheme>(builder: (context, theme, _) {
       return Consumer<GameModel>(builder: (context, gameModel, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(APP_TITLE),
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            bottom: PreferredSize(
-                preferredSize: Size(double.infinity, 3),
-                child: LinearProgressIndicator(
-                  value: (gameModel.totalBalls - gameModel.remainingBalls) /
-                      gameModel.totalBalls,
-                )),
-            leading: IconButton(
-              icon: Icon(Icons.undo),
-              onPressed: () {
-                gameModel.undoLastEvent(context);
-              },
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(_isEditMode ? Icons.edit_off : Icons.edit),
-                onPressed: () {
-                  setState(() {
-                    _isEditMode = !_isEditMode;
-                  });
-                },
-                tooltip: _isEditMode ? 'Exit Edit Mode' : 'Edit Scores',
-              ),
-              MenuItemButton(
-                child: Icon(Icons.menu),
-                onPressed: () {
-                  showMenu(
-                    context: context,
-                    position: RelativeRect.fromLTRB(100, 100, 0, 0),
-                    items: [
-                      PopupMenuItem(
-                        child: Row(
-                          spacing: 10.0,
-                          children: [
-                            Icon(Icons.sports_score),
-                            Text('Finish Game'),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => FinishPage()));
-                        },
-                      ),
-                      PopupMenuItem(
-                        child: Row(
-                          spacing: 10.0,
-                          children: [
-                            Icon(Icons.add),
-                            Text('Add Player'),
-                          ],
-                        ),
-                        onTap: () {
-                          showAddMidGamePlayerDialog(gameModel);
-                        },
-                      ),
-                      PopupMenuItem(
-                        child: Row(
-                          spacing: 10.0,
-                          children: [
-                            Icon(Icons.help_outline),
-                            Text('Rules'),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => const RulesPage()));
-                        },
-                      ),
-                    ],
-                  );
-                },
-              )
-            ],
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("assets/felt.png"), fit: BoxFit.cover)
           ),
-          body: SafeArea(
-            child: Center(
-              child: Column(
-                children: [
-                  if (_isEditMode)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      color: Colors.orange.shade800,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.edit, size: 16, color: Colors.white),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Edit Mode - Tap scores to adjust',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+          child: Scaffold(
+            //backgroundColor: Color(0xFF0B2A0E),
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text(APP_TITLE),
+              elevation: 10,
+              scrolledUnderElevation: 10,
+              // bottom: PreferredSize(
+              //     preferredSize: Size(double.infinity, 3),
+              //     child: LinearProgressIndicator(
+              //       value: (gameModel.totalBalls - gameModel.remainingBalls) /
+              //           gameModel.totalBalls,
+              //     )),
+              leading: IconButton(
+                icon: Icon(Icons.undo),
+                onPressed: () {
+                  gameModel.undoLastEvent(context);
+                },
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(_isEditMode ? Icons.edit_off : Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      _isEditMode = !_isEditMode;
+                    });
+                  },
+                  tooltip: _isEditMode ? 'Exit Edit Mode' : 'Edit Scores',
+                ),
+                MenuItemButton(
+                  child: Icon(Icons.menu),
+                  onPressed: () {
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(100, 100, 0, 0),
+                      items: [
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.sports_score),
+                              Text('Finish Game'),
+                            ],
                           ),
-                        ],
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => FinishPage()));
+                          },
+                        ),
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.add),
+                              Text('Add Player'),
+                            ],
+                          ),
+                          onTap: () {
+                            showAddMidGamePlayerDialog(gameModel);
+                          },
+                        ),
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.help_outline),
+                              Text('Rules'),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const RulesPage()));
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  children: [
+                    if (_isEditMode)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        color: Colors.orange.shade800,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit, size: 16, color: Colors.white),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Edit Mode - Tap scores to adjust',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  if (MediaQuery.of(context).size.aspectRatio > 1)
-                    _buildTabletMainControls(gameModel)
-                  else
-                    ..._buildMainControls(gameModel)
-                ],
+                    if (MediaQuery.of(context).size.aspectRatio > 1)
+                      _buildTabletMainControls(gameModel)
+                    else
+                      ..._buildMainControls(gameModel)
+                  ],
+                ),
               ),
             ),
           ),

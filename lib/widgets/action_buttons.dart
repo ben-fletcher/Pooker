@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/turn.dart';
+import 'package:pooker_score/widgets/gold_button.dart';
+import 'package:pooker_score/widgets/reflective_border.dart';
 import 'package:provider/provider.dart';
 
 class ActionButtons extends StatelessWidget {
@@ -206,7 +209,7 @@ class ActionButtons extends StatelessWidget {
                 spacing: 15,
                 children: [
                   Expanded(
-                    child: FilledButton.tonal(
+                    child: GoldButton(
                       onPressed: () {
                         _showFoulDialog(context, gameModel);
                       },
@@ -216,7 +219,7 @@ class ActionButtons extends StatelessWidget {
                           Icon(Icons.close, color: Colors.red),
                           Text('Foul',
                               style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Roboto')),
                         ],
@@ -224,7 +227,7 @@ class ActionButtons extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: FilledButton.tonal(
+                    child: GoldButton(
                       onPressed: () {
                         Provider.of<GameModel>(context, listen: false)
                             .undoLastEvent(context);
@@ -235,7 +238,7 @@ class ActionButtons extends StatelessWidget {
                           Icon(Icons.undo, color: Colors.grey.shade400),
                           Text('Undo',
                               style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Roboto')),
                         ],
@@ -245,7 +248,7 @@ class ActionButtons extends StatelessWidget {
                   if (gameModel.skillShotEnabled &&
                       _canApplySkillShot(gameModel))
                     Expanded(
-                      child: FilledButton.tonal(
+                      child: GoldButton(
                         onPressed: () {
                           Provider.of<GameModel>(context, listen: false)
                               .applySkillShotBonus();
@@ -257,18 +260,13 @@ class ActionButtons extends StatelessWidget {
                             ),
                           );
                         },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: _canApplySkillShot(gameModel)
-                              ? null
-                              : Colors.grey.withValues(alpha: 0.2),
-                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.star, color: Colors.amber.shade800),
                             Text('Skill',
                                 style: TextStyle(
-                                    fontSize: 17,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Roboto')),
                           ],
@@ -281,7 +279,7 @@ class ActionButtons extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            height: 250,
+            height: 200,
             child: Row(
               spacing: 20,
               children: [
@@ -291,45 +289,56 @@ class ActionButtons extends StatelessWidget {
                       onLongPress: gameModel.remainingBalls > 1
                           ? () => _showMultipleRedsDialog(context, gameModel)
                           : null,
-                      child: FilledButton(
-                        onPressed: gameModel.remainingBalls > 0
-                            ? () {
-                                Provider.of<GameModel>(context, listen: false)
-                                    .submitGameEvent(
-                                        GameEvent(
-                                            potted: true,
-                                            colour: BallColour.red,
-                                            count: 1),
-                                        Navigator.of(context));
-                              }
-                            : null,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: gameModel.remainingBalls > 0
-                              ? Colors.red.shade800
-                              : Colors.grey.shade700,
-                          foregroundColor: Colors.white,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [BoxShadow(
+                            //color: Color(0xFF6C0C0C),
+                            blurRadius: 5,
+                            offset: Offset(5, 5)
+                          )]
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Red',
-                              style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto'),
-                            ),
-                            Text('1',
+                        child: GoldButton(
+                          onPressed: gameModel.remainingBalls > 0
+                              ? () {
+                                  Provider.of<GameModel>(context, listen: false)
+                                      .submitGameEvent(
+                                          GameEvent(
+                                              potted: true,
+                                              colour: BallColour.red,
+                                              count: 1),
+                                          Navigator.of(context));
+                                }
+                              : null,
+/*                           style: ElevatedButton.styleFrom(
+                            elevation: 10,
+                            backgroundColor: gameModel.remainingBalls > 0
+                                ? Colors.red.shade800
+                                : Colors.grey.shade700,
+                            foregroundColor: Colors.white,
+                          ), */
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Red',
                                 style: TextStyle(
-                                    fontSize: 24, fontFamily: 'Roboto')),
-                          ],
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              Text('1',
+                                  style: TextStyle(
+                                      fontSize: 24, fontFamily: 'Roboto')),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 if (gameModel.nextTargetBall == BallColour.black)
                   Expanded(
-                    child: FilledButton.tonal(
+                    child: ElevatedButton(
                       onPressed: () {
                         Provider.of<GameModel>(context, listen: false)
                             .submitGameEvent(
@@ -337,7 +346,7 @@ class ActionButtons extends StatelessWidget {
                                     potted: true, colour: BallColour.black),
                                 Navigator.of(context));
                       },
-                      style: FilledButton.styleFrom(
+                      style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey.shade900,
                         foregroundColor: Colors.white,
                       ),
@@ -359,18 +368,19 @@ class ActionButtons extends StatelessWidget {
                     ),
                   ),
                 Expanded(
-                  child: FilledButton.tonal(
+                  child: GoldButton(
                     onPressed: () {
                       Provider.of<GameModel>(context, listen: false)
                           .submitGameEvent(
                               GameEvent(potted: false, colour: BallColour.na),
                               Navigator.of(context));
                     },
-                    style: FilledButton.styleFrom(
+/*                     style: ElevatedButton.styleFrom(
+                      elevation: 10,
                       backgroundColor:
                           Theme.of(context).colorScheme.tertiaryContainer,
                       foregroundColor: Colors.white,
-                    ),
+                    ), */
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
