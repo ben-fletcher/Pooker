@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:provider/provider.dart';
@@ -40,14 +41,14 @@ class ActionButtons extends StatelessWidget {
         context: context,
         showDragHandle: true,
         builder: (context) => SafeArea(
-          child: SizedBox(
+              child: SizedBox(
                 height: 210,
                 width: double.infinity,
                 child: Column(
                   spacing: 20,
                   children: [
                     Text("Foul Type?",
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: 'Roboto')),
+                        style: Theme.of(context).textTheme.titleLarge!),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Column(
@@ -56,6 +57,7 @@ class ActionButtons extends StatelessWidget {
                         children: [
                           ElevatedButton.icon(
                               onPressed: () {
+                                HapticFeedback.heavyImpact();
                                 Provider.of<GameModel>(context, listen: false)
                                     .submitGameEvent(
                                         GameEvent(
@@ -67,17 +69,18 @@ class ActionButtons extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(60, 60),
-                                backgroundColor: Colors.orange.shade800,
+                                backgroundColor: Colors.deepPurple,
                               ),
                               icon: Icon(Icons.gps_off_outlined,
                                   color: Colors.white),
                               label: const Text(
                                 "Miss",
-                                style:
-                                    TextStyle(fontSize: 20, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
                               )),
                           FilledButton.icon(
                               onPressed: () {
+                                HapticFeedback.heavyImpact();
                                 Provider.of<GameModel>(context, listen: false)
                                     .submitGameEvent(
                                         GameEvent(
@@ -91,12 +94,12 @@ class ActionButtons extends StatelessWidget {
                                 minimumSize: Size(60, 60),
                                 backgroundColor: Colors.red.shade800,
                               ),
-                              icon:
-                                  Icon(Icons.not_interested, color: Colors.white),
+                              icon: Icon(Icons.not_interested,
+                                  color: Colors.white),
                               label: const Text(
                                 "Potted Red",
-                                style:
-                                    TextStyle(fontSize: 20, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
                               )),
                         ],
                       ),
@@ -104,7 +107,7 @@ class ActionButtons extends StatelessWidget {
                   ],
                 ),
               ),
-        ));
+            ));
   }
 
   void _showMultipleRedsDialog(BuildContext context, GameModel gameModel) {
@@ -132,6 +135,7 @@ class ActionButtons extends StatelessWidget {
                   final count = index + 2; // Start from 2 reds
                   return FilledButton(
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
                       Navigator.of(context).pop();
                       gameModel.submitGameEvent(
                         GameEvent(
@@ -207,7 +211,14 @@ class ActionButtons extends StatelessWidget {
                 children: [
                   Expanded(
                     child: FilledButton.tonal(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer
+                                  .withValues(alpha: 0.6))),
                       onPressed: () {
+                        HapticFeedback.heavyImpact();
                         _showFoulDialog(context, gameModel);
                       },
                       child: Column(
@@ -216,16 +227,21 @@ class ActionButtons extends StatelessWidget {
                           Icon(Icons.close, color: Colors.red),
                           Text('Foul',
                               style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto')),
+                                  fontSize: 17, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
                   ),
                   Expanded(
                     child: FilledButton.tonal(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer
+                                  .withValues(alpha: 0.6))),
                       onPressed: () {
+                        HapticFeedback.heavyImpact();
                         Provider.of<GameModel>(context, listen: false)
                             .undoLastEvent(context);
                       },
@@ -235,9 +251,7 @@ class ActionButtons extends StatelessWidget {
                           Icon(Icons.undo, color: Colors.grey.shade400),
                           Text('Undo',
                               style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto')),
+                                  fontSize: 17, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -247,6 +261,7 @@ class ActionButtons extends StatelessWidget {
                     Expanded(
                       child: FilledButton.tonal(
                         onPressed: () {
+                          HapticFeedback.heavyImpact();
                           Provider.of<GameModel>(context, listen: false)
                               .applySkillShotBonus();
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -268,9 +283,7 @@ class ActionButtons extends StatelessWidget {
                             Icon(Icons.star, color: Colors.amber.shade800),
                             Text('Skill',
                                 style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Roboto')),
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -294,6 +307,7 @@ class ActionButtons extends StatelessWidget {
                       child: FilledButton(
                         onPressed: gameModel.remainingBalls > 0
                             ? () {
+                                HapticFeedback.heavyImpact();
                                 Provider.of<GameModel>(context, listen: false)
                                     .submitGameEvent(
                                         GameEvent(
@@ -305,7 +319,7 @@ class ActionButtons extends StatelessWidget {
                             : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: gameModel.remainingBalls > 0
-                              ? Colors.red.shade800
+                              ? Theme.of(context).colorScheme.errorContainer
                               : Colors.grey.shade700,
                           foregroundColor: Colors.white,
                         ),
@@ -315,13 +329,9 @@ class ActionButtons extends StatelessWidget {
                             Text(
                               'Red',
                               style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto'),
+                                  fontSize: 26, fontWeight: FontWeight.bold),
                             ),
-                            Text('1',
-                                style: TextStyle(
-                                    fontSize: 24, fontFamily: 'Roboto')),
+                            Text('1', style: TextStyle(fontSize: 24)),
                           ],
                         ),
                       ),
@@ -331,6 +341,7 @@ class ActionButtons extends StatelessWidget {
                   Expanded(
                     child: FilledButton.tonal(
                       onPressed: () {
+                        HapticFeedback.heavyImpact();
                         Provider.of<GameModel>(context, listen: false)
                             .submitGameEvent(
                                 GameEvent(
@@ -346,14 +357,11 @@ class ActionButtons extends StatelessWidget {
                         children: [
                           Text(
                             'Black',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto'),
+                                fontSize: 26, fontWeight: FontWeight.bold),
                           ),
-                          Text('3',
-                              style: TextStyle(
-                                  fontSize: 24, fontFamily: 'Roboto')),
+                          Text('3', style: TextStyle(fontSize: 24)),
                         ],
                       ),
                     ),
@@ -361,6 +369,7 @@ class ActionButtons extends StatelessWidget {
                 Expanded(
                   child: FilledButton.tonal(
                     onPressed: () {
+                      HapticFeedback.mediumImpact();
                       Provider.of<GameModel>(context, listen: false)
                           .submitGameEvent(
                               GameEvent(potted: false, colour: BallColour.na),
@@ -375,12 +384,11 @@ class ActionButtons extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'End',
-                          style: TextStyle(fontSize: 28, fontFamily: 'Roboto'),
+                          'End Turn',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 26),
                         ),
-                        Text('Turn',
-                            style:
-                                TextStyle(fontSize: 24, fontFamily: 'Roboto')),
+                        Icon(Icons.fast_forward, size: 35)
                       ],
                     ),
                   ),

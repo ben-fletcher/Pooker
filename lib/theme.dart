@@ -340,7 +340,8 @@ class MaterialTheme {
         canvasColor: colorScheme.surface,
         appBarTheme: AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
-            systemNavigationBarColor: colorScheme.surface
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarContrastEnforced: false
           ),
         ),
         filledButtonTheme: FilledButtonThemeData(

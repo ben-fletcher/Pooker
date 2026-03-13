@@ -45,6 +45,11 @@ class Scoreboard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card.outlined(
+            color: Colors.black.withValues(alpha: 0.2),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             elevation: 10,
             child: Container(
               width: double.infinity,
