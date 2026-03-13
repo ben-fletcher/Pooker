@@ -250,13 +250,4 @@ class GameDatabaseService {
   static Future<void> setSkillShotEnabled(bool enabled) async {
     await setSetting('skill_shot_enabled', enabled.toString());
   }
-
-  static Future<bool> getHardModeEnabled() async {
-    final value = await getSetting('hard_mode_enabled');
-    return value == 'true';
-  }
-
-  static Future<void> setHardModeEnabled(bool enabled) async {
-    await setSetting('hard_mode_enabled', enabled.toString());
-  }
 }

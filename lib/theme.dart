@@ -62,7 +62,10 @@ class MaterialTheme {
   }
 
   ThemeData light() {
-    return theme(lightScheme());
+    return theme(ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        primary: primaryColor,
+        brightness: Brightness.light));
   }
 
   static ColorScheme lightMediumContrastScheme() {

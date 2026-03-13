@@ -63,7 +63,9 @@ class ActionButtons extends StatelessWidget {
                                         GameEvent(
                                             foul: true,
                                             colour: BallColour.na,
-                                            potted: false),
+                                            potted: false,
+                                            pointsOverride:
+                                                gameModel.blackBallFoulPoints),
                                         Navigator.of(context));
                                 Navigator.of(context).pop();
                               },
@@ -86,7 +88,9 @@ class ActionButtons extends StatelessWidget {
                                         GameEvent(
                                             foul: true,
                                             colour: BallColour.red,
-                                            potted: true),
+                                            potted: true,
+                                            pointsOverride:
+                                                gameModel.blackBallFoulPoints),
                                         Navigator.of(context));
                                 Navigator.of(context).pop();
                               },
@@ -273,10 +277,10 @@ class ActionButtons extends StatelessWidget {
                           );
                         },
                         style: FilledButton.styleFrom(
-                          backgroundColor: _canApplySkillShot(gameModel)
-                              ? null
-                              : Colors.grey.withValues(alpha: 0.2),
-                        ),
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer
+                                .withValues(alpha: 0.6)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -361,7 +365,12 @@ class ActionButtons extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.bold),
                           ),
-                          Text('3', style: TextStyle(fontSize: 24)),
+                          Text(
+                              gameModel.luckyFinish &&
+                                      gameModel.remainingBalls == 0
+                                  ? '5'
+                                  : '3',
+                              style: TextStyle(fontSize: 24)),
                         ],
                       ),
                     ),

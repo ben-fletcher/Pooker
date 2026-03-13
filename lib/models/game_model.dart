@@ -12,6 +12,9 @@ class GameModel extends ChangeNotifier {
   final List<PlayerTurn> _turnHistory = [];
 
   int totalBalls = 15;
+  int blackBallFoulPoints = -1;
+  bool luckyFinish = false;
+
   int _currentPlayerIndex = 0;
   BallColour _nextTargetBall = BallColour.red;
   bool _skillShotEnabled = false;
@@ -28,7 +31,18 @@ class GameModel extends ChangeNotifier {
 
   void submitGameEvent(GameEvent event, NavigatorState navigator) {
     if (event.colour != _nextTargetBall && event.potted) {
-      event = GameEvent(foul: true, colour: event.colour, potted: true);
+      event = GameEvent(
+          foul: true,
+          colour: event.colour,
+          potted: true,
+          count: event.count,
+          pointsOverride: event.pointsOverride);
+    }
+
+    if (remainingBalls == 0 &&
+        event.potted &&
+        event.colour == BallColour.black) {
+      event.pointsOverride = luckyFinish ? 5 : null;
     }
 
     var turn = PlayerTurn(
@@ -88,6 +102,11 @@ class GameModel extends ChangeNotifier {
               ? BallColour.black
               : BallColour.red;
         }
+      } else if (_turnHistory.isNotEmpty &&
+          _turnHistory.last.event.colour != BallColour.na) {
+        _nextTargetBall = _turnHistory.last.event.colour == BallColour.red
+            ? BallColour.black
+            : BallColour.red;
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
@@ -158,6 +177,10 @@ class GameModel extends ChangeNotifier {
   }
 
   int _calculateScore(GameEvent event) {
+    if (event.pointsOverride != null) {
+      return event.pointsOverride!;
+    }
+
     if (event.foul == true) {
       return -1;
     }
@@ -179,12 +202,25 @@ class GameModel extends ChangeNotifier {
     _nextTargetBall = BallColour.red;
     _turnHistory.clear();
     _startDate = DateTime.now();
+    blackBallFoulPoints = -1;
+    luckyFinish = false;
+    totalBalls = 15;
 
     notifyListeners();
   }
 
   void setTotalBalls(int balls) {
     totalBalls = balls;
+    notifyListeners();
+  }
+
+  void setBlackBallFoulPoints(int foulPoints) {
+    blackBallFoulPoints = foulPoints;
+    notifyListeners();
+  }
+
+  void setLuckyFinish(bool value) {
+    luckyFinish = value;
     notifyListeners();
   }
 

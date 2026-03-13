@@ -10,6 +10,11 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarContrastEnforced: false),
+  );
   await GameDatabaseService.initDatabase();
   runApp(const MyApp());
 }
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Pooker',
-          //theme: theme.light(),
+          theme: theme.light(),
           darkTheme: theme.dark(),
           themeMode: ThemeMode.dark,
           home: StartPage(),
