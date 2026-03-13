@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/models/game_model.dart';
@@ -70,7 +69,7 @@ class _SetupPageState extends State<SetupPage> {
                         child: Text('No players added yet'),
                       );
                     }
-            
+
                     return Card.outlined(
                       child: ReorderableListView.builder(
                         itemCount: gameModel.players.length,
@@ -173,17 +172,26 @@ class _SetupPageState extends State<SetupPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FilledButton.icon(
-                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary)),
-                      onPressed: () {
-                        showAddPlayerDialog(context).then((value) {
-                          setState(() {
-                            _playersFuture = GameDatabaseService.loadPlayers();
+                        style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.tertiary)),
+                        onPressed: () {
+                          showAddPlayerDialog(context).then((value) {
+                            setState(() {
+                              _playersFuture =
+                                  GameDatabaseService.loadPlayers();
+                            });
                           });
-                        });
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text('New', style: TextStyle(fontSize: Theme.of(context).textTheme.titleLarge!.fontSize),)
-                    ),
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text(
+                          'New',
+                          style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .fontSize),
+                        )),
                   );
                 }
 
@@ -194,8 +202,8 @@ class _SetupPageState extends State<SetupPage> {
                     child: ListTile(
                       title: Text(player, style: TextStyle(fontSize: 18)),
                       onTap: () {
-                          _addPlayer(player, gameModel);
-                        },
+                        _addPlayer(player, gameModel);
+                      },
                       trailing: IconButton(
                         onPressed: () {
                           _addPlayer(player, gameModel);

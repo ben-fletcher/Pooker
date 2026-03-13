@@ -144,7 +144,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Card(
-                  child: Column(children: [
+                    child: Column(
+                  children: [
                     SwitchListTile(
                       title: const Text('Bonus Point Button'),
                       subtitle: const Text(
@@ -164,8 +165,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       onChanged: _toggleHardMode,
                       secondary: const Icon(Icons.keyboard_double_arrow_up),
                     ),
-                  ],)
-                ),
+                  ],
+                )),
                 const SizedBox(height: 20),
                 Text(
                   'Database',
@@ -181,8 +182,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 ElevatedButton(
                   onPressed: _resetData,
-                  child:
-                      const Text('Reset Data', style: TextStyle(color: Colors.red)),
+                  child: const Text('Reset Data',
+                      style: TextStyle(color: Colors.red)),
                 ),
               ],
             ),

@@ -117,8 +117,9 @@ class GameSettingsPage extends StatelessWidget {
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 16),
-                            backgroundColor:
-                                gameModel.players.isNotEmpty ? null : Colors.grey,
+                            backgroundColor: gameModel.players.isNotEmpty
+                                ? null
+                                : Colors.grey,
                             textStyle: TextStyle(fontSize: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),

@@ -83,19 +83,20 @@ class GameModel extends ChangeNotifier {
       if (lastTurn.event.potted) {
         if (lastTurn.event.foul != true) {
           _nextTargetBall = lastTurn.event.colour;
-        }
-        else {
-          _nextTargetBall = _turnHistory.last.event.colour == BallColour.red ? BallColour.black : BallColour.red;
+        } else {
+          _nextTargetBall = _turnHistory.last.event.colour == BallColour.red
+              ? BallColour.black
+              : BallColour.red;
         }
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
-      
+
       // Ensure next target is black if no reds remain
       if (remainingBalls <= 0) {
         _nextTargetBall = BallColour.black;
       }
-      
+
       notifyListeners();
     } else {
       showDialog<void>(
@@ -200,7 +201,7 @@ class GameModel extends ChangeNotifier {
   void adjustPlayerScore(Player player, int newScore) {
     int currentScore = player.score;
     int adjustment = newScore - currentScore;
-    
+
     if (adjustment != 0) {
       // Create a manual adjustment turn
       var adjustmentTurn = PlayerTurn(
@@ -213,33 +214,33 @@ class GameModel extends ChangeNotifier {
         ),
         ballIndex: 0,
       );
-      
+
       player.turns.add(adjustmentTurn);
       _turnHistory.add(adjustmentTurn);
-      
+
       // Ensure next target is black if no reds remain
       if (remainingBalls <= 0) {
         _nextTargetBall = BallColour.black;
       }
-      
+
       notifyListeners();
     }
   }
 
   void applySkillShotBonus() {
     if (!_skillShotEnabled) return;
-    
+
     // Find the last turn (pot, foul, or miss)
     if (_turnHistory.isEmpty) return;
-    
+
     final lastTurn = _turnHistory.last;
-    
+
     // Don't apply skill shot to another skill shot
-    final bool isAlreadySkillShot = !lastTurn.event.potted && 
-                                    lastTurn.event.foul != true && 
-                                    lastTurn.event.colour == BallColour.na && 
-                                    lastTurn.score > 0;
-    
+    final bool isAlreadySkillShot = !lastTurn.event.potted &&
+        lastTurn.event.foul != true &&
+        lastTurn.event.colour == BallColour.na &&
+        lastTurn.score > 0;
+
     if (!isAlreadySkillShot) {
       // Add skill shot bonus to the last player who did something
       // (works for impressive pots OR funny fouls!)
@@ -253,7 +254,7 @@ class GameModel extends ChangeNotifier {
         ),
         ballIndex: 0,
       );
-      
+
       players[lastTurn.playerIndex].turns.add(bonusTurn);
       _turnHistory.add(bonusTurn);
       notifyListeners();

@@ -47,7 +47,8 @@ class Scoreboard extends StatelessWidget {
           child: Card.outlined(
             color: Colors.black.withValues(alpha: 0.2),
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1),
+              side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline, width: 1),
               borderRadius: BorderRadius.circular(20.0),
             ),
             elevation: 10,

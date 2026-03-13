@@ -77,8 +77,7 @@ class StartPage extends StatelessWidget {
                     ),
                     Text(
                       "Pooker",
-                      style:
-                          Theme.of(context).textTheme.displayLarge?.copyWith(
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
                         color: Colors.white,
                         fontSize: 72,
                         shadows: [
@@ -151,8 +150,7 @@ class StartPage extends StatelessWidget {
                                   .reset();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HistoryPage()),
+                                    builder: (context) => const HistoryPage()),
                               );
                             }),
                         SizedBox(width: 30),
@@ -172,8 +170,7 @@ class StartPage extends StatelessWidget {
                                   .reset();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PlayerScreen()),
+                                    builder: (context) => const PlayerScreen()),
                               );
                             })
                       ],

@@ -20,8 +20,8 @@ class GameDatabaseService {
             'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)');
         await db
             .execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
-        await db.execute(
-            'CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
+        await db
+            .execute('CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         if (oldVersion == 1) {
@@ -51,7 +51,8 @@ class GameDatabaseService {
 
     final mapGameResult = gameResult.toMap();
     // Delete existing record if the game had already been saved once.
-    await _database!.delete('game_history', where: 'date = ?', whereArgs: [mapGameResult['date']]);
+    await _database!.delete('game_history',
+        where: 'date = ?', whereArgs: [mapGameResult['date']]);
 
     await _database!.insert(
       'game_history',
@@ -133,8 +134,8 @@ class GameDatabaseService {
       }
 
       // Determine the winner of this game
-      final PlayerResult winner = game.players.reduce(
-          (a, b) => a.score > b.score ? a : b);
+      final PlayerResult winner =
+          game.players.reduce((a, b) => a.score > b.score ? a : b);
       if (winner.name == playerName) {
         gamesWon += 1;
       }

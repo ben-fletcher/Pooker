@@ -56,16 +56,18 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
   }
 
   Future<Map<String, dynamic>> _loadPlayerData() async {
-    final stats = await GameDatabaseService.getPlayerStatistics(widget.playerName);
+    final stats =
+        await GameDatabaseService.getPlayerStatistics(widget.playerName);
     final history = await GameDatabaseService.loadGameHistory();
-    
+
     // Filter games for this player
-    final playerGames = history.where((game) =>
-        game.players.any((p) => p.name == widget.playerName)).toList();
-    
+    final playerGames = history
+        .where((game) => game.players.any((p) => p.name == widget.playerName))
+        .toList();
+
     // Calculate additional stats
     final detailedStats = _calculateDetailedStats(playerGames);
-    
+
     return {
       'stats': stats,
       'games': playerGames,
@@ -93,10 +95,11 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
     int podiumFinishes = 0;
 
     for (final game in games) {
-      final playerResult = game.players.firstWhere((p) => p.name == widget.playerName);
+      final playerResult =
+          game.players.firstWhere((p) => p.name == widget.playerName);
       final score = playerResult.score;
       allScores.add(score);
-      
+
       if (score < lowestScore) {
         lowestScore = score;
       }
@@ -104,9 +107,10 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       // Calculate position in this game
       final sortedPlayers = List<PlayerResult>.from(game.players)
         ..sort((a, b) => b.score.compareTo(a.score));
-      final position = sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
+      final position =
+          sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
       totalPosition += position;
-      
+
       if (position <= 3) {
         podiumFinishes++;
       }
@@ -120,16 +124,20 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       for (final opponent in game.players) {
         if (opponent.name != widget.playerName) {
           if (!headToHead.containsKey(opponent.name)) {
-            headToHead[opponent.name] = <String, int>{'wins': 0, 'losses': 0, 'draws': 0};
+            headToHead[opponent.name] = <String, int>{
+              'wins': 0,
+              'losses': 0,
+              'draws': 0
+            };
           }
           if (playerResult.score > opponent.score) {
-            headToHead[opponent.name]!['wins'] = 
+            headToHead[opponent.name]!['wins'] =
                 headToHead[opponent.name]!['wins']! + 1;
           } else if (playerResult.score < opponent.score) {
-            headToHead[opponent.name]!['losses'] = 
+            headToHead[opponent.name]!['losses'] =
                 headToHead[opponent.name]!['losses']! + 1;
           } else {
-            headToHead[opponent.name]!['draws'] = 
+            headToHead[opponent.name]!['draws'] =
                 headToHead[opponent.name]!['draws']! + 1;
           }
         }
@@ -143,8 +151,10 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       // final variance = allScores.map((score) =>
       //     (score - mean) * (score - mean)).reduce((a, b) => a + b) / allScores.length;
 
-      final std = allScores.map((score) =>
-        (score - mean).abs()).reduce((a, b) => a + b) / allScores.length;
+      final std = allScores
+              .map((score) => (score - mean).abs())
+              .reduce((a, b) => a + b) /
+          allScores.length;
 
       consistency = (1 - std / mean) * 100;
       if (consistency < 0) {
@@ -172,7 +182,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.transparent,
                 width: 3,
               ),
             ),
@@ -183,7 +195,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
               Icon(
                 icon,
                 size: 18,
-                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey,
               ),
               const SizedBox(width: 4),
               Text(
@@ -191,7 +205,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey,
                 ),
               ),
             ],
@@ -214,9 +230,10 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
     }
   }
 
-  Widget _buildStatisticsTab(Map<String, dynamic> stats, Map<String, dynamic> detailedStats) {
+  Widget _buildStatisticsTab(
+      Map<String, dynamic> stats, Map<String, dynamic> detailedStats) {
     return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -224,37 +241,40 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+            crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
             childAspectRatio: 1.1,
-              children: [
-                _buildStatCard('Games Played', stats['gamesPlayed'],
-                    Icons.games, Colors.blue),
-                _buildStatCard('Games Won', stats['gamesWon'],
-                    Icons.emoji_events, Colors.green),
-              _buildStatCard('Win Rate', stats['winRate'], Icons.percent, Colors.teal),
+            children: [
+              _buildStatCard('Games Played', stats['gamesPlayed'], Icons.games,
+                  Colors.blue),
+              _buildStatCard('Games Won', stats['gamesWon'], Icons.emoji_events,
+                  Colors.green),
+              _buildStatCard(
+                  'Win Rate', stats['winRate'], Icons.percent, Colors.teal),
               _buildStatCard('Podiums', detailedStats['podiumFinishes'],
                   Icons.workspace_premium, Colors.amber),
               _buildStatCard('Highest Score', stats['highestScore'],
                   Icons.trending_up, Colors.orange),
               _buildStatCard('Lowest Score', detailedStats['lowestScore'],
                   Icons.trending_down, Colors.red),
-                _buildStatCard('Average Score', stats['averageScore'],
-                    Icons.bar_chart, Colors.purple),
-              _buildStatCard('Avg Position', 
+              _buildStatCard('Average Score', stats['averageScore'],
+                  Icons.bar_chart, Colors.purple),
+              _buildStatCard(
+                  'Avg Position',
                   detailedStats['averagePosition'].toStringAsFixed(1),
-                  Icons.leaderboard, Colors.indigo),
+                  Icons.leaderboard,
+                  Colors.indigo),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Consistency meter
           _buildConsistencySection(detailedStats['consistency']),
-          
+
           const SizedBox(height: 24),
-          
+
           // Recent form
           if (detailedStats['recentForm'].isNotEmpty)
             _buildRecentFormSection(detailedStats['recentForm']),
@@ -288,8 +308,11 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
               minHeight: 20,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(
-                consistency > 70 ? Colors.green : 
-                consistency > 40 ? Colors.orange : Colors.red,
+                consistency > 70
+                    ? Colors.green
+                    : consistency > 40
+                        ? Colors.orange
+                        : Colors.red,
               ),
             ),
             const SizedBox(height: 8),
@@ -337,7 +360,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: recentScores.asMap().entries.map((entry) {
                   final maxScore = recentScores.reduce((a, b) => a > b ? a : b);
-                  final height = maxScore > 0 && entry.value > 0 ? (entry.value / maxScore) * 80.0 : 0.0;
+                  final height = maxScore > 0 && entry.value > 0
+                      ? (entry.value / maxScore) * 80.0
+                      : 0.0;
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -346,7 +371,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                         children: [
                           Text(
                             entry.value.toString(),
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Container(
@@ -377,7 +403,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           children: [
             Icon(Icons.history, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            Text('No games played yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('No games played yet',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
           ],
         ),
       );
@@ -390,13 +417,15 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
         final game = games[index];
         final sortedPlayers = List<PlayerResult>.from(game.players)
           ..sort((a, b) => b.score.compareTo(a.score));
-        final position = sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
+        final position =
+            sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
         final isWinner = position == 1;
 
         return Card(
           elevation: 2,
           margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -415,14 +444,17 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                         const SizedBox(width: 8),
                         Text(
                           DateFormat('MMM d, y').format(game.date),
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _getPositionColor(position).withValues(alpha: 0.2),
+                        color:
+                            _getPositionColor(position).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -450,8 +482,12 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                             player.name,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: isCurrentPlayer ? FontWeight.bold : FontWeight.normal,
-                              color: isCurrentPlayer ? Theme.of(context).colorScheme.primary : null,
+                              fontWeight: isCurrentPlayer
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: isCurrentPlayer
+                                  ? Theme.of(context).colorScheme.primary
+                                  : null,
                             ),
                           ),
                         ),
@@ -459,8 +495,12 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                           player.score.toString(),
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: isCurrentPlayer ? FontWeight.bold : FontWeight.normal,
-                            color: isCurrentPlayer ? Theme.of(context).colorScheme.primary : null,
+                            fontWeight: isCurrentPlayer
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isCurrentPlayer
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
                           ),
                         ),
                       ],
@@ -483,7 +523,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           children: [
             Icon(Icons.people_outline, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            Text('No rival data available', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('No rival data available',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
           ],
         ),
       );
@@ -492,8 +533,12 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
     // Sort rivals by total games played
     final sortedRivals = headToHead.entries.toList()
       ..sort((a, b) {
-        final aTotal = (a.value['wins'] ?? 0) + (a.value['losses'] ?? 0) + (a.value['draws'] ?? 0);
-        final bTotal = (b.value['wins'] ?? 0) + (b.value['losses'] ?? 0) + (b.value['draws'] ?? 0);
+        final aTotal = (a.value['wins'] ?? 0) +
+            (a.value['losses'] ?? 0) +
+            (a.value['draws'] ?? 0);
+        final bTotal = (b.value['wins'] ?? 0) +
+            (b.value['losses'] ?? 0) +
+            (b.value['draws'] ?? 0);
         return bTotal.compareTo(aTotal);
       });
 
@@ -511,7 +556,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
         return Card(
           elevation: 2,
           margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -520,7 +566,10 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.2),
                       child: Text(
                         rival.key[0].toUpperCase(),
                         style: TextStyle(
@@ -536,19 +585,24 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                         children: [
                           Text(
                             rival.key,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             '$total games played',
-                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey[600]),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: winRate >= 50 ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
+                        color: winRate >= 50
+                            ? Colors.green.withValues(alpha: 0.2)
+                            : Colors.red.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

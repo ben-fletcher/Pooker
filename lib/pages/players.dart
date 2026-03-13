@@ -35,7 +35,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
               return Card(
                 child: ListView.separated(
                   shrinkWrap: true,
-
                   itemCount: snapshot.data!.length,
                   separatorBuilder: (_, __) => const Divider(),
                   itemBuilder: (context, index) {
@@ -44,30 +43,33 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       title: Text(player,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: FutureBuilder(
-                        future: GameDatabaseService.getPlayerStatistics(player),
-                        builder: (context, asyncSnapshot) {
-                          return Wrap(
-                            spacing: 8,
-                            children: [
-                              Chip(
-                                  label: Text(
-                                    "Games: ${asyncSnapshot.data?['gamesPlayed']}",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  side: BorderSide(
-                                      color: Colors.blue.shade800, width: 0.3),
-                                  visualDensity: VisualDensity.compact,
-                                  padding: EdgeInsets.all(0)),
-                              Chip(
-                                  label: Text("High Score: ${asyncSnapshot.data?['highestScore']}",
-                                      style: TextStyle(fontSize: 12)),
-                                  side: BorderSide(color: Colors.amber, width: 0.3),
-                                  visualDensity: VisualDensity.compact,
-                                  padding: EdgeInsets.all(0)),
-                            ],
-                          );
-                        }
-                      ),
+                          future:
+                              GameDatabaseService.getPlayerStatistics(player),
+                          builder: (context, asyncSnapshot) {
+                            return Wrap(
+                              spacing: 8,
+                              children: [
+                                Chip(
+                                    label: Text(
+                                      "Games: ${asyncSnapshot.data?['gamesPlayed']}",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    side: BorderSide(
+                                        color: Colors.blue.shade800,
+                                        width: 0.3),
+                                    visualDensity: VisualDensity.compact,
+                                    padding: EdgeInsets.all(0)),
+                                Chip(
+                                    label: Text(
+                                        "High Score: ${asyncSnapshot.data?['highestScore']}",
+                                        style: TextStyle(fontSize: 12)),
+                                    side: BorderSide(
+                                        color: Colors.amber, width: 0.3),
+                                    visualDensity: VisualDensity.compact,
+                                    padding: EdgeInsets.all(0)),
+                              ],
+                            );
+                          }),
                       leading: Icon(Icons.person),
                       onTap: () {
                         Navigator.of(context).push(

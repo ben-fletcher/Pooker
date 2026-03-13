@@ -19,8 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme =
-        createTextTheme(context);
+    TextTheme textTheme = createTextTheme(context);
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
@@ -39,8 +38,7 @@ class MyApp extends StatelessWidget {
         ));
   }
 
-  TextTheme createTextTheme(
-      BuildContext context) {
+  TextTheme createTextTheme(BuildContext context) {
     TextTheme baseTextTheme = Theme.of(context).textTheme;
     TextTheme bodyTextTheme = GoogleFonts.preahvihearTextTheme(baseTextTheme);
 

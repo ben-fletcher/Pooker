@@ -46,8 +46,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
       return Consumer<GameModel>(builder: (context, gameModel, child) {
         return Container(
           decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage('assets/felt.png'), fit: BoxFit.cover)
-          ),
+              image: DecorationImage(
+                  image: AssetImage('assets/felt.png'), fit: BoxFit.cover)),
           child: Scaffold(
             restorationId: 'calculator',
             backgroundColor: Colors.black.withValues(alpha: 0.7),
