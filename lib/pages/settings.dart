@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart'; // Add this import
@@ -155,7 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       onChanged: _toggleSkillShot,
                       secondary: const Icon(Icons.star),
                     ),
-                    const Divider(),
+/*                     const Divider(),
                     SwitchListTile(
                       title: const Text('Hard Mode'),
                       subtitle: const Text(
@@ -164,7 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: _hardModeEnabled,
                       onChanged: _toggleHardMode,
                       secondary: const Icon(Icons.keyboard_double_arrow_up),
-                    ),
+                    ), */
                   ],
                 )),
                 const SizedBox(height: 20),

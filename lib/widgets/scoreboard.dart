@@ -161,12 +161,12 @@ class Scoreboard extends StatelessWidget {
                                         decoration: isEditMode
                                             ? BoxDecoration(
                                                 color: cs.primaryContainer
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 border: Border.all(
                                                   color: cs.primary
-                                                      .withOpacity(0.5),
+                                                      .withValues(alpha: 0.5),
                                                   width: 2,
                                                 ),
                                               )
@@ -355,9 +355,9 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
       child: Text(
         text,
