@@ -20,8 +20,8 @@ class GameDatabaseService {
             'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)');
         await db
             .execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
-        await db.execute(
-            'CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
+        await db
+            .execute('CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         if (oldVersion == 1) {
@@ -49,9 +49,14 @@ class GameDatabaseService {
   static Future<void> insertGameResult(GameResult gameResult) async {
     if (_database == null) return;
 
+    final mapGameResult = gameResult.toMap();
+    // Delete existing record if the game had already been saved once.
+    await _database!.delete('game_history',
+        where: 'date = ?', whereArgs: [mapGameResult['date']]);
+
     await _database!.insert(
       'game_history',
-      gameResult.toMap(),
+      mapGameResult,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -79,13 +84,21 @@ class GameDatabaseService {
     await _database!.delete('game_history');
   }
 
-  static Future<void> insertPlayer(String name) async {
-    if (_database == null) return;
+  static Future<bool> insertPlayer(String name) async {
+    if (_database == null) return false;
+
+    final existingPlayer = await _database!.query('player', where: 'name = ?', whereArgs: [name]);
+    if (existingPlayer.isNotEmpty) {
+      return false;
+    }
+
     await _database!.insert(
       'player',
       {'name': name},
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+
+    return true;
   }
 
   static Future<List<String>> loadPlayers() async {
@@ -129,8 +142,8 @@ class GameDatabaseService {
       }
 
       // Determine the winner of this game
-      final PlayerResult winner = game.players.reduce(
-          (a, b) => a.score > b.score ? a : b);
+      final PlayerResult winner =
+          game.players.reduce((a, b) => a.score > b.score ? a : b);
       if (winner.name == playerName) {
         gamesWon += 1;
       }

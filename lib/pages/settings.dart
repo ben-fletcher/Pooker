@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart'; // Add this import
@@ -119,49 +121,54 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 10,
-            children: [
-              ElevatedButton(
-                onPressed: _openAboutPage,
-                child: const Text('About'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Game Settings',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Card(
-                child: SwitchListTile(
-                  title: const Text('Bonus Point Button'),
-                  subtitle: const Text(
-                    'Award an extra point for skillful shots or funny fouls',
-                  ),
-                  value: _skillShotEnabled,
-                  onChanged: _toggleSkillShot,
-                  secondary: const Icon(Icons.star),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 10,
+              children: [
+                ElevatedButton(
+                  onPressed: _openAboutPage,
+                  child: const Text('About'),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Database',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              ElevatedButton(
-                onPressed: _exportDatabase,
-                child: const Text('Export Database'),
-              ),
-              ElevatedButton(
-                onPressed: _importDatabase,
-                child: const Text('Import Database'),
-              ),
-              ElevatedButton(
-                onPressed: _resetData,
-                child:
-                    const Text('Reset Data', style: TextStyle(color: Colors.red)),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Text(
+                  'Game Settings',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Card(
+                    child: Column(
+                  children: [
+                    SwitchListTile(
+                      title: const Text('Bonus Point Button'),
+                      subtitle: const Text(
+                        'Award an extra point for skillful shots or funny fouls',
+                      ),
+                      value: _skillShotEnabled,
+                      onChanged: _toggleSkillShot,
+                      secondary: const Icon(Icons.star),
+                    )
+                  ],
+                )),
+                const SizedBox(height: 20),
+                Text(
+                  'Database',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                ElevatedButton(
+                  onPressed: _exportDatabase,
+                  child: const Text('Export Database'),
+                ),
+                ElevatedButton(
+                  onPressed: _importDatabase,
+                  child: const Text('Import Database'),
+                ),
+                ElevatedButton(
+                  onPressed: _resetData,
+                  child: const Text('Reset Data',
+                      style: TextStyle(color: Colors.red)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

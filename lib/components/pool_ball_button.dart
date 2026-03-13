@@ -24,7 +24,7 @@ class PoolBallButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               offset: Offset(4, 4),
               blurRadius: 10,
             ),

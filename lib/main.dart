@@ -10,6 +10,11 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarContrastEnforced: false),
+  );
   await GameDatabaseService.initDatabase();
   runApp(const MyApp());
 }
@@ -19,8 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme =
-        createTextTheme(context);
+    TextTheme textTheme = createTextTheme(context);
 
     MaterialTheme theme = MaterialTheme(textTheme);
 
@@ -39,8 +43,7 @@ class MyApp extends StatelessWidget {
         ));
   }
 
-  TextTheme createTextTheme(
-      BuildContext context) {
+  TextTheme createTextTheme(BuildContext context) {
     TextTheme baseTextTheme = Theme.of(context).textTheme;
     TextTheme bodyTextTheme = GoogleFonts.preahvihearTextTheme(baseTextTheme);
 

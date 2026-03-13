@@ -22,8 +22,9 @@ class Scoreboard extends StatelessWidget {
     return Consumer<GameModel>(
       builder: (context, gameModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final activePlayerIndex =
-              gameModel.players.indexOf(gameModel.activePlayer);
+          final activePlayerIndex = gameModel.activePlayer != null
+              ? gameModel.players.indexOf(gameModel.activePlayer)
+              : -1;
           if (activePlayerIndex != -1) {
             final double targetOffset = activePlayerIndex * 92.0;
             if (scrollController.hasClients) {
@@ -44,7 +45,13 @@ class Scoreboard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card.outlined(
-            elevation: 5,
+            color: Colors.black.withValues(alpha: 0.2),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Theme.of(context).colorScheme.outline, width: 1),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            elevation: 10,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14.0),
@@ -154,12 +161,12 @@ class Scoreboard extends StatelessWidget {
                                         decoration: isEditMode
                                             ? BoxDecoration(
                                                 color: cs.primaryContainer
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 border: Border.all(
                                                   color: cs.primary
-                                                      .withOpacity(0.5),
+                                                      .withValues(alpha: 0.5),
                                                   width: 2,
                                                 ),
                                               )
@@ -307,6 +314,7 @@ List<Widget> _buildTurnIcons(
 class _MiniPill extends StatelessWidget {
   final IconData icon;
   final String text;
+
   const _MiniPill({required this.icon, required this.text});
 
   @override
@@ -339,6 +347,7 @@ class _MiniPill extends StatelessWidget {
 class _Chip extends StatelessWidget {
   final String text;
   final Color color;
+
   const _Chip({required this.text, required this.color});
 
   @override
@@ -346,9 +355,9 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
       child: Text(
         text,

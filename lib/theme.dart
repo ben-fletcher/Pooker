@@ -4,14 +4,16 @@ import "package:flutter/services.dart";
 class MaterialTheme {
   final TextTheme textTheme;
 
-  static const Color greenCardSurface = Color.fromARGB(255, 24, 50, 33);
+  static const Color greenCardSurface = Color.fromARGB(255, 42, 66, 50);
+
+  static const Color primaryColor = Color(0xff11d452);
 
   const MaterialTheme(this.textTheme);
 
   static ColorScheme lightScheme() {
     return const ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xff11d452),
+      primary: primaryColor,
       surfaceTint: Color.fromARGB(255, 4, 51, 20),
       onPrimary: Color.fromARGB(255, 0, 0, 0),
       primaryContainer: Color(0xffcdeda4),
@@ -60,7 +62,10 @@ class MaterialTheme {
   }
 
   ThemeData light() {
-    return theme(lightScheme());
+    return theme(ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        primary: primaryColor,
+        brightness: Brightness.light));
   }
 
   static ColorScheme lightMediumContrastScheme() {
@@ -175,45 +180,47 @@ class MaterialTheme {
 
   static ColorScheme darkScheme() {
     return const ColorScheme(
-      brightness: Brightness.dark,
-      primary: Color(0xff11d452),
-      surfaceTint: Color(0xffb1d18a),
-      onPrimary: Color.fromARGB(255, 0, 0, 0),
-      primaryContainer: Color.fromARGB(255, 46, 95, 62),
-      onPrimaryContainer: Color(0xffcdeda4),
-      secondary: Color(0xffbfcbad),
-      onSecondary: Color(0xff2a331e),
-      secondaryContainer: Color(0xff363e2b),
-      onSecondaryContainer: Color(0xffdbe7c8),
-      tertiary: Color(0xffa0d0cb),
-      onTertiary: Color(0xff003735),
-      tertiaryContainer: Color(0xff1f4e4b),
-      onTertiaryContainer: Color(0xffbcece7),
-      error: Color(0xffffb4ab),
-      onError: Color(0xff690005),
-      errorContainer: Color(0xff93000a),
-      onErrorContainer: Color(0xffffdad6),
-      surface: Color(0xff102216),
-      onSurface: Color(0xffe2e3d8),
-      onSurfaceVariant: Color(0xffc5c8ba),
-      outline: Color(0xff8f9285),
-      outlineVariant: Color.fromARGB(188, 104, 110, 94),
-      shadow: Color(0xff000000),
-      scrim: Color(0xff000000),
-      inverseSurface: Color(0xffe2e3d8),
-      inversePrimary: Color(0xff4c662b),
-      surfaceDim: Color(0xff12140e),
-      surfaceBright: Color(0xff383a32),
-      surfaceContainerLowest: Color(0xff0c0f09),
-      surfaceContainerLow: MaterialTheme.greenCardSurface,
-      surfaceContainer: MaterialTheme.greenCardSurface,
-      surfaceContainerHigh: MaterialTheme.greenCardSurface,
-      surfaceContainerHighest: MaterialTheme.greenCardSurface
-    );
+        brightness: Brightness.dark,
+        primary: Color(0xff11d452),
+        surfaceTint: Color(0xffb1d18a),
+        onPrimary: Color.fromARGB(255, 0, 0, 0),
+        primaryContainer: Color.fromARGB(255, 46, 95, 62),
+        onPrimaryContainer: Color(0xffcdeda4),
+        secondary: Color(0xffbfcbad),
+        onSecondary: Color(0xff2a331e),
+        secondaryContainer: Color(0xff363e2b),
+        onSecondaryContainer: Color(0xffdbe7c8),
+        tertiary: Color(0xffa0d0cb),
+        onTertiary: Color(0xff003735),
+        tertiaryContainer: Color(0xff1f4e4b),
+        onTertiaryContainer: Color(0xffbcece7),
+        error: Color(0xffffb4ab),
+        onError: Color(0xff690005),
+        errorContainer: Color(0xff93000a),
+        onErrorContainer: Color(0xffffdad6),
+        surface: Color(0xff102216),
+        onSurface: Color(0xffe2e3d8),
+        onSurfaceVariant: Color(0xffc5c8ba),
+        outline: Color(0xff8f9285),
+        outlineVariant: Color.fromARGB(188, 104, 110, 94),
+        shadow: Color(0xff000000),
+        scrim: Color(0xff000000),
+        inverseSurface: Color(0xffe2e3d8),
+        inversePrimary: Color(0xff4c662b),
+        surfaceDim: Color(0xff12140e),
+        surfaceBright: Color(0xff383a32),
+        surfaceContainerLowest: Color(0xff0c0f09),
+        surfaceContainerLow: MaterialTheme.greenCardSurface,
+        surfaceContainer: MaterialTheme.greenCardSurface,
+        surfaceContainerHigh: MaterialTheme.greenCardSurface,
+        surfaceContainerHighest: MaterialTheme.greenCardSurface);
   }
 
   ThemeData dark() {
-    return theme(darkScheme());
+    return theme(ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        primary: primaryColor,
+        brightness: Brightness.dark));
   }
 
   static ColorScheme darkMediumContrastScheme() {
@@ -334,12 +341,12 @@ class MaterialTheme {
           bodyColor: colorScheme.onSurface,
           displayColor: colorScheme.onSurface,
         ),
-        scaffoldBackgroundColor: colorScheme.surface,
+        //scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
         appBarTheme: AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
-            systemNavigationBarColor: colorScheme.surface
-          ),
+              systemNavigationBarColor: Colors.transparent,
+              systemNavigationBarContrastEnforced: false),
         ),
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(

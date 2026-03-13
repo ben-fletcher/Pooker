@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/models/game_model.dart';
@@ -70,22 +69,24 @@ class _SetupPageState extends State<SetupPage> {
                         child: Text('No players added yet'),
                       );
                     }
-            
-                    return ReorderableListView.builder(
-                      itemCount: gameModel.players.length,
-                      onReorder: (oldIndex, newIndex) {
-                        if (newIndex > oldIndex) newIndex -= 1;
-                        final player = gameModel.players.removeAt(oldIndex);
-                        gameModel.players.insert(newIndex, player);
-                        // Re-index the players
-                        for (var i = 0; i < gameModel.players.length; i++) {
-                          gameModel.players[i].id = i + 1;
-                        }
-                        setState(() {});
-                      },
-                      itemBuilder: (context, index) {
-                        return _buildPlayerCard(gameModel, index);
-                      },
+
+                    return Card.outlined(
+                      child: ReorderableListView.builder(
+                        itemCount: gameModel.players.length,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          final player = gameModel.players.removeAt(oldIndex);
+                          gameModel.players.insert(newIndex, player);
+                          // Re-index the players
+                          for (var i = 0; i < gameModel.players.length; i++) {
+                            gameModel.players[i].id = i + 1;
+                          }
+                          setState(() {});
+                        },
+                        itemBuilder: (context, index) {
+                          return _buildPlayerCard(gameModel, index);
+                        },
+                      ),
                     );
                   }),
                 ),
@@ -132,25 +133,14 @@ class _SetupPageState extends State<SetupPage> {
   }
 
   Widget _buildPlayerCard(GameModel gameModel, int index) {
-    return Card(
-      elevation: 5,
+    return ListTile(
       key: ValueKey(gameModel.players[index].id),
-      child: Stack(
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              radius: 16,
-              child: Icon(Icons.person,
-                  color: Theme.of(context).colorScheme.onSurface),
-            ),
-            title:
-                Text(gameModel.players[index].name, style: TextStyle(fontSize: 18)),
-            trailing: IconButton(
-              icon: Icon(Icons.remove_circle_outline, color: Colors.red),
-              onPressed: () => _removePlayer(gameModel, index),
-            ),
-          ),
-        ],
+      enableFeedback: true,
+      title:
+          Text(gameModel.players[index].name, style: TextStyle(fontSize: 18)),
+      trailing: ReorderableDragStartListener(
+        index: index,
+        child: const Icon(Icons.drag_handle),
       ),
     );
   }
@@ -181,25 +171,38 @@ class _SetupPageState extends State<SetupPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FilledButton.icon(
-                      onPressed: () {
-                        showAddPlayerDialog(context).then((value) {
-                          setState(() {
-                            _playersFuture = GameDatabaseService.loadPlayers();
+                        style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.tertiary)),
+                        onPressed: () {
+                          showAddPlayerDialog(context).then((value) {
+                            setState(() {
+                              _playersFuture =
+                                  GameDatabaseService.loadPlayers();
+                            });
                           });
-                        });
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text('Add Player'),
-                    ),
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text(
+                          'New',
+                          style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge!
+                                  .fontSize),
+                        )),
                   );
                 }
 
                 final player = playersToAdd.elementAt(index);
 
-                return Card(
+                return Card.filled(
                   child: Center(
                     child: ListTile(
                       title: Text(player, style: TextStyle(fontSize: 18)),
+                      onTap: () {
+                        _addPlayer(player, gameModel);
+                      },
                       trailing: IconButton(
                         onPressed: () {
                           _addPlayer(player, gameModel);

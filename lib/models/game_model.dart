@@ -9,16 +9,20 @@ import 'package:pooker_score/services/database_service.dart';
 
 class GameModel extends ChangeNotifier {
   final List<Player> players = [];
+  final List<PlayerTurn> _turnHistory = [];
+
   int totalBalls = 15;
-  get activePlayer => players[_currentPlayerIndex];
+  int blackBallFoulPoints = -1;
+  bool luckyFinish = false;
+
   int _currentPlayerIndex = 0;
   BallColour _nextTargetBall = BallColour.red;
-  bool hasSaved = false;
-  final List<PlayerTurn> _turnHistory = [];
   bool _skillShotEnabled = false;
+  DateTime _startDate = DateTime.now();
 
   BallColour get nextTargetBall => _nextTargetBall;
   bool get skillShotEnabled => _skillShotEnabled;
+  get activePlayer => players.isNotEmpty ? players[_currentPlayerIndex] : null;
 
   Future<void> loadSettings() async {
     _skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
@@ -27,7 +31,18 @@ class GameModel extends ChangeNotifier {
 
   void submitGameEvent(GameEvent event, NavigatorState navigator) {
     if (event.colour != _nextTargetBall && event.potted) {
-      event = GameEvent(foul: true, colour: event.colour, potted: true);
+      event = GameEvent(
+          foul: true,
+          colour: event.colour,
+          potted: true,
+          count: event.count,
+          pointsOverride: event.pointsOverride);
+    }
+
+    if (remainingBalls == 0 &&
+        event.potted &&
+        event.colour == BallColour.black) {
+      event.pointsOverride = luckyFinish ? 5 : null;
     }
 
     var turn = PlayerTurn(
@@ -68,9 +83,9 @@ class GameModel extends ChangeNotifier {
       return PlayerResult(player.name, player.score);
     }).toList();
 
-    var gameResult = GameResult(date: DateTime.now(), players: playerResults);
+    var gameResult = GameResult(date: _startDate, players: playerResults);
     GameDatabaseService.insertGameResult(gameResult);
-    hasSaved = true;
+    debugPrint("Saved game");
   }
 
   void undoLastEvent(BuildContext context) {
@@ -80,16 +95,27 @@ class GameModel extends ChangeNotifier {
       player.turns.removeLast();
 
       if (lastTurn.event.potted) {
-        _nextTargetBall = lastTurn.event.colour;
+        if (lastTurn.event.foul != true) {
+          _nextTargetBall = lastTurn.event.colour;
+        } else {
+          _nextTargetBall = _turnHistory.last.event.colour == BallColour.red
+              ? BallColour.black
+              : BallColour.red;
+        }
+      } else if (_turnHistory.isNotEmpty &&
+          _turnHistory.last.event.colour != BallColour.na) {
+        _nextTargetBall = _turnHistory.last.event.colour == BallColour.red
+            ? BallColour.black
+            : BallColour.red;
       }
 
       _currentPlayerIndex = lastTurn.playerIndex;
-      
+
       // Ensure next target is black if no reds remain
       if (remainingBalls <= 0) {
         _nextTargetBall = BallColour.black;
       }
-      
+
       notifyListeners();
     } else {
       showDialog<void>(
@@ -151,6 +177,10 @@ class GameModel extends ChangeNotifier {
   }
 
   int _calculateScore(GameEvent event) {
+    if (event.pointsOverride != null) {
+      return event.pointsOverride!;
+    }
+
     if (event.foul == true) {
       return -1;
     }
@@ -170,14 +200,27 @@ class GameModel extends ChangeNotifier {
     players.clear();
     _currentPlayerIndex = 0;
     _nextTargetBall = BallColour.red;
-    hasSaved = false;
     _turnHistory.clear();
+    _startDate = DateTime.now();
+    blackBallFoulPoints = -1;
+    luckyFinish = false;
+    totalBalls = 15;
 
     notifyListeners();
   }
 
   void setTotalBalls(int balls) {
     totalBalls = balls;
+    notifyListeners();
+  }
+
+  void setBlackBallFoulPoints(int foulPoints) {
+    blackBallFoulPoints = foulPoints;
+    notifyListeners();
+  }
+
+  void setLuckyFinish(bool value) {
+    luckyFinish = value;
     notifyListeners();
   }
 
@@ -194,7 +237,7 @@ class GameModel extends ChangeNotifier {
   void adjustPlayerScore(Player player, int newScore) {
     int currentScore = player.score;
     int adjustment = newScore - currentScore;
-    
+
     if (adjustment != 0) {
       // Create a manual adjustment turn
       var adjustmentTurn = PlayerTurn(
@@ -207,33 +250,33 @@ class GameModel extends ChangeNotifier {
         ),
         ballIndex: 0,
       );
-      
+
       player.turns.add(adjustmentTurn);
       _turnHistory.add(adjustmentTurn);
-      
+
       // Ensure next target is black if no reds remain
       if (remainingBalls <= 0) {
         _nextTargetBall = BallColour.black;
       }
-      
+
       notifyListeners();
     }
   }
 
   void applySkillShotBonus() {
     if (!_skillShotEnabled) return;
-    
+
     // Find the last turn (pot, foul, or miss)
     if (_turnHistory.isEmpty) return;
-    
+
     final lastTurn = _turnHistory.last;
-    
+
     // Don't apply skill shot to another skill shot
-    final bool isAlreadySkillShot = !lastTurn.event.potted && 
-                                    lastTurn.event.foul != true && 
-                                    lastTurn.event.colour == BallColour.na && 
-                                    lastTurn.score > 0;
-    
+    final bool isAlreadySkillShot = !lastTurn.event.potted &&
+        lastTurn.event.foul != true &&
+        lastTurn.event.colour == BallColour.na &&
+        lastTurn.score > 0;
+
     if (!isAlreadySkillShot) {
       // Add skill shot bonus to the last player who did something
       // (works for impressive pots OR funny fouls!)
@@ -247,7 +290,7 @@ class GameModel extends ChangeNotifier {
         ),
         ballIndex: 0,
       );
-      
+
       players[lastTurn.playerIndex].turns.add(bonusTurn);
       _turnHistory.add(bonusTurn);
       notifyListeners();

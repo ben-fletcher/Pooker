@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:pooker_score/components/new_player_picker.dart';
 import 'package:pooker_score/data.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/pages/rules.dart';
-import 'package:pooker_score/services/database_service.dart';
 import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
@@ -43,20 +43,26 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MaterialTheme>(builder: (context, theme, _) {
-      return Theme(
-        data: theme.dark(),
-        child: Consumer<GameModel>(builder: (context, gameModel, child) {
-          return Scaffold(
+      return Consumer<GameModel>(builder: (context, gameModel, child) {
+        return Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/felt.png'), fit: BoxFit.cover)),
+          child: Scaffold(
+            restorationId: 'calculator',
+            backgroundColor: Colors.black.withValues(alpha: 0.7),
             appBar: AppBar(
               title: Text(APP_TITLE),
               elevation: 0,
+              scrolledUnderElevation: 0,
+              forceMaterialTransparency: true,
+              centerTitle: true,
               bottom: PreferredSize(
                   preferredSize: Size(double.infinity, 3),
                   child: LinearProgressIndicator(
                     value: (gameModel.totalBalls - gameModel.remainingBalls) /
                         gameModel.totalBalls,
                   )),
-              scrolledUnderElevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.undo),
                 onPressed: () {
@@ -157,9 +163,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 ),
               ),
             ),
-          );
-        }),
-      );
+          ),
+        );
+      });
     });
   }
 
@@ -258,50 +264,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   Future showAddMidGamePlayerDialog(GameModel gameModel) async {
-    List<String> players = await GameDatabaseService.loadPlayers();
-    players = players
-        .where((player) => !gameModel.players.any((p) => p.name == player))
-        .toList();
-    final playerController = TextEditingController();
-    String? selectedPlayer;
-
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Player'),
-        content: DropdownMenu<String>(
-          width: double.infinity,
-          controller: playerController,
-          requestFocusOnTap: false,
-          enableSearch: false,
-          label: const Text('Player'),
-          dropdownMenuEntries: players
-              .map((player) => DropdownMenuEntry(value: player, label: player))
-              .toList(),
-          onSelected: (String? player) {
-            selectedPlayer = player;
-          },
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                if (selectedPlayer == null) {
-                  return;
-                }
-                gameModel.addPlayer(Player(
-                    id: gameModel.players.length + 1,
-                    name: selectedPlayer!,
-                    turns: []));
-                Navigator.of(context).pop();
-              },
-              child: Text('Add')),
-        ],
-      ),
-    );
+    return showModalBottomSheet(
+        // ignore: use_build_context_synchronously
+        context: context,
+        showDragHandle: true,
+        useSafeArea: true,
+        isScrollControlled: true,
+        builder: (context) => DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.5,
+            maxChildSize: 0.7,
+            minChildSize: .3,
+            builder: (context, controller) {
+              return NewPlayerPicker(
+                  gameModel: gameModel, scrollController: controller);
+            }));
   }
 }

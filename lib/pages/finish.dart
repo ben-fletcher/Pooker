@@ -50,9 +50,7 @@ class _FinishPageState extends State<FinishPage> {
         children: [
           Consumer<GameModel>(
             builder: (context, gameModel, child) {
-              if (!gameModel.hasSaved) {
-                gameModel.saveGame();
-              }
+              gameModel.saveGame();
 
               // Sort players by score in descending order
               final players = gameModel.players;

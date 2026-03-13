@@ -20,97 +20,81 @@ class _PlayerScreenState extends State<PlayerScreen> {
         title: Text('Players'),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            FutureBuilder(
-                future: players,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting &&
-                      snapshot.hasData == false) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-        
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-        
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final player = snapshot.data![index];
-                        return ListTile(
-                          title: Text(player),
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PlayerDetailScreen(
-                                  playerName: player,
-                                ),
-                              ),
+        child: FutureBuilder(
+            future: players,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  snapshot.hasData == false) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              return Card(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final player = snapshot.data![index];
+                    return ListTile(
+                      title: Text(player,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: FutureBuilder(
+                          future:
+                              GameDatabaseService.getPlayerStatistics(player),
+                          builder: (context, asyncSnapshot) {
+                            return Wrap(
+                              spacing: 8,
+                              children: [
+                                Chip(
+                                    label: Text(
+                                      "Games: ${asyncSnapshot.data?['gamesPlayed']}",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    side: BorderSide(
+                                        color: Colors.blue.shade800,
+                                        width: 0.3),
+                                    visualDensity: VisualDensity.compact,
+                                    padding: EdgeInsets.all(0)),
+                                Chip(
+                                    label: Text(
+                                        "High Score: ${asyncSnapshot.data?['highestScore']}",
+                                        style: TextStyle(fontSize: 12)),
+                                    side: BorderSide(
+                                        color: Colors.amber, width: 0.3),
+                                    visualDensity: VisualDensity.compact,
+                                    padding: EdgeInsets.all(0)),
+                              ],
                             );
-                          },
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => PlayerDetailScreen(
-                                          playerName: player,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(Icons.bar_chart_rounded)),
-                              IconButton(
-                                  onPressed: () async {
-                                    // Confirm the deletion
-                                    bool? confirm = await showDialog<bool>(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: Text('Delete Player'),
-                                        content: Text('Are you sure you want to delete this player?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Theme.of(context).colorScheme.error,
-                                            ),
-                                            child: const Text('Delete'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                    if (confirm == true) {
-                                      GameDatabaseService.deletePlayer(player);
-                                      setState(() {
-                                        players = GameDatabaseService.loadPlayers();
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(
-                                    Icons.delete_outline_rounded,
-                                    color: Theme.of(context).colorScheme.error,
-                                  )),
-                            ],
+                          }),
+                      leading: Icon(Icons.person),
+                      onTap: () async {
+                        final reload = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PlayerDetailScreen(
+                              playerName: player,
+                            ),
                           ),
                         );
+                        if (reload == true) {
+                          setState(() {
+                            players = GameDatabaseService.loadPlayers();
+                          });
+                        }
                       },
-                    ),
-                  );
-                })
-          ],
-        ),
+                    );
+                  },
+                ),
+              );
+            }),
       ),
       floatingActionButton: FloatingActionButton.extended(
           label: Text("Add Player"),
           icon: Icon(Icons.add),
+          isExtended: false,
           onPressed: () {
             showAddPlayerDialog(context).then((value) {
               setState(() {

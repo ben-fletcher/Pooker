@@ -20,127 +20,153 @@ class GameSettingsPage extends StatelessWidget {
         final colorScheme = Theme.of(context).colorScheme;
 
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16.0),
-                const Text(
-                  'Select Game Type:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _setGameType(15, gameModel);
-                      },
-                      child: Column(
-                        children: [
-                          CustomPaint(
-                            size: const Size(100, 100),
-                            painter: TriangleRackPainter(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant),
-                          ),
-                          const SizedBox(height: 8),
-                          Chip(
-                            backgroundColor: gameModel.totalBalls == 15
-                                ? colorScheme.primary
-                                : null,
-                            label: Text(
-                              '15-ball',
-                              style: TextStyle(
-                                color: gameModel.totalBalls == 15
-                                    ? colorScheme.onPrimary
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _setGameType(9, gameModel);
-                      },
-                      child: Column(
-                        children: [
-                          CustomPaint(
-                            size: const Size(65, 100),
-                            painter: DiamondRackPainter(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant),
-                          ),
-                          const SizedBox(height: 8),
-                          Chip(
-                            backgroundColor: gameModel.totalBalls == 9
-                                ? colorScheme.primary
-                                : null,
-                            label: Text(
-                              '9-ball',
-                              style: TextStyle(
-                                color: gameModel.totalBalls == 9
-                                    ? colorScheme.onPrimary
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Expanded(
-                  child: Column(
-                    children: [
-                      const Expanded(child: SizedBox()),
-                      SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          onPressed: gameModel.players.isNotEmpty
-                              ? () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CalculatorPage()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                }
-                              : null,
-                          style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            backgroundColor:
-                                gameModel.players.isNotEmpty ? null : Colors.grey,
-                            textStyle: TextStyle(fontSize: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          icon: const Icon(Icons.play_circle_fill, size: 32),
-                          label: const Text('Start Game',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              )),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16.0),
+                        const Text(
+                          'Select Game Type:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      const SizedBox(height: 20)
-                    ],
+                        const SizedBox(height: 30),
+                        _buildGameTypePicker(gameModel, context, colorScheme),
+                        const SizedBox(height: 32),
+                        const Divider(),
+                        SwitchListTile(
+                          title: const Text('Hard Mode'),
+                          subtitle: const Text(
+                            'Fouls on black are -3 points',
+                          ),
+                          value: gameModel.blackBallFoulPoints == -3,
+                          onChanged: (s) {
+                            print("Set");
+                            gameModel.setBlackBallFoulPoints(s ? -3 : -1);
+                          },
+                          secondary: const Icon(Icons.keyboard_double_arrow_up),
+                        ),
+                        SwitchListTile(
+                          title: const Text('Lucky Finish'),
+                          subtitle: const Text(
+                            'Last black is worth 5 points',
+                          ),
+                          value: gameModel.luckyFinish,
+                          onChanged: gameModel.setLuckyFinish,
+                          secondary: const Icon(Icons.flag),
+                        ),
+                        const Spacer(),
+                        _buildStartButton(gameModel, context),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }),
         );
       }),
+    );
+  }
+
+  SizedBox _buildStartButton(GameModel gameModel, BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: gameModel.players.isNotEmpty
+            ? () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => const CalculatorPage()),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            : null,
+        style: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          backgroundColor: gameModel.players.isNotEmpty ? null : Colors.grey,
+          textStyle: TextStyle(fontSize: 18),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        icon: const Icon(Icons.play_circle_fill, size: 32),
+        label: const Text('Start Game',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            )),
+      ),
+    );
+  }
+
+  Row _buildGameTypePicker(
+      GameModel gameModel, BuildContext context, ColorScheme colorScheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        GestureDetector(
+          onTap: () {
+            _setGameType(15, gameModel);
+          },
+          child: Column(
+            children: [
+              CustomPaint(
+                size: const Size(100, 100),
+                painter: TriangleRackPainter(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 8),
+              Chip(
+                backgroundColor:
+                    gameModel.totalBalls == 15 ? colorScheme.primary : null,
+                label: Text(
+                  '15-ball',
+                  style: TextStyle(
+                    color: gameModel.totalBalls == 15
+                        ? colorScheme.onPrimary
+                        : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            _setGameType(9, gameModel);
+          },
+          child: Column(
+            children: [
+              CustomPaint(
+                size: const Size(65, 100),
+                painter: DiamondRackPainter(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 8),
+              Chip(
+                backgroundColor:
+                    gameModel.totalBalls == 9 ? colorScheme.primary : null,
+                label: Text(
+                  '9-ball',
+                  style: TextStyle(
+                    color: gameModel.totalBalls == 9
+                        ? colorScheme.onPrimary
+                        : null,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
