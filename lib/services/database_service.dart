@@ -84,13 +84,21 @@ class GameDatabaseService {
     await _database!.delete('game_history');
   }
 
-  static Future<void> insertPlayer(String name) async {
-    if (_database == null) return;
+  static Future<bool> insertPlayer(String name) async {
+    if (_database == null) return false;
+
+    final existingPlayer = await _database!.query('player', where: 'name = ?', whereArgs: [name]);
+    if (existingPlayer.isNotEmpty) {
+      return false;
+    }
+
     await _database!.insert(
       'player',
       {'name': name},
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+
+    return true;
   }
 
   static Future<List<String>> loadPlayers() async {

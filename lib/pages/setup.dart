@@ -135,13 +135,12 @@ class _SetupPageState extends State<SetupPage> {
   Widget _buildPlayerCard(GameModel gameModel, int index) {
     return ListTile(
       key: ValueKey(gameModel.players[index].id),
-      leading: Icon(Icons.drag_handle),
       enableFeedback: true,
       title:
           Text(gameModel.players[index].name, style: TextStyle(fontSize: 18)),
-      trailing: IconButton(
-        icon: Icon(Icons.remove_circle_outline),
-        onPressed: () => _removePlayer(gameModel, index),
+      trailing: ReorderableDragStartListener(
+        index: index,
+        child: const Icon(Icons.drag_handle),
       ),
     );
   }

@@ -20,6 +20,38 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.playerName}\'s Profile'),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                bool? confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Delete Player'),
+                    content:
+                        Text('Are you sure you want to delete this player?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true) {
+                  GameDatabaseService.deletePlayer(widget.playerName).then((_) {
+                    Navigator.of(context).pop(true);
+                  });
+                }
+              },
+              icon: Icon(Icons.delete_outline_rounded))
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Container(

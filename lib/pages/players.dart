@@ -71,58 +71,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             );
                           }),
                       leading: Icon(Icons.person),
-                      onTap: () {
-                        Navigator.of(context).push(
+                      onTap: () async {
+                        final reload = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => PlayerDetailScreen(
                               playerName: player,
                             ),
                           ),
                         );
+                        if (reload == true) {
+                          setState(() {
+                            players = GameDatabaseService.loadPlayers();
+                          });
+                        }
                       },
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed: () async {
-                                bool? confirm = await showDialog<bool>(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text('Delete Player'),
-                                    content: Text(
-                                        'Are you sure you want to delete this player?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(false),
-                                        child: Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(true),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                        ),
-                                        child: const Text('Delete'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                if (confirm == true) {
-                                  GameDatabaseService.deletePlayer(player);
-                                  setState(() {
-                                    players = GameDatabaseService.loadPlayers();
-                                  });
-                                }
-                              },
-                              icon: Icon(
-                                Icons.delete_outline_rounded,
-                                color: Theme.of(context).colorScheme.error,
-                              )),
-                        ],
-                      ),
                     );
                   },
                 ),
@@ -132,6 +94,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       floatingActionButton: FloatingActionButton.extended(
           label: Text("Add Player"),
           icon: Icon(Icons.add),
+          isExtended: false,
           onPressed: () {
             showAddPlayerDialog(context).then((value) {
               setState(() {

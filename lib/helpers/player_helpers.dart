@@ -27,9 +27,28 @@ Future<void> showAddPlayerDialog(BuildContext context) {
               onPressed: () {
                 final playerName = nameController.text;
                 if (playerName.isNotEmpty) {
-                  GameDatabaseService.insertPlayer(playerName);
+                  GameDatabaseService.insertPlayer(playerName).then((success) {
+                    if (!success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Player already exists',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onErrorContainer),
+                          ),
+                          duration: Duration(seconds: 2),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.errorContainer,
+                        ),
+                      );
+                    }
+                    Navigator.of(context).pop();
+                  });
+                } else {
+                  Navigator.of(context).pop();
                 }
-                Navigator.of(context).pop();
               },
               child: Text('Add'),
             ),

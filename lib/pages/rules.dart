@@ -8,6 +8,7 @@ class RulesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('How to Play Pooker'),
+        centerTitle: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

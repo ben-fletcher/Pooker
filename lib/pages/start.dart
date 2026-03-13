@@ -160,7 +160,7 @@ class StartPage extends StatelessWidget {
                                           const HistoryPage()),
                                 );
                               }),
-                          SizedBox(width: 30),
+                          SizedBox(width: 20),
                           FilledButton.tonal(
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
