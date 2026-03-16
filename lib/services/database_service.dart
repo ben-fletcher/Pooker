@@ -87,7 +87,8 @@ class GameDatabaseService {
   static Future<bool> insertPlayer(String name) async {
     if (_database == null) return false;
 
-    final existingPlayer = await _database!.query('player', where: 'name = ?', whereArgs: [name]);
+    final existingPlayer =
+        await _database!.query('player', where: 'name = ?', whereArgs: [name]);
     if (existingPlayer.isNotEmpty) {
       return false;
     }

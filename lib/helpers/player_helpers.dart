@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/services/database_service.dart';
 
 Future<void> showAddPlayerDialog(BuildContext context) {
@@ -55,4 +56,27 @@ Future<void> showAddPlayerDialog(BuildContext context) {
           ],
         );
       });
+}
+
+List<Player> getOrderPlayers(List<Player> players) {
+  final playersCopy = players.toList();
+  playersCopy.sort((a, b) {
+    var scoreCompare = b.score.compareTo(a.score);
+    if (scoreCompare != 0) {
+      return scoreCompare;
+    }
+
+    scoreCompare = a.turns
+        .where((t) => t.event.foul == true)
+        .length
+        .compareTo(b.turns.where((t) => t.event.foul == true).length);
+    if (scoreCompare != 0) {
+      return scoreCompare;
+    }
+
+    // Player starting after get's tie broken
+    return -1;
+  });
+
+  return playersCopy;
 }

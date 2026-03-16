@@ -138,10 +138,15 @@ class _SetupPageState extends State<SetupPage> {
       enableFeedback: true,
       title:
           Text(gameModel.players[index].name, style: TextStyle(fontSize: 18)),
-      trailing: ReorderableDragStartListener(
+      leading: ReorderableDragStartListener(
         index: index,
         child: const Icon(Icons.drag_handle),
       ),
+      trailing: IconButton(
+          onPressed: () {
+            _removePlayer(gameModel, index);
+          },
+          icon: Icon(Icons.remove_circle)),
     );
   }
 
@@ -199,7 +204,9 @@ class _SetupPageState extends State<SetupPage> {
                 return Card.filled(
                   child: Center(
                     child: ListTile(
-                      title: Text(player, style: TextStyle(fontSize: 18)),
+                      title: Text(player,
+                          style: TextStyle(
+                              fontSize: 18, overflow: TextOverflow.ellipsis)),
                       onTap: () {
                         _addPlayer(player, gameModel);
                       },

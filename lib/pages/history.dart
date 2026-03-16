@@ -106,7 +106,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return gameHistory.map((game) {
       final sortedPlayers = List.from(game.players)
         ..sort((a, b) => b.score.compareTo(a.score));
-      return Card(
+      return Card.outlined(
         margin: const EdgeInsets.all(8.0),
         child: ListTile(
           title:

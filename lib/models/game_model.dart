@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/pages/finish.dart';
@@ -23,6 +24,7 @@ class GameModel extends ChangeNotifier {
   BallColour get nextTargetBall => _nextTargetBall;
   bool get skillShotEnabled => _skillShotEnabled;
   get activePlayer => players.isNotEmpty ? players[_currentPlayerIndex] : null;
+  List<PlayerTurn> get turnHistory => _turnHistory;
 
   Future<void> loadSettings() async {
     _skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
@@ -79,7 +81,7 @@ class GameModel extends ChangeNotifier {
       return;
     }
 
-    var playerResults = players.map((player) {
+    var playerResults = getOrderPlayers(players).map((player) {
       return PlayerResult(player.name, player.score);
     }).toList();
 
