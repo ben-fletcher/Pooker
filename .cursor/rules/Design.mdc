@@ -1,0 +1,10 @@
+---
+description: 
+alwaysApply: true
+---
+
+- In general I'm following modern material design with elements from Material 3 Expressive
+- As this is a game scoring app it the design should be fun and have playful elements.
+- The app is always in dark mode so you'll need to consider how to adapt designs to look best
+- The app is for a game called Pooker which is a cross between Pool and Snooker
+- adding animations is a great way to make the app more fun!

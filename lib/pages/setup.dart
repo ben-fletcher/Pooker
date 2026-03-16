@@ -59,8 +59,14 @@ class _SetupPageState extends State<SetupPage> {
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
-                  child: Text('Current Players (${gameModel.players.length})',
-                      style: TextStyle(fontSize: 20)),
+                  child: Row(
+                    children: [
+                      Icon(Icons.people_outline_outlined, color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 10),
+                      Text('Current Players (${gameModel.players.length})',
+                          style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Builder(builder: (context) {
@@ -90,9 +96,15 @@ class _SetupPageState extends State<SetupPage> {
                     );
                   }),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
-                  child: Text('Add Players', style: TextStyle(fontSize: 20)),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      Icon(Icons.person_add, color: Theme.of(context).colorScheme.primary),
+                      const Text('Add Players', style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
                 ),
                 _buildPlayerSelector(gameModel),
                 const SizedBox(height: 16),
