@@ -51,7 +51,9 @@ class _ScoreboardState extends State<Scoreboard> {
           }
 
           for (var c in horizonalControllers) {
-            c.jumpTo(c.position.maxScrollExtent);
+            if (c.positions.isNotEmpty) {
+              c.jumpTo(c.position.maxScrollExtent);
+            }
           }
         });
 

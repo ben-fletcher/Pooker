@@ -17,7 +17,7 @@ class GameDatabaseService {
       path,
       onCreate: (db, version) async {
         await db.execute(
-            'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, players TEXT)');
+            'CREATE TABLE game_history(id INTEGER PRIMARY KEY, date TEXT, sorted TEXT, players TEXT)');
         await db
             .execute('CREATE TABLE player(id INTEGER PRIMARY KEY, name TEXT)');
         await db
@@ -30,8 +30,11 @@ class GameDatabaseService {
         if (oldVersion < 3) {
           db.execute('CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT)');
         }
+        if (oldVersion < 4) {
+          db.execute('ALTER TABLE game_history ADD COLUMN sorted text');
+        }
       },
-      version: 3,
+      version: 4,
     );
   }
 
