@@ -72,8 +72,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               ],
                             );
                           }),
-                      leading:
-                          CircleAvatar(child: Text(player[0].toUpperCase())),
+                      leading: Hero(
+                          tag: player,
+                          child: CircleAvatar(
+                              child: Text(player[0].toUpperCase()))),
                       onTap: () async {
                         final reload = await Navigator.of(context).push(
                           MaterialPageRoute(

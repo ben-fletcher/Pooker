@@ -104,16 +104,14 @@ class _HistoryPageState extends State<HistoryPage> {
 
   List<Widget> buildHistoryListItems(List<GameResult> gameHistory) {
     return gameHistory.map((game) {
-      final sortedPlayers = List.from(game.players)
-        ..sort((a, b) => b.score.compareTo(a.score));
-      return Card.filled(
+      return Card(
         margin: const EdgeInsets.all(8.0),
         child: ListTile(
           title:
               Text('Game on ${DateFormat.yMMMMd().add_Hm().format(game.date)}'),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: sortedPlayers.asMap().entries.map((entry) {
+            children: game.players.asMap().entries.map((entry) {
               final player = entry.value;
               final position = entry.key + 1;
               Color textColor;

@@ -55,10 +55,13 @@ class GameResultPage extends StatelessWidget {
                             : Colors.white
                         : null;
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: playerColor,
-                        foregroundColor: foregroundColor,
-                        child: Text((index + 1).toString()),
+                      leading: Hero(
+                        tag: sortedPlayers[index].name,
+                        child: CircleAvatar(
+                          backgroundColor: playerColor,
+                          foregroundColor: foregroundColor,
+                          child: Text((index + 1).toString()),
+                        ),
                       ),
                       title: Text(sortedPlayers[index].name),
                       trailing: Text(sortedPlayers[index].score.toString()),
