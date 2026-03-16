@@ -9,20 +9,26 @@ import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/widgets/turn_icon.dart';
 import 'package:provider/provider.dart';
 
-class Scoreboard extends StatelessWidget {
+class Scoreboard extends StatefulWidget {
   final bool isEditMode;
   final void Function(Player)? onScoreTap;
 
-  const Scoreboard({
+  Scoreboard({
     super.key,
     this.isEditMode = false,
     this.onScoreTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+  State<Scoreboard> createState() => _ScoreboardState();
+}
 
+class _ScoreboardState extends State<Scoreboard> {
+  final ScrollController scrollController = ScrollController();
+  final List<ScrollController> horizonalControllers = [];
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<GameModel>(
       builder: (context, gameModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,7 +49,20 @@ class Scoreboard extends StatelessWidget {
               );
             }
           }
+
+          for (var c in horizonalControllers) {
+            c.jumpTo(c.position.maxScrollExtent);
+          }
         });
+
+        if (horizonalControllers.length != gameModel.players.length) {
+          print('Generate controllers');
+          for (int i = 0;
+              i <= gameModel.players.length - horizonalControllers.length;
+              i++) {
+            horizonalControllers.add(ScrollController());
+          }
+        }
 
         final cs = Theme.of(context).colorScheme;
         return Padding(
@@ -154,15 +173,16 @@ class Scoreboard extends StatelessWidget {
                                         text: '$foulCount'),
                                     const SizedBox(width: 20),
                                     GestureDetector(
-                                      onTap: isEditMode && onScoreTap != null
-                                          ? () => onScoreTap!(player)
+                                      onTap: widget.isEditMode &&
+                                              widget.onScoreTap != null
+                                          ? () => widget.onScoreTap!(player)
                                           : null,
                                       child: Container(
-                                        padding: isEditMode
+                                        padding: widget.isEditMode
                                             ? const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 4)
                                             : null,
-                                        decoration: isEditMode
+                                        decoration: widget.isEditMode
                                             ? BoxDecoration(
                                                 color: cs.primaryContainer
                                                     .withValues(alpha: 0.3),
@@ -188,7 +208,7 @@ class Scoreboard extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.w700),
                                             ),
-                                            if (isEditMode) ...[
+                                            if (widget.isEditMode) ...[
                                               const SizedBox(width: 4),
                                               Icon(
                                                 Icons.edit,
@@ -204,11 +224,14 @@ class Scoreboard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 6),
                                 // Turn history: last 16 icons
-                                SizedBox(
+                                Container(
                                   height: 15,
                                   child: AnimatedList(
                                       key: player.animatedListState,
                                       scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.only(right: 28),
+                                      controller: horizonalControllers[
+                                          gameModel.players.indexOf(player)],
                                       initialItemCount:
                                           min(player.turns.length, 16),
                                       itemBuilder: (context, index, animation) {
