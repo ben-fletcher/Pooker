@@ -98,29 +98,32 @@ class _SetupPageState extends State<SetupPage> {
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: gameModel.players.isNotEmpty
-                        ? () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => GameSettingsPage()));
-                          }
-                        : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      backgroundColor:
-                          gameModel.players.isNotEmpty ? null : Colors.grey,
-                      textStyle:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Hero(
+                    tag: 'next_button',
+                    child: FilledButton.icon(
+                      onPressed: gameModel.players.isNotEmpty
+                          ? () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => GameSettingsPage()));
+                            }
+                          : null,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        backgroundColor:
+                            gameModel.players.isNotEmpty ? null : Colors.grey,
+                        textStyle: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
+                      icon: const Icon(Icons.skip_next_sharp, size: 32),
+                      label: const Text('Next',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
                     ),
-                    icon: const Icon(Icons.skip_next_sharp, size: 32),
-                    label: const Text('Next',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
                   ),
                 ),
                 const SizedBox(height: 20),

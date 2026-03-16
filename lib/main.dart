@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pooker_score/models/game_model.dart';
+import 'package:pooker_score/pages/onboarding.dart';
 import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/services/database_service.dart';
 import 'package:pooker_score/theme.dart';
@@ -27,6 +28,12 @@ class MyApp extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context);
 
     MaterialTheme theme = MaterialTheme(textTheme);
+    Widget startPage = StartPage();
+
+    // ignore: dead_code
+    if (false) {
+      startPage = OnboardingPage();
+    }
 
     return MultiProvider(
         providers: [
@@ -38,7 +45,7 @@ class MyApp extends StatelessWidget {
           theme: theme.light(),
           darkTheme: theme.dark(),
           themeMode: ThemeMode.dark,
-          home: StartPage(),
+          home: startPage,
           debugShowCheckedModeBanner: false,
         ));
   }

@@ -168,7 +168,7 @@ class RulesPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          SelectableText(
             title,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -176,7 +176,7 @@ class RulesPage extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 12),
-          Text(
+          SelectableText(
             content,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   height: 1.5,
@@ -198,14 +198,14 @@ class RulesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              SelectableText(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 12),
-              Text(
+              SelectableText(
                 content,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       height: 1.5,

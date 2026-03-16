@@ -23,7 +23,7 @@ class GameSettingsPage extends StatelessWidget {
           child: LayoutBuilder(builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
@@ -79,30 +79,33 @@ class GameSettingsPage extends StatelessWidget {
   SizedBox _buildStartButton(GameModel gameModel, BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: gameModel.players.isNotEmpty
-            ? () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (context) => const CalculatorPage()),
-                  (Route<dynamic> route) => false,
-                );
-              }
-            : null,
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          backgroundColor: gameModel.players.isNotEmpty ? null : Colors.grey,
-          textStyle: TextStyle(fontSize: 18),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+      child: Hero(
+        tag: 'next_button',
+        child: FilledButton.icon(
+          onPressed: gameModel.players.isNotEmpty
+              ? () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const CalculatorPage()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+              : null,
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            backgroundColor: gameModel.players.isNotEmpty ? null : Colors.grey,
+            textStyle: TextStyle(fontSize: 18),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
           ),
+          icon: const Icon(Icons.play_circle_fill, size: 32),
+          label: const Text('Start Game',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              )),
         ),
-        icon: const Icon(Icons.play_circle_fill, size: 32),
-        label: const Text('Start Game',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            )),
       ),
     );
   }

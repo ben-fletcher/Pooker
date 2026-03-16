@@ -50,7 +50,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   image: AssetImage('assets/felt.png'), fit: BoxFit.cover)),
           child: Scaffold(
             restorationId: 'calculator',
-            backgroundColor: Colors.black.withValues(alpha: 0.7),
+            backgroundColor: Colors.black.withValues(alpha: 0.6),
             appBar: AppBar(
               title: Text(APP_TITLE),
               elevation: 0,
