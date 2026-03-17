@@ -55,7 +55,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                       style: TextStyle(fontSize: 12),
                                     ),
                                     side: BorderSide(
-                                        color: Colors.blue.shade800,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
                                         width: 0.3),
                                     visualDensity: VisualDensity.compact,
                                     padding: EdgeInsets.all(0)),
@@ -70,7 +72,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               ],
                             );
                           }),
-                      leading: Icon(Icons.person),
+                      leading: Hero(
+                          tag: player,
+                          child: CircleAvatar(
+                              child: Text(player[0].toUpperCase()))),
                       onTap: () async {
                         final reload = await Navigator.of(context).push(
                           MaterialPageRoute(

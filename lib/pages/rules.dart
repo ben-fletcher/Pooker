@@ -55,6 +55,13 @@ class RulesPage extends StatelessWidget {
                     '1. Players must first pot a red ball\n2. After potting a red, they can attempt the black ball\n3. Continue alternating red-black until no reds remain\n4. Once all reds are gone, only the black ball remains\n5. The game ends when the black ball is potted with no reds left',
               ),
 
+              _buildHighlightCard(
+                context,
+                title: 'End of Turn',
+                content:
+                    '⏭️ If you miss a pot\n⛔ If you foul (Even if you potted too)',
+              ),
+
               // Fouls
               _buildSection(
                 context,
@@ -85,6 +92,13 @@ class RulesPage extends StatelessWidget {
                 title: 'Winning the Game',
                 content:
                     'The player with the most points when all balls are potted wins! Points are calculated from successful pots minus any fouls committed.',
+              ),
+
+              _buildHighlightCard(
+                context,
+                title: 'Tie Breaks!',
+                content:
+                    'If players score the same then a tie break is decided on the player with the least fouls. And then the player who started after the other',
               ),
 
               // Strategy Tips
@@ -154,7 +168,7 @@ class RulesPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          SelectableText(
             title,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -162,7 +176,7 @@ class RulesPage extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 12),
-          Text(
+          SelectableText(
             content,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   height: 1.5,
@@ -184,14 +198,14 @@ class RulesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              SelectableText(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 12),
-              Text(
+              SelectableText(
                 content,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       height: 1.5,

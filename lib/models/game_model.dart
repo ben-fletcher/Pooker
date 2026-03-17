@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/helpers/player_helpers.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:pooker_score/pages/finish.dart';
@@ -6,6 +7,7 @@ import 'package:pooker_score/models/player_turn.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/pages/start.dart';
 import 'package:pooker_score/services/database_service.dart';
+import 'package:pooker_score/widgets/turn_icon.dart';
 
 class GameModel extends ChangeNotifier {
   final List<Player> players = [];
@@ -23,6 +25,7 @@ class GameModel extends ChangeNotifier {
   BallColour get nextTargetBall => _nextTargetBall;
   bool get skillShotEnabled => _skillShotEnabled;
   get activePlayer => players.isNotEmpty ? players[_currentPlayerIndex] : null;
+  List<PlayerTurn> get turnHistory => _turnHistory;
 
   Future<void> loadSettings() async {
     _skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
@@ -52,6 +55,10 @@ class GameModel extends ChangeNotifier {
       ballIndex: 0,
     );
     players[_currentPlayerIndex].turns.add(turn);
+    players[_currentPlayerIndex]
+        .animatedListState
+        .currentState
+        ?.insertItem(players[_currentPlayerIndex].turns.length - 1);
     _turnHistory.add(turn);
 
     if (event.foul == true || event.potted == false) {
@@ -79,7 +86,7 @@ class GameModel extends ChangeNotifier {
       return;
     }
 
-    var playerResults = players.map((player) {
+    var playerResults = getOrderPlayers(players).map((player) {
       return PlayerResult(player.name, player.score);
     }).toList();
 
@@ -92,7 +99,11 @@ class GameModel extends ChangeNotifier {
     if (_turnHistory.isNotEmpty) {
       PlayerTurn lastTurn = _turnHistory.removeLast();
       Player player = players[lastTurn.playerIndex];
-      player.turns.removeLast();
+      Turn removedLastTurn = player.turns.removeLast();
+      player.animatedListState.currentState?.removeItem(
+          player.turns.length,
+          (_, animation) =>
+              TurnIcon(turn: removedLastTurn, animation: animation));
 
       if (lastTurn.event.potted) {
         if (lastTurn.event.foul != true) {
@@ -252,6 +263,10 @@ class GameModel extends ChangeNotifier {
       );
 
       player.turns.add(adjustmentTurn);
+      players[_currentPlayerIndex]
+          .animatedListState
+          .currentState
+          ?.insertItem(players[_currentPlayerIndex].turns.length - 1);
       _turnHistory.add(adjustmentTurn);
 
       // Ensure next target is black if no reds remain
@@ -293,6 +308,10 @@ class GameModel extends ChangeNotifier {
 
       players[lastTurn.playerIndex].turns.add(bonusTurn);
       _turnHistory.add(bonusTurn);
+      players[_currentPlayerIndex]
+          .animatedListState
+          .currentState
+          ?.insertItem(players[_currentPlayerIndex].turns.length - 1);
       notifyListeners();
     }
   }

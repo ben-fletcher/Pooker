@@ -13,75 +13,91 @@ class PlayerDetailScreen extends StatefulWidget {
 }
 
 class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
-  String _selectedTab = 'stats';
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.playerName}\'s Profile'),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                bool? confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Delete Player'),
-                    content:
-                        Text('Are you sure you want to delete this player?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).colorScheme.error,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          leadingWidth: 30,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 12.0,
+            children: [
+              Hero(
+                tag: widget.playerName,
+                child: CircleAvatar(
+                    child: Text(widget.playerName[0].toUpperCase())),
+              ),
+              Text(widget.playerName),
+            ],
+          ),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Delete Player'),
+                      content:
+                          Text('Are you sure you want to delete this player?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
                         ),
-                        child: const Text('Delete'),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true) {
-                  GameDatabaseService.deletePlayer(widget.playerName).then((_) {
-                    Navigator.of(context).pop(true);
-                  });
-                }
-              },
-              icon: Icon(Icons.delete_outline_rounded))
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: Container(
-            color: Theme.of(context).colorScheme.surface,
-            child: Row(
-              children: [
-                _buildTabButton('stats', 'Statistics', Icons.bar_chart),
-                _buildTabButton('history', 'Game History', Icons.history),
-                _buildTabButton('rivals', 'Rivals', Icons.people),
-              ],
-            ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true) {
+                    GameDatabaseService.deletePlayer(widget.playerName)
+                        .then((_) {
+                      Navigator.of(context).pop(true);
+                    });
+                  }
+                },
+                icon: Icon(Icons.delete_outline_rounded))
+          ],
+          bottom: TabBar(
+            tabs: const [
+              Tab(icon: Icon(Icons.bar_chart), text: 'Statistics'),
+              Tab(icon: Icon(Icons.history), text: 'Game History'),
+              Tab(icon: Icon(Icons.people), text: 'Rivals'),
+            ],
           ),
         ),
-      ),
-      body: SafeArea(
-        child: FutureBuilder<Map<String, dynamic>>(
-          future: _loadPlayerData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: SafeArea(
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: _loadPlayerData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (snapshot.hasError) {
-              debugPrint(snapshot.error.toString());
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
+              if (snapshot.hasError) {
+                debugPrint(snapshot.error.toString());
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
 
-            final data = snapshot.data!;
-            return _buildContent(data);
-          },
+              final data = snapshot.data!;
+              return TabBarView(
+                children: [
+                  _buildStatisticsTab(data['stats'], data['detailedStats']),
+                  _buildGameHistoryTab(data['games']),
+                  _buildRivalsTab(data['detailedStats']['headToHead']),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -137,10 +153,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       }
 
       // Calculate position in this game
-      final sortedPlayers = List<PlayerResult>.from(game.players)
-        ..sort((a, b) => b.score.compareTo(a.score));
       final position =
-          sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
+          game.players.indexWhere((p) => p.name == widget.playerName) + 1;
       totalPosition += position;
 
       if (position <= 3) {
@@ -202,64 +216,6 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       'consistency': consistency,
       'podiumFinishes': podiumFinishes,
     };
-  }
-
-  Widget _buildTabButton(String tab, String label, IconData icon) {
-    final isSelected = _selectedTab == tab;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => _selectedTab = tab),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.transparent,
-                width: 3,
-              ),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.grey,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContent(Map<String, dynamic> data) {
-    switch (_selectedTab) {
-      case 'stats':
-        return _buildStatisticsTab(data['stats'], data['detailedStats']);
-      case 'history':
-        return _buildGameHistoryTab(data['games']);
-      case 'rivals':
-        return _buildRivalsTab(data['detailedStats']['headToHead']);
-      default:
-        return const SizedBox();
-    }
   }
 
   Widget _buildStatisticsTab(
@@ -447,10 +403,8 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       itemCount: games.length,
       itemBuilder: (context, index) {
         final game = games[index];
-        final sortedPlayers = List<PlayerResult>.from(game.players)
-          ..sort((a, b) => b.score.compareTo(a.score));
         final position =
-            sortedPlayers.indexWhere((p) => p.name == widget.playerName) + 1;
+            game.players.indexWhere((p) => p.name == widget.playerName) + 1;
         final isWinner = position == 1;
 
         return Card(
@@ -502,7 +456,7 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                 const SizedBox(height: 12),
                 Divider(),
                 const SizedBox(height: 8),
-                ...sortedPlayers.map((player) {
+                ...game.players.map((player) {
                   final isCurrentPlayer = player.name == widget.playerName;
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),

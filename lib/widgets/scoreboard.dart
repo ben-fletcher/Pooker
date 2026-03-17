@@ -1,24 +1,34 @@
+import 'dart:math';
+
+import 'package:animated_digit/animated_digit.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
+import 'package:pooker_score/widgets/turn_icon.dart';
 import 'package:provider/provider.dart';
 
-class Scoreboard extends StatelessWidget {
+class Scoreboard extends StatefulWidget {
   final bool isEditMode;
   final void Function(Player)? onScoreTap;
 
-  const Scoreboard({
+  Scoreboard({
     super.key,
     this.isEditMode = false,
     this.onScoreTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+  State<Scoreboard> createState() => _ScoreboardState();
+}
 
+class _ScoreboardState extends State<Scoreboard> {
+  final ScrollController scrollController = ScrollController();
+  final List<ScrollController> horizonalControllers = [];
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<GameModel>(
       builder: (context, gameModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,7 +49,22 @@ class Scoreboard extends StatelessWidget {
               );
             }
           }
+
+          for (var c in horizonalControllers) {
+            if (c.positions.isNotEmpty) {
+              c.jumpTo(c.position.maxScrollExtent);
+            }
+          }
         });
+
+        if (horizonalControllers.length != gameModel.players.length) {
+          print('Generate controllers');
+          for (int i = 0;
+              i <= gameModel.players.length - horizonalControllers.length;
+              i++) {
+            horizonalControllers.add(ScrollController());
+          }
+        }
 
         final cs = Theme.of(context).colorScheme;
         return Padding(
@@ -150,15 +175,16 @@ class Scoreboard extends StatelessWidget {
                                         text: '$foulCount'),
                                     const SizedBox(width: 20),
                                     GestureDetector(
-                                      onTap: isEditMode && onScoreTap != null
-                                          ? () => onScoreTap!(player)
+                                      onTap: widget.isEditMode &&
+                                              widget.onScoreTap != null
+                                          ? () => widget.onScoreTap!(player)
                                           : null,
                                       child: Container(
-                                        padding: isEditMode
+                                        padding: widget.isEditMode
                                             ? const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 4)
                                             : null,
-                                        decoration: isEditMode
+                                        decoration: widget.isEditMode
                                             ? BoxDecoration(
                                                 color: cs.primaryContainer
                                                     .withValues(alpha: 0.3),
@@ -174,16 +200,17 @@ class Scoreboard extends StatelessWidget {
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text(
-                                              player.score.toString(),
-                                              style: Theme.of(context)
+                                            AnimatedDigitWidget(
+                                              value: player.score,
+                                              loop: false,
+                                              textStyle: Theme.of(context)
                                                   .textTheme
                                                   .titleLarge
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.w700),
                                             ),
-                                            if (isEditMode) ...[
+                                            if (widget.isEditMode) ...[
                                               const SizedBox(width: 4),
                                               Icon(
                                                 Icons.edit,
@@ -199,12 +226,21 @@ class Scoreboard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 6),
                                 // Turn history: last 16 icons
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children:
-                                        _buildTurnIcons(context, player, 16),
-                                  ),
+                                Container(
+                                  height: 15,
+                                  child: AnimatedList(
+                                      key: player.animatedListState,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.only(right: 28),
+                                      controller: horizonalControllers[
+                                          gameModel.players.indexOf(player)],
+                                      initialItemCount:
+                                          min(player.turns.length, 16),
+                                      itemBuilder: (context, index, animation) {
+                                        return TurnIcon(
+                                            turn: player.turns[index],
+                                            animation: animation);
+                                      }),
                                 )
                               ],
                             ),
@@ -237,78 +273,6 @@ int _computeCurrentBreak(Player player) {
 
 int _computeFouls(player) {
   return player.turns.where((t) => t.event.foul == true).length;
-}
-
-// Removed unused _buildTurnChips in favor of compact _buildTurnIcons
-
-List<Widget> _buildTurnIcons(
-    BuildContext context, Player player, int maxItems) {
-  final cs = Theme.of(context).colorScheme;
-  final turns = player.turns.reversed.take(maxItems).toList().reversed;
-  return turns.map<Widget>((t) {
-    final bool isFoul = t.event.foul == true;
-    final bool isPotted = t.event.potted;
-    final bool isSkillShot =
-        !isPotted && !isFoul && t.event.colour == BallColour.na && t.score > 0;
-    Color color;
-    IconData icon;
-    Widget iconWidget;
-
-    if (isSkillShot) {
-      // Skill shot bonus
-      color = Colors.amber;
-      iconWidget = Icon(Icons.star, size: 14, color: color);
-    } else if (isFoul) {
-      color = cs.error;
-      icon = Icons.close;
-      iconWidget = Icon(icon, size: 14, color: color);
-    } else if (isPotted) {
-      if (t.event.colour == BallColour.red) {
-        color = Colors.red;
-        // Show multiple circles for multiple reds
-        if (t.event.count > 1) {
-          iconWidget = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...List.generate(
-                t.event.count > 3 ? 3 : t.event.count,
-                (index) => Padding(
-                  padding: EdgeInsets.only(left: index > 0 ? 2.0 : 0),
-                  child: Icon(Icons.circle, size: 14, color: color),
-                ),
-              ),
-              if (t.event.count > 3)
-                Padding(
-                  padding: const EdgeInsets.only(left: 2.0),
-                  child: Text(
-                    '+${t.event.count - 3}',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        } else {
-          iconWidget = Icon(Icons.circle, size: 14, color: color);
-        }
-      } else {
-        color = Colors.black;
-        iconWidget = Icon(Icons.circle, size: 14, color: color);
-      }
-    } else {
-      color = cs.tertiary;
-      icon = Icons.chevron_right_rounded;
-      iconWidget = Icon(icon, size: 14, color: color);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: iconWidget,
-    );
-  }).toList();
 }
 
 class _MiniPill extends StatelessWidget {

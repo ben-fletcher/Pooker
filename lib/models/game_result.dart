@@ -22,18 +22,26 @@ class GameResult {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'sorted': 'true',
       'date': date.toIso8601String(),
       'players': players.map((player) => player.toJson()).toList().toString(),
     };
   }
 
   static GameResult fromMap(Map<String, dynamic> map) {
+    final players = (json.decode(map['players']) as List)
+          .map((player) => PlayerResult.fromMap(player))
+          .toList();
+
+    if (map['sorted'] != 'true') {
+
+      players.sort((a, b) => b.score.compareTo(a.score));
+    }
+
     return GameResult(
       id: map['id'],
       date: DateTime.parse(map['date']),
-      players: (json.decode(map['players']) as List)
-          .map((player) => PlayerResult.fromMap(player))
-          .toList(),
+      players: players,
     );
   }
 }

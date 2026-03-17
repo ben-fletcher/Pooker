@@ -59,8 +59,14 @@ class _SetupPageState extends State<SetupPage> {
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
-                  child: Text('Current Players (${gameModel.players.length})',
-                      style: TextStyle(fontSize: 20)),
+                  child: Row(
+                    children: [
+                      Icon(Icons.people_outline_outlined, color: Theme.of(context).colorScheme.primary),
+                      const SizedBox(width: 10),
+                      Text('Current Players (${gameModel.players.length})',
+                          style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Builder(builder: (context) {
@@ -90,37 +96,46 @@ class _SetupPageState extends State<SetupPage> {
                     );
                   }),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 10.0, bottom: 5.0),
-                  child: Text('Add Players', style: TextStyle(fontSize: 20)),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      Icon(Icons.person_add, color: Theme.of(context).colorScheme.primary),
+                      const Text('Add Players', style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
                 ),
                 _buildPlayerSelector(gameModel),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: gameModel.players.isNotEmpty
-                        ? () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => GameSettingsPage()));
-                          }
-                        : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      backgroundColor:
-                          gameModel.players.isNotEmpty ? null : Colors.grey,
-                      textStyle:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  child: Hero(
+                    tag: 'next_button',
+                    child: FilledButton.icon(
+                      onPressed: gameModel.players.isNotEmpty
+                          ? () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => GameSettingsPage()));
+                            }
+                          : null,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        backgroundColor:
+                            gameModel.players.isNotEmpty ? null : Colors.grey,
+                        textStyle: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
+                      icon: const Icon(Icons.skip_next_sharp, size: 32),
+                      label: const Text('Next',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
                     ),
-                    icon: const Icon(Icons.skip_next_sharp, size: 32),
-                    label: const Text('Next',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -138,10 +153,15 @@ class _SetupPageState extends State<SetupPage> {
       enableFeedback: true,
       title:
           Text(gameModel.players[index].name, style: TextStyle(fontSize: 18)),
-      trailing: ReorderableDragStartListener(
+      leading: ReorderableDragStartListener(
         index: index,
         child: const Icon(Icons.drag_handle),
       ),
+      trailing: IconButton(
+          onPressed: () {
+            _removePlayer(gameModel, index);
+          },
+          icon: Icon(Icons.remove_circle)),
     );
   }
 
@@ -199,7 +219,9 @@ class _SetupPageState extends State<SetupPage> {
                 return Card.filled(
                   child: Center(
                     child: ListTile(
-                      title: Text(player, style: TextStyle(fontSize: 18)),
+                      title: Text(player,
+                          style: TextStyle(
+                              fontSize: 18, overflow: TextOverflow.ellipsis)),
                       onTap: () {
                         _addPlayer(player, gameModel);
                       },

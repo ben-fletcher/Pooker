@@ -44,6 +44,10 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
       child: FutureBuilder(
           future: _playersFuture,
           builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
+
             final players = snapshot.data!
                 .where((player) =>
                     !widget.gameModel.players.any((p) => p.name == player))

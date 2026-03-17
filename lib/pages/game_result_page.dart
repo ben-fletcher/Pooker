@@ -12,8 +12,7 @@ class GameResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sortedPlayers = List.from(gameResult.players)
-      ..sort((a, b) => b.score.compareTo(a.score));
+    final sortedPlayers = List.from(gameResult.players);
     final winner = sortedPlayers.isNotEmpty ? sortedPlayers[0] : null;
     final secondPlace = sortedPlayers.length > 1 ? sortedPlayers[1] : null;
     final thirdPlace = sortedPlayers.length > 2 ? sortedPlayers[2] : null;
@@ -56,10 +55,13 @@ class GameResultPage extends StatelessWidget {
                             : Colors.white
                         : null;
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: playerColor,
-                        foregroundColor: foregroundColor,
-                        child: Text((index + 1).toString()),
+                      leading: Hero(
+                        tag: sortedPlayers[index].name,
+                        child: CircleAvatar(
+                          backgroundColor: playerColor,
+                          foregroundColor: foregroundColor,
+                          child: Text((index + 1).toString()),
+                        ),
                       ),
                       title: Text(sortedPlayers[index].name),
                       trailing: Text(sortedPlayers[index].score.toString()),
