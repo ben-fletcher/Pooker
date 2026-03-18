@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/history.dart';
+import 'package:pooker_score/pages/leaderboard.dart';
 import 'package:pooker_score/pages/players.dart';
 import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/pages/settings.dart';
@@ -137,13 +138,16 @@ class StartPage extends StatelessWidget {
                             );
                           }),
                       SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 16,
+                        runSpacing: 12,
                         children: [
                           FilledButton.tonal(
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.history),
                                     Text("History",
@@ -160,11 +164,11 @@ class StartPage extends StatelessWidget {
                                           const HistoryPage()),
                                 );
                               }),
-                          SizedBox(width: 20),
                           FilledButton.tonal(
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.people),
                                     Text("Players",
@@ -180,7 +184,28 @@ class StartPage extends StatelessWidget {
                                       builder: (context) =>
                                           const PlayerScreen()),
                                 );
-                              })
+                              }),
+                          FilledButton.tonal(
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.military_tech),
+                                    Text("Leaderboard",
+                                        style: TextStyle(fontSize: 18))
+                                  ],
+                                ),
+                              ),
+                              onPressed: () {
+                                Provider.of<GameModel>(context, listen: false)
+                                    .reset();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LeaderboardPage()),
+                                );
+                              }),
                         ],
                       ),
                       SizedBox(height: 30),

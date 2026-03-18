@@ -5,6 +5,7 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:pooker_score/models/game_result.dart';
+import 'package:pooker_score/models/high_score_leaderboard_entry.dart';
 import 'package:flutter/foundation.dart';
 
 class GameDatabaseService {
@@ -129,7 +130,7 @@ class GameDatabaseService {
     int gamesPlayed = 0;
     int gamesWon = 0;
     int totalScore = 0;
-    int highestScore = 0;
+    int? highestScore;
 
     for (final game in history) {
       // Consider only games where the player actually participated
@@ -141,7 +142,7 @@ class GameDatabaseService {
 
       gamesPlayed += 1;
       totalScore += playerResult.score;
-      if (playerResult.score > highestScore) {
+      if (highestScore == null || playerResult.score > highestScore) {
         highestScore = playerResult.score;
       }
 
@@ -175,6 +176,43 @@ class GameDatabaseService {
       'highestScore': highestScore,
       'winRate': winRate,
     };
+  }
+
+  /// Players ranked by highest single-game score. Tie-break: more games played, then name A–Z.
+  static Future<List<HighScoreLeaderboardEntry>> getHighScoreLeaderboard() async {
+    final history = await loadGameHistory();
+    final Map<String, int> maxScore = {};
+    final Map<String, int> gamesCount = {};
+
+    for (final game in history) {
+      for (final p in game.players) {
+        gamesCount[p.name] = (gamesCount[p.name] ?? 0) + 1;
+        final m = maxScore[p.name];
+        if (m == null || p.score > m) {
+          maxScore[p.name] = p.score;
+        }
+      }
+    }
+
+    final entries = maxScore.entries
+        .map(
+          (e) => HighScoreLeaderboardEntry(
+            name: e.key,
+            highScore: e.value,
+            gamesPlayed: gamesCount[e.key] ?? 0,
+          ),
+        )
+        .toList();
+
+    entries.sort((a, b) {
+      final byScore = b.highScore.compareTo(a.highScore);
+      if (byScore != 0) return byScore;
+      final byGames = b.gamesPlayed.compareTo(a.gamesPlayed);
+      if (byGames != 0) return byGames;
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+
+    return entries;
   }
 
   static Future<void> exportDatabase() async {

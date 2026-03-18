@@ -225,7 +225,7 @@ class _FinishPageState extends State<FinishPage> {
         continue;
       }
 
-      currentShots++;
+      currentShots += turn.score;
 
       if (currentShots > maxShots) {
         maxShotsPlayerIndex = turn.playerIndex;
