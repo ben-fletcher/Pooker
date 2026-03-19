@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pooker_score/helpers/games_export_helper.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/pages/game_result_page.dart';
 import 'package:pooker_score/services/database_service.dart';
@@ -56,6 +57,12 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
     });
   }
 
+  Future<void> _exportAndShareAllGames(BuildContext context) async {
+    final games = await GameDatabaseService.loadGameHistory();
+    if (!context.mounted) return;
+    await GamesExportHelper.presentExportOptions(context, games: games);
+  }
+
   void _calculatePlayerWins(List<GameResult> gameHistory) {
     final wins = <String, int>{};
     for (var game in gameHistory) {
@@ -106,6 +113,13 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
         title: const Text('Game History'),
         elevation: 0,
         scrolledUnderElevation: 4,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.ios_share),
+            tooltip: 'Export all games',
+            onPressed: () => _exportAndShareAllGames(context),
+          ),
+        ],
       ),
       body: SafeArea(
         child: FutureBuilder<List<GameResult>>(

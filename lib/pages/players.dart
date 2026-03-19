@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/helpers/player_helpers.dart';
+import 'package:pooker_score/pages/leaderboard.dart';
 import 'package:pooker_score/pages/player_detail.dart';
 import 'package:pooker_score/services/database_service.dart';
 
@@ -18,6 +19,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Players'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const LeaderboardPage()),
+                );
+              },
+              icon: Icon(Icons.military_tech)),
+        ],
       ),
       body: SafeArea(
         child: FutureBuilder(

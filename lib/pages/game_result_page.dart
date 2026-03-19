@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooker_score/helpers/games_export_helper.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/pages/player_detail.dart';
 import 'package:pooker_score/services/database_service.dart';
@@ -21,6 +22,11 @@ class GameResultPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(DateFormat.yMMMMd().add_Hm().format(gameResult.date)),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.ios_share),
+            tooltip: 'Export game',
+            onPressed: () => GamesExportHelper.presentExportOptions(context, games: [gameResult]),
+          ),
           IconButton(
             icon: const Icon(Icons.delete),
             color: Colors.red,

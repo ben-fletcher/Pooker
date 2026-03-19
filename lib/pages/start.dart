@@ -50,20 +50,37 @@ class StartPage extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: <Widget>[
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.settings,
-                            color: Colors.white,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LeaderboardPage()),
+                                  );
+                                },
+                                icon: Icon(Icons.military_tech)),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => const SettingsPage()),
-                            );
-                          },
-                        ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.settings
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsPage()),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       Spacer(flex: 4),
                       const Text(
@@ -184,28 +201,7 @@ class StartPage extends StatelessWidget {
                                       builder: (context) =>
                                           const PlayerScreen()),
                                 );
-                              }),
-                          FilledButton.tonal(
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.military_tech),
-                                    Text("Leaderboard",
-                                        style: TextStyle(fontSize: 18))
-                                  ],
-                                ),
-                              ),
-                              onPressed: () {
-                                Provider.of<GameModel>(context, listen: false)
-                                    .reset();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LeaderboardPage()),
-                                );
-                              }),
+                              })
                         ],
                       ),
                       SizedBox(height: 30),

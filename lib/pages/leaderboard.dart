@@ -132,23 +132,10 @@ class _LeaderboardPageState extends State<LeaderboardPage>
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Highest game scores',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        _PodiumSection(
-                          entries: entries,
-                          controller: _podiumController,
-                          onTap: _openPlayer,
-                        ),
-                      ],
+                    child: _PodiumSection(
+                      entries: entries,
+                      controller: _podiumController,
+                      onTap: _openPlayer,
                     ),
                   ),
                 ),

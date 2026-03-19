@@ -1,9 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart'; // Add this import
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pooker_score/helpers/games_export_helper.dart';
 import 'package:pooker_score/services/database_service.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _skillShotEnabled = false;
+  String _version = "";
 
   @override
   void initState() {
@@ -23,9 +27,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _loadSettings() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
     setState(() {
       _skillShotEnabled = skillShotEnabled;
+      _version = "v${packageInfo.version}";
     });
   }
 
@@ -71,6 +77,48 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _exportGamesJson() async {
+    final games = await GameDatabaseService.loadGameHistory();
+    if (!mounted) return;
+    await GamesExportHelper.presentExportOptions(context, games: games);
+  }
+
+  Future<void> _importGamesJson() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      dialogTitle: 'Import games (merge)',
+      type: FileType.any,
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return;
+
+    final file = result.files.single;
+    if (file.bytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not read file. Try selecting the file again.')),
+      );
+      return;
+    }
+    final jsonString = utf8.decode(file.bytes!);
+
+    if (!GameDatabaseService.looksLikeExportJson(jsonString)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File does not look like a Pooker games export')),
+      );
+      return;
+    }
+
+    final importResult = await GameDatabaseService.importGamesFromJson(jsonString);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Imported ${importResult.gamesImported} game(s). ${importResult.playersAdded} new player(s) added.',
+          ),
+        ),
+      );
+    }
+  }
+
   Future<void> _resetData() async {
     bool? confirm = await showDialog<bool>(
       context: context,
@@ -99,12 +147,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _openAboutPage() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
     showAboutDialog(
       context: context,
       applicationName: 'Pooker',
-      applicationVersion: version,
+      applicationVersion: _version,
       applicationIcon: Image.asset('assets/pooker.png', width: 32),
       children: [
         const Text('An app to keep track of the score of a pooker game'),
@@ -126,7 +172,11 @@ class _SettingsPageState extends State<SettingsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 10,
               children: [
-                ElevatedButton(
+                Center(
+                  child: Text('Version: $_version',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ),
+                FilledButton(
                   onPressed: _openAboutPage,
                   child: const Text('About'),
                 ),
@@ -151,27 +201,56 @@ class _SettingsPageState extends State<SettingsPage> {
                 )),
                 const SizedBox(height: 20),
                 Text(
-                  'Database',
+                  'Export & share games',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                ElevatedButton(
-                  onPressed: _exportDatabase,
-                  child: const Text('Export Database'),
+                const Text(
+                  'Export games as a shareable file. Others can import it to add these games and any new players without losing existing data.',
+                  style: TextStyle(fontSize: 13),
                 ),
-                ElevatedButton(
-                  onPressed: _importDatabase,
-                  child: const Text('Import Database'),
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  onPressed: _exportGamesJson,
+                  icon: const Icon(Icons.upload_file),
+                  label: const Text('Export all games'),
                 ),
-                ElevatedButton(
-                  onPressed: _resetData,
-                  child: const Text('Reset Data',
-                      style: TextStyle(color: Colors.red)),
+                ElevatedButton.icon(
+                  onPressed: _importGamesJson,
+                  icon: const Icon(Icons.download),
+                  label: const Text('Import games (merge)'),
                 ),
+                const SizedBox(height: 20),
+                ..._buildDatabaseOptions()
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildDatabaseOptions() {
+    if (!kIsWeb) {
+      return [
+        Text(
+          'Database',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        ElevatedButton(
+          onPressed: _exportDatabase,
+          child: const Text('Export Database'),
+        ),
+        ElevatedButton(
+          onPressed: _importDatabase,
+          child: const Text('Import Database'),
+        ),
+        ElevatedButton(
+          onPressed: _resetData,
+          child: const Text('Reset Data', style: TextStyle(color: Colors.red)),
+        )
+      ];
+    }
+
+    return [];
   }
 }
