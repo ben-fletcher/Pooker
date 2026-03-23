@@ -47,7 +47,6 @@ class GameSettingsPage extends StatelessWidget {
                           ),
                           value: gameModel.blackBallFoulPoints == -3,
                           onChanged: (s) {
-                            print("Set");
                             gameModel.setBlackBallFoulPoints(s ? -3 : -1);
                           },
                           secondary: const Icon(Icons.keyboard_double_arrow_up),

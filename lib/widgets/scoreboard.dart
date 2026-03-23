@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:animated_digit/animated_digit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
@@ -13,7 +12,7 @@ class Scoreboard extends StatefulWidget {
   final bool isEditMode;
   final void Function(Player)? onScoreTap;
 
-  Scoreboard({
+  const Scoreboard({
     super.key,
     this.isEditMode = false,
     this.onScoreTap,
@@ -33,7 +32,7 @@ class _ScoreboardState extends State<Scoreboard> {
       builder: (context, gameModel, child) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final activePlayerIndex = gameModel.activePlayer != null
-              ? gameModel.players.indexOf(gameModel.activePlayer)
+              ? gameModel.players.indexOf(gameModel.activePlayer!)
               : -1;
           if (activePlayerIndex != -1) {
             final double targetOffset = activePlayerIndex * 92.0;
@@ -58,7 +57,6 @@ class _ScoreboardState extends State<Scoreboard> {
         });
 
         if (horizonalControllers.length != gameModel.players.length) {
-          print('Generate controllers');
           for (int i = 0;
               i <= gameModel.players.length - horizonalControllers.length;
               i++) {
@@ -119,7 +117,8 @@ class _ScoreboardState extends State<Scoreboard> {
                               gameModel.activePlayer == player;
                           final int currentBreak = _computeCurrentBreak(player);
                           final int foulCount = _computeFouls(player);
-                          return Container(
+                          return AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 8),
@@ -226,22 +225,21 @@ class _ScoreboardState extends State<Scoreboard> {
                                 ),
                                 const SizedBox(height: 6),
                                 // Turn history: last 16 icons
-                                Container(
-                                  height: 15,
-                                  child: AnimatedList(
-                                      key: player.animatedListState,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.only(right: 28),
-                                      controller: horizonalControllers[
-                                          gameModel.players.indexOf(player)],
-                                      initialItemCount:
-                                          min(player.turns.length, 16),
-                                      itemBuilder: (context, index, animation) {
-                                        return TurnIcon(
-                                            turn: player.turns[index],
-                                            animation: animation);
-                                      }),
-                                )
+                                SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    controller: horizonalControllers[
+                                        gameModel.players.indexOf(player)],
+                                    child: Row(
+                                        children: AnimateList(
+                                      effects: [
+                                        FadeEffect(duration: 50.ms),
+                                        SlideEffect(
+                                            duration: 200.ms,
+                                            begin: Offset(-1, 0))
+                                      ],
+                                      children:
+                                          _buildTurnIcons(context, player, 26),
+                                    )))
                               ],
                             ),
                           );
@@ -259,6 +257,14 @@ class _ScoreboardState extends State<Scoreboard> {
   }
 }
 
+List<Widget> _buildTurnIcons(
+    BuildContext context, Player player, int maxItems) {
+  final turns = player.turns.reversed.take(maxItems).toList().reversed;
+  return turns.map<Widget>((t) {
+    return TurnIcon(turn: t);
+  }).toList();
+}
+
 int _computeCurrentBreak(Player player) {
   int sum = 0;
   for (int i = player.turns.length - 1; i >= 0; i--) {
@@ -271,7 +277,7 @@ int _computeCurrentBreak(Player player) {
   return sum;
 }
 
-int _computeFouls(player) {
+int _computeFouls(Player player) {
   return player.turns.where((t) => t.event.foul == true).length;
 }
 

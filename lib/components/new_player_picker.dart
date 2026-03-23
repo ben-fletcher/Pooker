@@ -19,7 +19,7 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
   List<String> selectedPlayers = [];
   Future<List<String>> _playersFuture = GameDatabaseService.loadPlayers();
 
-  void playerTapped(player) {
+  void playerTapped(String player) {
     setState(() {
       if (selectedPlayers.contains(player)) {
         selectedPlayers.remove(player);

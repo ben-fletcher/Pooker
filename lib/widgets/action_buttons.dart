@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/turn.dart';
 import 'package:provider/provider.dart';
@@ -340,7 +341,7 @@ class ActionButtons extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
+                  ).animate().fade(duration: 100.ms),
                 if (gameModel.nextTargetBall == BallColour.black)
                   Expanded(
                     child: FilledButton.tonal(
@@ -373,7 +374,7 @@ class ActionButtons extends StatelessWidget {
                               style: TextStyle(fontSize: 24)),
                         ],
                       ),
-                    ),
+                    ).animate().fade(duration: 100.ms),
                   ),
                 Expanded(
                   child: FilledButton.tonal(
