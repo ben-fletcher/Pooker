@@ -29,6 +29,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _loadSettings() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
+    if (!context.mounted) {
+      return;
+    }
+
     setState(() {
       _skillShotEnabled = skillShotEnabled;
       _version = "v${packageInfo.version}";
@@ -89,7 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
       type: FileType.any,
       withData: true,
     );
-    if (result == null || result.files.isEmpty) return;
+    if (result == null || result.files.isEmpty || !context.mounted) return;
 
     final file = result.files.single;
     if (file.bytes == null) {

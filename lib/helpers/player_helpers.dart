@@ -9,6 +9,10 @@ Future<void> showAddPlayerDialog(BuildContext context) {
     final playerName = nameController.text;
     if (playerName.isNotEmpty) {
       GameDatabaseService.insertPlayer(playerName).then((success) {
+        if (!context.mounted) {
+          return;
+        }
+        
         if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

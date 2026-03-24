@@ -130,7 +130,9 @@ class _LeaderboardPageState extends State<LeaderboardPage>
             );
           }
 
-          final rest = entries.length > 3 ? entries.sublist(3) : <HighScoreLeaderboardEntry>[];
+          final rest = entries.length > 3
+              ? entries.sublist(3)
+              : <HighScoreLeaderboardEntry>[];
 
           return RefreshIndicator(
             onRefresh: _onRefresh,
@@ -192,14 +194,12 @@ class _LeaderboardPageState extends State<LeaderboardPage>
                                         _RankChip(rank: rank, compact: true),
                                         const SizedBox(width: 12),
                                         CircleAvatar(
-                                          backgroundColor:
-                                              cs.primaryContainer,
+                                          backgroundColor: cs.primaryContainer,
                                           foregroundColor:
                                               cs.onPrimaryContainer,
                                           child: Text(
                                             entry.name.isNotEmpty
-                                                ? entry.name[0]
-                                                    .toUpperCase()
+                                                ? entry.name[0].toUpperCase()
                                                 : '?',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -224,8 +224,7 @@ class _LeaderboardPageState extends State<LeaderboardPage>
                                               ),
                                               Text(
                                                 '${entry.gamesPlayed} games played',
-                                                style: theme
-                                                    .textTheme.bodySmall
+                                                style: theme.textTheme.bodySmall
                                                     ?.copyWith(
                                                   color: cs.onSurfaceVariant,
                                                 ),

@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.2.4
   animated_digit: ^3.3.2
   flutter_animate: ^4.5.2
+  path: ^1.9.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

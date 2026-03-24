@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:pooker_score/models/game_result.dart';
 import 'package:pooker_score/models/high_score_leaderboard_entry.dart';
@@ -74,20 +73,6 @@ class GameDatabaseService {
     );
   }
 
-  /// Inserts a game without deleting any existing data. Use for import/merge.
-  /// Ensures all player names from the game exist in the player table.
-  static Future<void> insertGameResultMerge(GameResult gameResult) async {
-    if (_database == null) return;
-
-    for (final playerResult in gameResult.players) {
-      await insertPlayer(playerResult.name);
-    }
-
-    final mapGameResult = Map<String, dynamic>.from(gameResult.toMap());
-    mapGameResult.remove('id');
-    await _database!.insert('game_history', mapGameResult);
-  }
-
   static const int _exportFormatVersion = 1;
 
   /// Returns a JSON string of games for sharing. Does not include internal ids.
@@ -123,7 +108,7 @@ class GameDatabaseService {
         final inserted = await insertPlayer(playerResult.name);
         if (inserted) playersAdded++;
       }
-      await insertGameResultMerge(game);
+      await insertGameResult(game);
     }
 
     return ImportResult(

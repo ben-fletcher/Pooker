@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/pages/history.dart';
-import 'package:pooker_score/pages/leaderboard.dart';
 import 'package:pooker_score/pages/players.dart';
 import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/pages/settings.dart';
@@ -50,37 +49,20 @@ class StartPage extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LeaderboardPage()),
-                                  );
-                                },
-                                icon: Icon(Icons.military_tech)),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.settings
                           ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.settings
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SettingsPage()),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SettingsPage()),
+                            );
+                          },
+                        ),
                       ),
                       Spacer(flex: 4),
                       const Text(

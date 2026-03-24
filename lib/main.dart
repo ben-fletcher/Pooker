@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Pooker',
+          restorationScopeId: 'pooker',
           theme: theme.light(),
           darkTheme: theme.dark(),
           themeMode: ThemeMode.dark,
