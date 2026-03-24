@@ -52,14 +52,23 @@ class _LeaderboardPageState extends State<LeaderboardPage>
     setState(() {
       _future = GameDatabaseService.getHighScoreLeaderboard();
     });
-    final list = await _future;
-    if (!mounted) return;
-    if (list.isNotEmpty) {
-      _podiumController.forward(from: 0);
-      await Future<void>.delayed(const Duration(milliseconds: 320));
-      if (mounted) await _listController.forward(from: 0);
+    try {
+      final list = await _future;
+      if (!mounted) return;
+      if (list.isNotEmpty) {
+        _podiumController.forward(from: 0);
+        await Future<void>.delayed(const Duration(milliseconds: 320));
+        if (mounted) await _listController.forward(from: 0);
+      }
+      HapticFeedback.lightImpact();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to refresh leaderboard. Please try again.'),
+        ),
+      );
     }
-    HapticFeedback.lightImpact();
   }
 
   @override
