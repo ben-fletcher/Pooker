@@ -3,15 +3,8 @@ import 'package:pooker_score/models/turn.dart';
 
 class TurnIcon extends StatelessWidget {
   final Turn turn;
-  final Animation<double> animation;
-  late final Animation<Offset> offsetAnimation;
 
-  TurnIcon({super.key, required this.turn, required this.animation}) {
-    offsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(1.5, 0.0),
-    ).animate(animation);
-  }
+  const TurnIcon({super.key, required this.turn});
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +71,7 @@ class TurnIcon extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: FadeTransition(
-          opacity: animation,
-          child: SlideTransition(position: offsetAnimation, child: iconWidget)),
+      child: iconWidget,
     );
   }
 }

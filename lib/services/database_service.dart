@@ -1,11 +1,20 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:pooker_score/models/game_result.dart';
+import 'package:pooker_score/models/high_score_leaderboard_entry.dart';
 import 'package:flutter/foundation.dart';
+
+/// Result of importing games from JSON (merge). No existing data is deleted.
+class ImportResult {
+  final int gamesImported;
+  final int playersAdded;
+
+  const ImportResult({required this.gamesImported, required this.playersAdded});
+}
 
 class GameDatabaseService {
   static Database? _database;
@@ -62,6 +71,63 @@ class GameDatabaseService {
       mapGameResult,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  static const int _exportFormatVersion = 1;
+
+  /// Returns a JSON string of games for sharing. Does not include internal ids.
+  static String exportGamesAsJson(List<GameResult> games) {
+    final list = games.map((g) {
+      final m = Map<String, dynamic>.from(g.toMap());
+      m.remove('id');
+      return m;
+    }).toList();
+    final envelope = {
+      'version': _exportFormatVersion,
+      'exportedAt': DateTime.now().toUtc().toIso8601String(),
+      'games': list,
+    };
+    return const JsonEncoder.withIndent('  ').convert(envelope);
+  }
+
+  /// Parses JSON from export and merges games into the database. Adds any
+  /// missing players. Returns counts of games imported and new players added.
+  static Future<ImportResult> importGamesFromJson(String jsonString) async {
+    if (_database == null) {
+      return const ImportResult(gamesImported: 0, playersAdded: 0);
+    }
+
+    final envelope = jsonDecode(jsonString) as Map<String, dynamic>;
+    final gamesList = envelope['games'] as List<dynamic>? ?? [];
+    int playersAdded = 0;
+
+    for (final item in gamesList) {
+      final gameMap = item as Map<String, dynamic>;
+      final game = GameResult.fromMap(gameMap);
+      for (final playerResult in game.players) {
+        final inserted = await insertPlayer(playerResult.name);
+        if (inserted) playersAdded++;
+      }
+      await insertGameResult(game);
+    }
+
+    return ImportResult(
+      gamesImported: gamesList.length,
+      playersAdded: playersAdded,
+    );
+  }
+
+  /// Returns true if the string looks like a Pooker games export (has version + games).
+  static bool looksLikeExportJson(String jsonString) {
+    try {
+      final envelope = jsonDecode(jsonString) as Map<String, dynamic>?;
+      return envelope != null &&
+          envelope.containsKey('version') &&
+          envelope.containsKey('games') &&
+          envelope['games'] is List;
+    } catch (_) {
+      return false;
+    }
   }
 
   static Future<List<GameResult>> loadGameHistory() async {
@@ -129,7 +195,7 @@ class GameDatabaseService {
     int gamesPlayed = 0;
     int gamesWon = 0;
     int totalScore = 0;
-    int highestScore = 0;
+    int? highestScore;
 
     for (final game in history) {
       // Consider only games where the player actually participated
@@ -141,7 +207,7 @@ class GameDatabaseService {
 
       gamesPlayed += 1;
       totalScore += playerResult.score;
-      if (playerResult.score > highestScore) {
+      if (highestScore == null || playerResult.score > highestScore) {
         highestScore = playerResult.score;
       }
 
@@ -175,6 +241,43 @@ class GameDatabaseService {
       'highestScore': highestScore,
       'winRate': winRate,
     };
+  }
+
+  /// Players ranked by highest single-game score. Tie-break: more games played, then name A–Z.
+  static Future<List<HighScoreLeaderboardEntry>> getHighScoreLeaderboard() async {
+    final history = await loadGameHistory();
+    final Map<String, int> maxScore = {};
+    final Map<String, int> gamesCount = {};
+
+    for (final game in history) {
+      for (final p in game.players) {
+        gamesCount[p.name] = (gamesCount[p.name] ?? 0) + 1;
+        final m = maxScore[p.name];
+        if (m == null || p.score > m) {
+          maxScore[p.name] = p.score;
+        }
+      }
+    }
+
+    final entries = maxScore.entries
+        .map(
+          (e) => HighScoreLeaderboardEntry(
+            name: e.key,
+            highScore: e.value,
+            gamesPlayed: gamesCount[e.key] ?? 0,
+          ),
+        )
+        .toList();
+
+    entries.sort((a, b) {
+      final byScore = b.highScore.compareTo(a.highScore);
+      if (byScore != 0) return byScore;
+      final byGames = b.gamesPlayed.compareTo(a.gamesPlayed);
+      if (byGames != 0) return byGames;
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+
+    return entries;
   }
 
   static Future<void> exportDatabase() async {

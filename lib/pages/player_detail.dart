@@ -61,7 +61,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
                   if (confirm == true) {
                     GameDatabaseService.deletePlayer(widget.playerName)
                         .then((_) {
-                      Navigator.of(context).pop(true);
+                      if (context.mounted) {
+                        Navigator.of(context).pop(true);
+                      }
                     });
                   }
                 },

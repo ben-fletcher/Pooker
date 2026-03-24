@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:pooker_score/models/turn.dart';
 
 class Player implements PlayerScore {
@@ -6,7 +5,6 @@ class Player implements PlayerScore {
   @override
   String name;
   List<Turn> turns;
-  GlobalKey<AnimatedListState> animatedListState = GlobalKey();
 
   @override
   get score =>

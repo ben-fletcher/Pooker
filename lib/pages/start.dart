@@ -53,13 +53,13 @@ class StartPage extends StatelessWidget {
                         alignment: Alignment.topRight,
                         child: IconButton(
                           icon: Icon(
-                            Icons.settings,
-                            color: Colors.white,
+                            Icons.settings
                           ),
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => const SettingsPage()),
+                                  builder: (context) =>
+                                      const SettingsPage()),
                             );
                           },
                         ),
@@ -137,13 +137,16 @@ class StartPage extends StatelessWidget {
                             );
                           }),
                       SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 16,
+                        runSpacing: 12,
                         children: [
                           FilledButton.tonal(
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.history),
                                     Text("History",
@@ -160,11 +163,11 @@ class StartPage extends StatelessWidget {
                                           const HistoryPage()),
                                 );
                               }),
-                          SizedBox(width: 20),
                           FilledButton.tonal(
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.people),
                                     Text("Players",
