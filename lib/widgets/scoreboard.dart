@@ -102,7 +102,8 @@ class _ScoreboardState extends State<Scoreboard> {
                                   'Next: ${gameModel.nextTargetBall == BallColour.red ? 'Red' : 'Black'}',
                               color: gameModel.nextTargetBall == BallColour.red
                                   ? Colors.red
-                                  : Colors.black),
+                                  : Colors.black,
+                              minWidth: 105),
                         ],
                       )
                     ],
@@ -317,24 +318,39 @@ class _MiniPill extends StatelessWidget {
 class _Chip extends StatelessWidget {
   final String text;
   final Color color;
+  final double? minWidth;
 
-  const _Chip({required this.text, required this.color});
+  const _Chip({required this.text, required this.color, this.minWidth});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      constraints: minWidth != null ? BoxConstraints(
+        minWidth: minWidth!
+      ) : null,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
-      child: Text(
-        text,
-        style: Theme.of(context)
-            .textTheme
-            .labelLarge
-            ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+      child: AnimatedSwitcher(
+        duration: 300.ms,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        child: Text(
+          text,
+          key: ValueKey(text),
+          style: Theme.of(context)
+              .textTheme
+              .labelLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+        ),
       ),
     );
   }

@@ -257,7 +257,7 @@ class _LeaderboardPageState extends State<LeaderboardPage>
                     ),
                   ),
                 ],
-                const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                SliverToBoxAdapter(child: SizedBox(height: MediaQuery.paddingOf(context).bottom)),
               ],
             ),
           );

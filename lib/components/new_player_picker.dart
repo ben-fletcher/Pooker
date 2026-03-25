@@ -91,6 +91,7 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
                                         .primaryContainer
                                     : null,
                                 child: ListTile(
+                                  visualDensity: VisualDensity.compact,
                                   selected: selected,
                                   selectedColor: Theme.of(context)
                                       .colorScheme
@@ -105,7 +106,7 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
                                 ),
                               );
                             },
-                            separatorBuilder: (_, __) => const Divider(),
+                            separatorBuilder: (_, __) => const Divider(height: 8,),
                             itemCount: players.length + 1),
                       )
                     : const Center(child: CircularProgressIndicator()),
@@ -115,7 +116,7 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
                   child: SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
-                      onPressed: addPlayers,
+                      onPressed: selectedPlayers.isNotEmpty ? addPlayers : null,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
