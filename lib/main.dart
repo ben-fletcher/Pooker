@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pooker_score/models/game_model.dart';
@@ -9,6 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
+  LicenseRegistry.addLicense(() async* {
+    final String license = await rootBundle.loadString('assets/fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(<String>['google_fonts'], license);
+  });
+
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
