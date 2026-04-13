@@ -121,61 +121,59 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
           ),
         ],
       ),
-      body: SafeArea(
-        child: FutureBuilder<List<GameResult>>(
-          future: _gameHistoryFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildLoadingState(colorScheme);
-            }
-            if (snapshot.hasError) {
-              return _buildErrorState(context, colorScheme);
-            }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return _buildEmptyState(context, colorScheme);
-            }
-
-            final gameHistory = snapshot.data!;
-            final grouped = _groupGamesBySection(gameHistory);
-
-            if (!_contentFadeStarted) {
-              _contentFadeStarted = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) _fadeController.forward();
-              });
-            }
-
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _buildStatsStrip(context, colorScheme)),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-                    child: Text(
-                      'Past games',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.8,
-                      ),
+      body: FutureBuilder<List<GameResult>>(
+        future: _gameHistoryFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildLoadingState(colorScheme);
+          }
+          if (snapshot.hasError) {
+            return _buildErrorState(context, colorScheme);
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return _buildEmptyState(context, colorScheme);
+          }
+      
+          final gameHistory = snapshot.data!;
+          final grouped = _groupGamesBySection(gameHistory);
+      
+          if (!_contentFadeStarted) {
+            _contentFadeStarted = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _fadeController.forward();
+            });
+          }
+      
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: _buildStatsStrip(context, colorScheme)),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                  child: Text(
+                    'Past games',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.8,
                     ),
                   ),
                 ),
-                ...grouped.entries.map((e) => _buildSection(
-                      context,
-                      sectionLabel: e.key,
-                      games: e.value,
-                      colorScheme: colorScheme,
-                      theme: theme,
-                    )),
-                const SliverToBoxAdapter(child: SizedBox(height: 40)),
-              ],
-            ),
-            );
-          },
-        ),
+              ),
+              ...grouped.entries.map((e) => _buildSection(
+                    context,
+                    sectionLabel: e.key,
+                    games: e.value,
+                    colorScheme: colorScheme,
+                    theme: theme,
+                  )),
+              SliverToBoxAdapter(child: SizedBox(height: MediaQuery.paddingOf(context).bottom)),
+            ],
+          ),
+          );
+        },
       ),
     );
   }

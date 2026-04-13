@@ -273,7 +273,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         builder: (context) => DraggableScrollableSheet(
             expand: false,
             initialChildSize: 0.5,
-            maxChildSize: 0.7,
+            maxChildSize: 0.9,
             minChildSize: .3,
             builder: (context, controller) {
               return NewPlayerPicker(
