@@ -82,7 +82,7 @@ class _ScoreboardState extends State<Scoreboard> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //alignment: WrapAlignment.spaceBetween,
                     children: [
                       Text(
                         'Scoreboard',
@@ -327,9 +327,8 @@ class _Chip extends StatelessWidget {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      constraints: minWidth != null ? BoxConstraints(
-        minWidth: minWidth!
-      ) : null,
+      constraints:
+          minWidth != null ? BoxConstraints(minWidth: minWidth!) : null,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),

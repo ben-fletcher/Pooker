@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart' show Uint8List, defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart'
+    show Uint8List, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pooker_score/models/game_result.dart';
@@ -73,12 +74,14 @@ class GamesExportHelper {
                 ListTile(
                   leading: CircleAvatar(
                     backgroundColor: colorScheme.primaryContainer,
-                    child: Icon(Icons.share_rounded, color: colorScheme.onPrimaryContainer),
+                    child: Icon(Icons.share_rounded,
+                        color: colorScheme.onPrimaryContainer),
                   ),
                   title: const Text('Share'),
                   subtitle: Text(
                     'Messages, email, Drive…',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
+                    style: TextStyle(
+                        color: colorScheme.onSurfaceVariant, fontSize: 13),
                   ),
                   onTap: () async {
                     Navigator.of(sheetContext).pop();
@@ -104,14 +107,16 @@ class GamesExportHelper {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundColor: colorScheme.secondaryContainer,
-                      child: Icon(Icons.save_alt_rounded, color: colorScheme.onSecondaryContainer),
+                      child: Icon(Icons.save_alt_rounded,
+                          color: colorScheme.onSecondaryContainer),
                     ),
                     title: const Text('Save to device'),
                     subtitle: Text(
                       defaultTargetPlatform == TargetPlatform.android
                           ? 'Opens the system picker — pick Downloads or browse with Files'
                           : 'Choose where to save the export file',
-                      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
+                      style: TextStyle(
+                          color: colorScheme.onSurfaceVariant, fontSize: 13),
                     ),
                     onTap: () async {
                       Navigator.of(sheetContext).pop();

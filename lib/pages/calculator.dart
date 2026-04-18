@@ -124,6 +124,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                 builder: (_) => const RulesPage()));
                           },
                         ),
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.cancel),
+                              Text('Exit Game'),
+                            ],
+                          ),
+                          onTap: () {
+                            gameModel.cancelGameDialog(context);
+                          },
+                        ),
                       ],
                     );
                   },

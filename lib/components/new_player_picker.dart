@@ -106,7 +106,9 @@ class _NewPlayerPickerState extends State<NewPlayerPicker> {
                                 ),
                               );
                             },
-                            separatorBuilder: (_, __) => const Divider(height: 8,),
+                            separatorBuilder: (_, __) => const Divider(
+                                  height: 8,
+                                ),
                             itemCount: players.length + 1),
                       )
                     : const Center(child: CircularProgressIndicator()),

@@ -23,7 +23,8 @@ class GameModel extends ChangeNotifier {
 
   BallColour get nextTargetBall => _nextTargetBall;
   bool get skillShotEnabled => _skillShotEnabled;
-  Player? get activePlayer => players.isNotEmpty ? players[_currentPlayerIndex] : null;
+  Player? get activePlayer =>
+      players.isNotEmpty ? players[_currentPlayerIndex] : null;
   List<PlayerTurn> get turnHistory => _turnHistory;
 
   Future<void> loadSettings() async {
@@ -120,39 +121,43 @@ class GameModel extends ChangeNotifier {
 
       notifyListeners();
     } else {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Exit Game'),
-            content: const SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Would you like to exit this game?'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => StartPage()),
-                      (_) => false);
-                },
-                child: const Text('Exit'),
-              ),
-            ],
-          );
-        },
-      );
+      cancelGameDialog(context);
     }
+  }
+
+  Future cancelGameDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit Game'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Would you like to exit this game?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => StartPage()),
+                        (_) => false);
+              },
+              child: const Text('Exit'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   int get remainingBalls {

@@ -61,7 +61,8 @@ class _SetupPageState extends State<SetupPage> {
                   padding: const EdgeInsets.only(left: 10.0, bottom: 5.0),
                   child: Row(
                     children: [
-                      Icon(Icons.people_outline_outlined, color: Theme.of(context).colorScheme.primary),
+                      Icon(Icons.people_outline_outlined,
+                          color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 10),
                       Text('Current Players (${gameModel.players.length})',
                           style: TextStyle(fontSize: 20)),
@@ -101,7 +102,8 @@ class _SetupPageState extends State<SetupPage> {
                   child: Row(
                     spacing: 10,
                     children: [
-                      Icon(Icons.person_add, color: Theme.of(context).colorScheme.primary),
+                      Icon(Icons.person_add,
+                          color: Theme.of(context).colorScheme.primary),
                       const Text('Add Players', style: TextStyle(fontSize: 20)),
                     ],
                   ),

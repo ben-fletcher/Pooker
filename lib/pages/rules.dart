@@ -22,7 +22,7 @@ class RulesPage extends StatelessWidget {
               content:
                   'Pooker is a snooker-style game played on a pool table. It combines the strategy and scoring of snooker with the accessibility of pool equipment.',
             ),
-      
+
             // Equipment
             _buildSection(
               context,
@@ -30,7 +30,7 @@ class RulesPage extends StatelessWidget {
               content:
                   '• A pool table\n• At least one black ball (8-ball)\n• Multiple colored balls to act as "reds"\n• Pool cues for each player',
             ),
-      
+
             // Basic Rules
             _buildSection(
               context,
@@ -38,14 +38,14 @@ class RulesPage extends StatelessWidget {
               content:
                   'All balls except the black ball are treated as "red balls" worth 1 point each. The black ball is the only "color ball" worth 3 points.\n\nPlayers take turns attempting to pot balls and score points.',
             ),
-      
+
             // Ball Values
             _buildHighlightCard(
               context,
               title: 'Ball Values',
               content: '🔴 Red Balls: 1 point each\n⚫ Black Ball: 3 points',
             ),
-      
+
             // Turn Structure
             _buildSection(
               context,
@@ -53,14 +53,14 @@ class RulesPage extends StatelessWidget {
               content:
                   '1. Players must first pot a red ball\n2. After potting a red, they can attempt the black ball\n3. Continue alternating red-black until no reds remain\n4. Once all reds are gone, only the black ball remains\n5. The game ends when the black ball is potted with no reds left',
             ),
-      
+
             _buildHighlightCard(
               context,
               title: 'End of Turn',
               content:
                   '⏭️ If you miss a pot\n⛔ If you foul (Even if you potted too)',
             ),
-      
+
             // Fouls
             _buildSection(
               context,
@@ -68,7 +68,7 @@ class RulesPage extends StatelessWidget {
               content:
                   '• Missing your target ball\n• Potting the wrong ball first\n• Potting the black ball when reds remain (unless after a red)\n• Scratching (cue ball in pocket)\n• Other standard pool fouls',
             ),
-      
+
             // Game Types
             _buildSection(
               context,
@@ -76,7 +76,7 @@ class RulesPage extends StatelessWidget {
               content:
                   'You can play with different numbers of balls:\n• 9-Ball: Quick games\n• 15-Ball: Full rack games\n\nChoose your game type in the setup screen.',
             ),
-      
+
             // Skill Shots
             _buildSection(
               context,
@@ -84,7 +84,7 @@ class RulesPage extends StatelessWidget {
               content:
                   'When enabled in settings, players can award bonus points for impressive shots or entertaining mistakes. Tap the "Skill Shot" button after any turn to award a bonus point.',
             ),
-      
+
             // Winning
             _buildSection(
               context,
@@ -92,14 +92,14 @@ class RulesPage extends StatelessWidget {
               content:
                   'The player with the most points when all balls are potted wins! Points are calculated from successful pots minus any fouls committed.',
             ),
-      
+
             _buildHighlightCard(
               context,
               title: 'Tie Breaks!',
               content:
                   'If players score the same then a tie break is decided on the player with the least fouls. And then the player who started after the other',
             ),
-      
+
             // Strategy Tips
             _buildSection(
               context,
@@ -107,9 +107,9 @@ class RulesPage extends StatelessWidget {
               content:
                   '• Plan your shots to leave good position for the next ball\n• Consider safety play if you can\'t make a shot\n• Watch your opponent\'s patterns and weaknesses\n• Practice controlling the cue ball for better position\n• Remember: consistency beats risky shots',
             ),
-      
+
             const SizedBox(height: 24),
-      
+
             // Fun fact
             Container(
               padding: const EdgeInsets.all(16),
@@ -129,13 +129,11 @@ class RulesPage extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Fun Fact',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                       ),
                     ],
                   ),
@@ -143,15 +141,14 @@ class RulesPage extends StatelessWidget {
                   Text(
                     'Pooker can be played with any number of players! Unlike traditional pool games, everyone can participate by taking turns, making it perfect for parties and large groups.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimaryContainer,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
                   ),
                 ],
               ),
             ),
-      
+
             SizedBox(height: MediaQuery.paddingOf(context).bottom),
           ],
         ),

@@ -19,15 +19,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Players'),
+        centerTitle: false,
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const LeaderboardPage()),
-                );
-              },
-              icon: Icon(Icons.military_tech)),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const LeaderboardPage()),
+                  );
+                },
+                icon: Icon(Icons.military_tech),
+                label: Text('Leaderboard')),
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -37,11 +42,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 snapshot.hasData == false) {
               return const Center(child: CircularProgressIndicator());
             }
-      
+
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-      
+
             return Card(
               child: ListView.separated(
                 shrinkWrap: true,
@@ -53,8 +58,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     title: Text(player,
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: FutureBuilder(
-                        future:
-                            GameDatabaseService.getPlayerStatistics(player),
+                        future: GameDatabaseService.getPlayerStatistics(player),
                         builder: (context, asyncSnapshot) {
                           return Wrap(
                             spacing: 8,
@@ -84,8 +88,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         }),
                     leading: Hero(
                         tag: player,
-                        child: CircleAvatar(
-                            child: Text(player[0].toUpperCase()))),
+                        child:
+                            CircleAvatar(child: Text(player[0].toUpperCase()))),
                     onTap: () async {
                       final reload = await Navigator.of(context).push(
                         MaterialPageRoute(

@@ -244,7 +244,8 @@ class GameDatabaseService {
   }
 
   /// Players ranked by highest single-game score. Tie-break: more games played, then name A–Z.
-  static Future<List<HighScoreLeaderboardEntry>> getHighScoreLeaderboard() async {
+  static Future<List<HighScoreLeaderboardEntry>>
+      getHighScoreLeaderboard() async {
     final history = await loadGameHistory();
     final Map<String, int> maxScore = {};
     final Map<String, int> gamesCount = {};
@@ -364,5 +365,14 @@ class GameDatabaseService {
 
   static Future<void> setSkillShotEnabled(bool enabled) async {
     await setSetting('skill_shot_enabled', enabled.toString());
+  }
+
+  static Future<bool> getDeveloperModeEnabled() async {
+    final value = await getSetting('developer_mode');
+    return value == 'true';
+  }
+
+  static Future<void> setDeveloperModeEnabled(bool enabled) async {
+    await setSetting('developer_mode', enabled.toString());
   }
 }

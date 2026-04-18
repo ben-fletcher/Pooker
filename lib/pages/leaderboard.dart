@@ -141,6 +141,9 @@ class _LeaderboardPageState extends State<LeaderboardPage>
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
+                  child: Center(child: Text('By Highest Score')),
+                ),
+                SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
                     child: _PodiumSection(
@@ -257,7 +260,9 @@ class _LeaderboardPageState extends State<LeaderboardPage>
                     ),
                   ),
                 ],
-                SliverToBoxAdapter(child: SizedBox(height: MediaQuery.paddingOf(context).bottom)),
+                SliverToBoxAdapter(
+                    child:
+                        SizedBox(height: MediaQuery.paddingOf(context).bottom)),
               ],
             ),
           );
