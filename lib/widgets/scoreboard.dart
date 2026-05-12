@@ -57,9 +57,9 @@ class _ScoreboardState extends State<Scoreboard> {
         });
 
         if (horizonalControllers.length != gameModel.players.length) {
-          for (int i = 0;
-              i <= gameModel.players.length - horizonalControllers.length;
-              i++) {
+          final countToAdd =
+              gameModel.players.length - horizonalControllers.length;
+          for (int i = 0; i < countToAdd; i++) {
             horizonalControllers.add(ScrollController());
           }
         }

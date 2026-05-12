@@ -22,16 +22,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
         centerTitle: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 3.0),
             child: FilledButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const LeaderboardPage()),
-                  );
-                },
-                icon: Icon(Icons.military_tech),
-                label: Text('Leaderboard')),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const LeaderboardPage()),
+                );
+              },
+              icon: Icon(Icons.military_tech),
+              label: Text('Leaderboard'),
+              style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).colorScheme.tertiary)),
+            ),
           ),
         ],
       ),

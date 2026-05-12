@@ -191,9 +191,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
               : null,
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: ActionButtons(),
+      ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 385),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: ActionButtons(),
+        ),
       )
     ];
   }
