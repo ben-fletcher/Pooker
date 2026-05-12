@@ -124,6 +124,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                 builder: (_) => const RulesPage()));
                           },
                         ),
+                        PopupMenuItem(
+                          child: Row(
+                            spacing: 10.0,
+                            children: [
+                              Icon(Icons.cancel),
+                              Text('Exit Game'),
+                            ],
+                          ),
+                          onTap: () {
+                            gameModel.cancelGameDialog(context);
+                          },
+                        ),
                       ],
                     );
                   },
@@ -179,9 +191,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
               : null,
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: ActionButtons(),
+      ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 385),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: ActionButtons(),
+        ),
       )
     ];
   }

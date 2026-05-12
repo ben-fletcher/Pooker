@@ -52,14 +52,11 @@ class StartPage extends StatelessWidget {
                       Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
-                          icon: Icon(
-                            Icons.settings
-                          ),
+                          icon: Icon(Icons.settings),
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SettingsPage()),
+                                  builder: (context) => const SettingsPage()),
                             );
                           },
                         ),

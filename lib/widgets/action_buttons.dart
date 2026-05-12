@@ -297,113 +297,115 @@ class ActionButtons extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            height: 250,
-            child: Row(
-              spacing: 20,
-              children: [
-                if (gameModel.nextTargetBall == BallColour.red)
-                  Expanded(
-                    child: GestureDetector(
-                      onLongPress: gameModel.remainingBalls > 1
-                          ? () => _showMultipleRedsDialog(context, gameModel)
-                          : null,
-                      child: FilledButton(
-                        onPressed: gameModel.remainingBalls > 0
-                            ? () {
-                                HapticFeedback.heavyImpact();
-                                Provider.of<GameModel>(context, listen: false)
-                                    .submitGameEvent(
-                                        GameEvent(
-                                            potted: true,
-                                            colour: BallColour.red,
-                                            count: 1),
-                                        Navigator.of(context));
-                              }
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              height: 250,
+              child: Row(
+                spacing: 20,
+                children: [
+                  if (gameModel.nextTargetBall == BallColour.red)
+                    Expanded(
+                      child: GestureDetector(
+                        onLongPress: gameModel.remainingBalls > 1
+                            ? () => _showMultipleRedsDialog(context, gameModel)
                             : null,
+                        child: FilledButton(
+                          onPressed: gameModel.remainingBalls > 0
+                              ? () {
+                                  HapticFeedback.heavyImpact();
+                                  Provider.of<GameModel>(context, listen: false)
+                                      .submitGameEvent(
+                                          GameEvent(
+                                              potted: true,
+                                              colour: BallColour.red,
+                                              count: 1),
+                                          Navigator.of(context));
+                                }
+                              : null,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: gameModel.remainingBalls > 0
+                                ? Theme.of(context).colorScheme.errorContainer
+                                : Colors.grey.shade700,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Red',
+                                style: TextStyle(
+                                    fontSize: 26, fontWeight: FontWeight.bold),
+                              ),
+                              Text('1', style: TextStyle(fontSize: 24)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ).animate().fade(duration: 100.ms),
+                  if (gameModel.nextTargetBall == BallColour.black)
+                    Expanded(
+                      child: FilledButton.tonal(
+                        onPressed: () {
+                          HapticFeedback.heavyImpact();
+                          Provider.of<GameModel>(context, listen: false)
+                              .submitGameEvent(
+                                  GameEvent(
+                                      potted: true, colour: BallColour.black),
+                                  Navigator.of(context));
+                        },
                         style: FilledButton.styleFrom(
-                          backgroundColor: gameModel.remainingBalls > 0
-                              ? Theme.of(context).colorScheme.errorContainer
-                              : Colors.grey.shade700,
+                          backgroundColor: Colors.grey.shade900,
                           foregroundColor: Colors.white,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Red',
+                              'Black',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 26, fontWeight: FontWeight.bold),
                             ),
-                            Text('1', style: TextStyle(fontSize: 24)),
+                            Text(
+                                gameModel.luckyFinish &&
+                                        gameModel.remainingBalls == 0
+                                    ? '5'
+                                    : '3',
+                                style: TextStyle(fontSize: 24)),
                           ],
                         ),
-                      ),
+                      ).animate().fade(duration: 100.ms),
                     ),
-                  ).animate().fade(duration: 100.ms),
-                if (gameModel.nextTargetBall == BallColour.black)
                   Expanded(
                     child: FilledButton.tonal(
                       onPressed: () {
-                        HapticFeedback.heavyImpact();
+                        HapticFeedback.mediumImpact();
                         Provider.of<GameModel>(context, listen: false)
                             .submitGameEvent(
-                                GameEvent(
-                                    potted: true, colour: BallColour.black),
+                                GameEvent(potted: false, colour: BallColour.na),
                                 Navigator.of(context));
                       },
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.grey.shade900,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
                         foregroundColor: Colors.white,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Black',
+                            'End Turn',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 26),
                           ),
-                          Text(
-                              gameModel.luckyFinish &&
-                                      gameModel.remainingBalls == 0
-                                  ? '5'
-                                  : '3',
-                              style: TextStyle(fontSize: 24)),
+                          Icon(Icons.fast_forward, size: 35)
                         ],
                       ),
-                    ).animate().fade(duration: 100.ms),
-                  ),
-                Expanded(
-                  child: FilledButton.tonal(
-                    onPressed: () {
-                      HapticFeedback.mediumImpact();
-                      Provider.of<GameModel>(context, listen: false)
-                          .submitGameEvent(
-                              GameEvent(potted: false, colour: BallColour.na),
-                              Navigator.of(context));
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiaryContainer,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'End Turn',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 26),
-                        ),
-                        Icon(Icons.fast_forward, size: 35)
-                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         ],

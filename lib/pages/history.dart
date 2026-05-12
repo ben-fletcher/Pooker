@@ -12,7 +12,8 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStateMixin {
+class _HistoryPageState extends State<HistoryPage>
+    with SingleTickerProviderStateMixin {
   late Future<List<GameResult>> _gameHistoryFuture;
   Map<String, int> _playerWins = {};
   int _totalGamesPlayed = 0;
@@ -133,45 +134,48 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return _buildEmptyState(context, colorScheme);
           }
-      
+
           final gameHistory = snapshot.data!;
           final grouped = _groupGamesBySection(gameHistory);
-      
+
           if (!_contentFadeStarted) {
             _contentFadeStarted = true;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) _fadeController.forward();
             });
           }
-      
+
           return FadeTransition(
             opacity: _fadeAnimation,
             child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(child: _buildStatsStrip(context, colorScheme)),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-                  child: Text(
-                    'Past games',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.8,
+              slivers: [
+                SliverToBoxAdapter(
+                    child: _buildStatsStrip(context, colorScheme)),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                    child: Text(
+                      'Past games',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.8,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ...grouped.entries.map((e) => _buildSection(
-                    context,
-                    sectionLabel: e.key,
-                    games: e.value,
-                    colorScheme: colorScheme,
-                    theme: theme,
-                  )),
-              SliverToBoxAdapter(child: SizedBox(height: MediaQuery.paddingOf(context).bottom)),
-            ],
-          ),
+                ...grouped.entries.map((e) => _buildSection(
+                      context,
+                      sectionLabel: e.key,
+                      games: e.value,
+                      colorScheme: colorScheme,
+                      theme: theme,
+                    )),
+                SliverToBoxAdapter(
+                    child:
+                        SizedBox(height: MediaQuery.paddingOf(context).bottom)),
+              ],
+            ),
           );
         },
       ),
@@ -255,7 +259,8 @@ class _HistoryPageState extends State<HistoryPage> with SingleTickerProviderStat
             Container(
               padding: const EdgeInsets.all(28),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color:
+                    colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -517,7 +522,8 @@ class _GameHistoryCard extends StatelessWidget {
                       Icon(
                         Icons.chevron_right_rounded,
                         size: 20,
-                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                        color:
+                            colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                       ),
                     ],
                   ),
@@ -570,7 +576,8 @@ class _GameHistoryCard extends StatelessWidget {
                             player.name,
                             style: TextStyle(
                               fontSize: 15,
-                              fontWeight: isWinner ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight:
+                                  isWinner ? FontWeight.w700 : FontWeight.w500,
                               color: isWinner
                                   ? colorScheme.onSurface
                                   : colorScheme.onSurfaceVariant,
@@ -583,7 +590,9 @@ class _GameHistoryCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: isWinner ? colorScheme.primary : _positionColor(position),
+                            color: isWinner
+                                ? colorScheme.primary
+                                : _positionColor(position),
                           ),
                         ),
                       ],

@@ -12,7 +12,7 @@ Future<void> showAddPlayerDialog(BuildContext context) {
         if (!context.mounted) {
           return;
         }
-        
+
         if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

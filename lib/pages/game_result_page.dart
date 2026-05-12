@@ -25,7 +25,8 @@ class GameResultPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.ios_share),
             tooltip: 'Export game',
-            onPressed: () => GamesExportHelper.presentExportOptions(context, games: [gameResult]),
+            onPressed: () => GamesExportHelper.presentExportOptions(context,
+                games: [gameResult]),
           ),
           IconButton(
             icon: const Icon(Icons.delete),

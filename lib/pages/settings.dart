@@ -18,6 +18,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _skillShotEnabled = false;
+  bool _developerModeEnabled = false;
   String _version = "";
 
   @override
@@ -29,12 +30,14 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _loadSettings() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final skillShotEnabled = await GameDatabaseService.getSkillShotEnabled();
+    final developerMode = await GameDatabaseService.getDeveloperModeEnabled();
     if (!context.mounted) {
       return;
     }
 
     setState(() {
       _skillShotEnabled = skillShotEnabled;
+      _developerModeEnabled = developerMode;
       _version = "v${packageInfo.version}";
     });
   }
@@ -43,6 +46,13 @@ class _SettingsPageState extends State<SettingsPage> {
     await GameDatabaseService.setSkillShotEnabled(value);
     setState(() {
       _skillShotEnabled = value;
+    });
+  }
+
+  Future<void> _toggleDeveloperMode(bool value) async {
+    await GameDatabaseService.setDeveloperModeEnabled(value);
+    setState(() {
+      _developerModeEnabled = value;
     });
   }
 
@@ -98,7 +108,9 @@ class _SettingsPageState extends State<SettingsPage> {
     final file = result.files.single;
     if (file.bytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not read file. Try selecting the file again.')),
+        const SnackBar(
+            content:
+                Text('Could not read file. Try selecting the file again.')),
       );
       return;
     }
@@ -106,12 +118,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (!GameDatabaseService.looksLikeExportJson(jsonString)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('File does not look like a Pooker games export')),
+        const SnackBar(
+            content: Text('File does not look like a Pooker games export')),
       );
       return;
     }
 
-    final importResult = await GameDatabaseService.importGamesFromJson(jsonString);
+    final importResult =
+        await GameDatabaseService.importGamesFromJson(jsonString);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -155,7 +169,9 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       applicationName: 'Pooker',
       applicationVersion: _version,
-      applicationIcon: Image.asset('assets/pooker.png', width: 32),
+      applicationIcon: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(6),
+          child: Image.asset('assets/pooker.png', width: 32)),
       children: [
         const Text('An app to keep track of the score of a pooker game'),
       ],
@@ -185,10 +201,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: const Text('About'),
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  'Game Settings',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
                 Card(
                     child: Column(
                   children: [
@@ -200,6 +212,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: _skillShotEnabled,
                       onChanged: _toggleSkillShot,
                       secondary: const Icon(Icons.star),
+                    ),
+                    SwitchListTile(
+                      title: Text('Developer Mode',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error)),
+                      subtitle: const Text(
+                        'WARNING: May result in loss of data',
+                      ),
+                      value: _developerModeEnabled,
+                      onChanged: _toggleDeveloperMode,
+                      secondary: const Icon(Icons.developer_mode),
                     )
                   ],
                 )),
@@ -234,7 +257,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> _buildDatabaseOptions() {
-    if (!kIsWeb) {
+    if (!kIsWeb && _developerModeEnabled) {
       return [
         Text(
           'Database',

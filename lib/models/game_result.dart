@@ -30,11 +30,10 @@ class GameResult {
 
   static GameResult fromMap(Map<String, dynamic> map) {
     final players = (json.decode(map['players']) as List)
-          .map((player) => PlayerResult.fromMap(player))
-          .toList();
+        .map((player) => PlayerResult.fromMap(player))
+        .toList();
 
     if (map['sorted'] != 'true') {
-
       players.sort((a, b) => b.score.compareTo(a.score));
     }
 
