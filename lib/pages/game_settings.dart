@@ -83,6 +83,7 @@ class GameSettingsPage extends StatelessWidget {
         child: FilledButton.icon(
           onPressed: gameModel.players.isNotEmpty
               ? () {
+                gameModel.startGame();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                         builder: (context) => const CalculatorPage()),

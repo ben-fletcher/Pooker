@@ -303,4 +303,10 @@ class GameModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void startGame() {
+    _startDate = DateTime.now();
+  }
+
+  DateTime getStartTime() => _startDate;
 }

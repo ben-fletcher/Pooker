@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:pooker_score/models/game_model.dart';
 import 'package:pooker_score/models/player.dart';
 import 'package:pooker_score/models/turn.dart';
+import 'package:pooker_score/widgets/mini_pill.dart';
 import 'package:pooker_score/widgets/turn_icon.dart';
 import 'package:provider/provider.dart';
 
@@ -166,11 +167,11 @@ class _ScoreboardState extends State<Scoreboard> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    _MiniPill(
+                                    MiniPill(
                                         icon: Icons.sports_score,
                                         text: '$currentBreak'),
                                     const SizedBox(width: 8),
-                                    _MiniPill(
+                                    MiniPill(
                                         icon: Icons.report_problem,
                                         text: '$foulCount'),
                                     const SizedBox(width: 20),
@@ -280,39 +281,6 @@ int _computeCurrentBreak(Player player) {
 
 int _computeFouls(Player player) {
   return player.turns.where((t) => t.event.foul == true).length;
-}
-
-class _MiniPill extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _MiniPill({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: cs.secondaryContainer,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: cs.onSurfaceVariant),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: cs.onSurfaceVariant),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _Chip extends StatelessWidget {

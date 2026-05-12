@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:pooker_score/pages/finish.dart';
 import 'package:pooker_score/pages/rules.dart';
 import 'package:pooker_score/theme.dart';
 import 'package:pooker_score/widgets/action_buttons.dart';
+import 'package:pooker_score/widgets/game_timer.dart';
 import 'package:pooker_score/widgets/scoreboard.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -57,17 +59,25 @@ class _CalculatorPageState extends State<CalculatorPage> {
               scrolledUnderElevation: 0,
               forceMaterialTransparency: true,
               centerTitle: true,
+              leadingWidth: 118,
               bottom: PreferredSize(
                   preferredSize: Size(double.infinity, 3),
                   child: LinearProgressIndicator(
                     value: (gameModel.totalBalls - gameModel.remainingBalls) /
                         gameModel.totalBalls,
                   )),
-              leading: IconButton(
-                icon: Icon(Icons.undo),
-                onPressed: () {
-                  gameModel.undoLastEvent(context);
-                },
+              leading: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.undo),
+                    onPressed: () {
+                      gameModel.undoLastEvent(context);
+                    },
+                  ),
+                  GameTimer(gameModel: gameModel)
+                ],
               ),
               actions: [
                 IconButton(
